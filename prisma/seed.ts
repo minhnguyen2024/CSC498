@@ -4,17 +4,27 @@ const prisma = new PrismaClient();
 
 const users = [
   {
-    id: 4,
+    id: 1,
+    username: "minhnguyen_2024",
+    password: "pass"
+  },
+  {
+    id: 2,
+    username: "thaohoang_2024",
+    password: "password"
+  },
+  {
+    id: 3,
     username: "alex_2024",
     password: "password"
   },
   {
-    id: 5,
+    id: 4,
     username: "baker_2025",
     password: "password"
   },
   {
-    id: 6,
+    id: 5,
     username: "cole_2023",
     password: "password"
   },
@@ -110,6 +120,8 @@ async function seedSingleUser({username, password}: {username: string, password:
   await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`
 }
 
-seedBlock()
-seedRoom()
+seedUser()
+// seedBlock()
+// seedRoom()
+
 
