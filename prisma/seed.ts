@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -21,23 +20,96 @@ const users = [
   },
 ]
 
+const rooms = [
+  {
+    id: 1,
+    display: 1,
+    table: 0,
+  },
+  {
+    id: 2,
+    display: 0,
+    table: 0,
+  },
+  {
+    id: 3,
+    display: 1,
+    table: 1,
+  },
+]
+
+const blocks = [
+  {
+    room_id: 1,
+    time: 1,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 1,
+    time: 2,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 1,
+    time: 3,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 2,
+    time: 1,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 2,
+    time: 2,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 2,
+    time: 3,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 3,
+    time: 1,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 3,
+    time: 2,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 3,
+    time: 3,
+    booked_user_id: 0,
+  },
+]
 
 function seedUser() {
   users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password})`)
   console.log(`User table has been seeded. 🌱`);
 }
-// seedUser()
 
-async function seedSingleUser({username, password}: {username: string, password: string}){
-  await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`
+function seedRoom(){
+  rooms.forEach(async (item) => await prisma.$executeRaw`INSERT INTO Room VALUES (${item.id}, ${item.display}, ${item.table})`)
+  console.log(`Room table has been seeded. 🌱`);
 }
 
-// seedSingleUser({username: "danny_2024", password: "pass"})
+function seedBlock(){
+  blocks.forEach(async (item) => await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${item.room_id}, ${item.time}, ${item.booked_user_id})`)
+  console.log(`Block table has been seeded. 🌱`);
+}
 
 async function selectExample(username: string){
   const result = await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`
   return result
 }
-selectExample("minhnguyen_2024").then(result => console.log(result))
 
+async function seedSingleUser({username, password}: {username: string, password: string}){
+  await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`
+}
+
+seedBlock()
+seedRoom()
 

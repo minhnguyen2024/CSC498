@@ -14,8 +14,9 @@ model Room {
 }
 
 model Block {
-  id Int @id
+  id Int @id @default(autoincrement())
   room_id Int 
+  time Int
   booked_user_id Int 
 } 
 

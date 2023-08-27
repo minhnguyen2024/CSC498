@@ -32,3 +32,9 @@ export async function verifyLogin(
   }
   return null
 }
+
+
+export async function getAllUsers(){
+  const allUsers = await prisma.$queryRaw`SELECT * FROM User`
+  return allUsers
+}
