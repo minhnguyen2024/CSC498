@@ -65,6 +65,26 @@ const blocks = [
     booked_user_id: 0,
   },
   { 
+    room_id: 1,
+    time: 4,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 1,
+    time: 5,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 1,
+    time: 6,
+    booked_user_id: 0,
+  },
+  { 
+    room_id: 1,
+    time: 7,
+    booked_user_id: 0,
+  },
+  { 
     room_id: 2,
     time: 1,
     booked_user_id: 0,
@@ -101,13 +121,19 @@ function seedUser() {
   console.log(`User table has been seeded. 🌱`);
 }
 
-function seedRoom(){
-  rooms.forEach(async (item) => await prisma.$executeRaw`INSERT INTO Room VALUES (${item.id}, ${item.display}, ${item.table})`)
+async function seedRoom(){
+  for (let numRoom = 1; numRoom < 11; numRoom++){
+    await prisma.$executeRaw`INSERT INTO Room VALUES (${numRoom}, ${1}, ${1})`
+  }
   console.log(`Room table has been seeded. 🌱`);
 }
 
-function seedBlock(){
-  blocks.forEach(async (item) => await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${item.room_id}, ${item.time}, ${item.booked_user_id})`)
+async function seedBlock(){
+  for (let numRoom = 1; numRoom < 11; numRoom++){
+    for (let numBlock = 1; numBlock < 50; numBlock++){
+      await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${numRoom}, ${numBlock}, ${0})`
+    }
+  }
   console.log(`Block table has been seeded. 🌱`);
 }
 
@@ -121,7 +147,7 @@ async function seedSingleUser({username, password}: {username: string, password:
 }
 
 seedUser()
-// seedBlock()
-// seedRoom()
+seedBlock()
+seedRoom()
 
 

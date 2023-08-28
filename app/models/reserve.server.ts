@@ -2,8 +2,7 @@ import { prisma } from "~/db.server";
 
 export async function getAllBlocks() {
     const blocks = prisma
-    .$queryRaw`SELECT User.username, Room.id, Block.id FROM Block, Room , User 
-                WHERE Block.room_id = Room.id`
+    .$queryRaw`SELECT * FROM Block ORDER BY time ASC`
     return blocks
 }
 
