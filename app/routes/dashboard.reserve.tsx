@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { type LoaderArgs, json, ActionArgs } from "@remix-run/node";
+import { type LoaderArgs, json, ActionArgs, redirect } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getAllBlocks } from "~/models/reserve.server";
-import { requireUserId } from "~/session.server";
+import { getSession, requireUserId } from "~/session.server";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -15,6 +15,8 @@ function partitionArrayByChunk(arr: any, chunk: number) {
 
 export async function loader({ request }: LoaderArgs) {
   const userId = requireUserId(request);
+  const session = await getSession(request)
+  console.log(session.get("userId"))
   const blocks: any = await getAllBlocks();
   const partitionedBy10 = partitionArrayByChunk(blocks, 10);
   const partitionedBy10By7 = partitionArrayByChunk(partitionedBy10, 7);
@@ -23,10 +25,12 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   const userId = requireUserId(request);
+  console.log(userId)
   const body = await request.formData();
   const items: string = body.get("items")?.toString() || ""
     const blockIDByTime = JSON.parse(items)
-  return null;
+    const serializedArray = encodeURIComponent(JSON.stringify(items));
+  return redirect(`/dashboard/${serializedArray}`);
 }
 export default function DashboardReserve() {
   const { partitionedBy10, partitionedBy10By7 } =
@@ -55,6 +59,7 @@ export default function DashboardReserve() {
                   Reserve
                 </button>
               </form>
+              <dialog open={true}></dialog>
             </CardContent>
           </Card>
         </div>,
@@ -65,13 +70,13 @@ export default function DashboardReserve() {
 
   return (
     <div>
-      <p>Reserve</p>
       <form method="post">
         <input type="hidden" name="title" value="title 1" />
         <input type="hidden" name="title" value="title 2" />
         <input type="hidden" name="title" value="title 3" />
         <button className="bg-red-500 rounded text-white">Reserve</button>
       </form>
+      {/* <Link to='/reserve/:userId'>To Reserve Page</Link> */}
       <div className="flex h-full bg-white">
         <div className="h-full w-40 border-r bg-gray-50" key={0}>
           {renderCardsInColumn(partitionedBy10By7[0], 0)}
