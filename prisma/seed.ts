@@ -6,27 +6,38 @@ const users = [
   {
     id: 1,
     username: "minhnguyen_2024",
-    password: "pass"
+    password: "pass",
+    admin: 0
   },
   {
     id: 2,
     username: "thaohoang_2024",
-    password: "password"
+    password: "password",
+    admin: 0
   },
   {
     id: 3,
     username: "alex_2024",
-    password: "password"
+    password: "password",
+    admin: 0
   },
   {
     id: 4,
     username: "baker_2025",
-    password: "password"
+    password: "password",
+    admin: 0
   },
   {
     id: 5,
     username: "cole_2023",
-    password: "password"
+    password: "password",
+    admin: 0
+  },
+  {
+    id: 6,
+    username: "admin",
+    password: "password",
+    admin: 1
   },
 ]
 
@@ -117,13 +128,13 @@ const blocks = [
 ]
 
 function seedUser() {
-  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password})`)
+  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password}, ${item.admin})`)
   console.log(`User table has been seeded. 🌱`);
 }
 
 async function seedRoom(){
   for (let numRoom = 1; numRoom < 11; numRoom++){
-    await prisma.$executeRaw`INSERT INTO Room VALUES (${numRoom}, ${1}, ${1})`
+    await prisma.$executeRaw`INSERT INTO Room VALUES (${numRoom}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1})`
   }
   console.log(`Room table has been seeded. 🌱`);
 }

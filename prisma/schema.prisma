@@ -9,8 +9,14 @@ generator client {
 
 model Room {
   id Int @id @default(autoincrement())
-  display Int 
-  table Int
+  accessible Int
+  power Int
+  reservable Int
+  softSeating Int
+  tableChairs Int
+  monitor Int 
+  whiteboard Int
+  window Int
 }
 
 model Block {
@@ -24,4 +30,5 @@ model User {
   id Int @id @default(autoincrement())
   username String 
   password String
+  admin Int
 }
