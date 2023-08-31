@@ -19,6 +19,9 @@ export default function DashboardIndex() {
             <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
               <Link to="reserve" className="">Reserve a Study Room</Link>
             </li>
+            <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+              <Link to="" className="">Order at Cafe Roy</Link>
+            </li>
           </ul>
         </div>
         <div className="flex-1 p-6">

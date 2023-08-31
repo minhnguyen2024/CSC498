@@ -1,37 +1,88 @@
 import { Button } from "@/components/ui/button";
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { Form, Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { getAllAvailableRoomsByBlockAndAmenities } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
+
+function getAvailableRoomsByBlock(arr: any) {
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    result.push(arr[i].id);
+  }
+  return result;
+}
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = await requireUserId(request);
-  invariant(params.serializedArray, "noteId not found");
-  const dataArray = JSON.parse(decodeURIComponent(params.serializedArray));
-  return { userId, dataArray };
+  invariant(params.time, "time not found");
+  const time = JSON.parse(decodeURIComponent(params.time));
+  return { time };
 };
 
 export const action = async ({ request }: ActionArgs) => {
-    const body = await request.formData()
-    const userId = await requireUserId(request);
-    const accessible = body.get("accessible")
-    const power = body.get("power")
-    const reservable = body.get("reservable")
-    const softSeating = body.get("soft-seating")
-    const tableChairs = body.get("tableChairs")
-    const monitor = body.get("monitor")
-    const whiteboard = body.get("whiteboard")
-    const window = body.get("window")
-    console.log({accessible, power, reservable, softSeating, tableChairs, monitor, whiteboard, window})
-  return null;
+  const body = await request.formData();
+  const userId = (await requireUserId(request)).toString();
+  let time = body.get("time")?.toString();
+  if (typeof time !== "string") {
+    time = "null";
+  }
+  let accessible = body.get("accessible");
+  if (typeof accessible !== "string") {
+    accessible = "off";
+  }
+  let power = body.get("power");
+  if (typeof power !== "string") {
+    power = "off";
+  }
+  let reservable = body.get("reservable");
+  if (typeof reservable !== "string") {
+    reservable = "off";
+  }
+  let softSeating = body.get("soft-seating");
+  if (typeof softSeating !== "string") {
+    softSeating = "off";
+  }
+  let tableChairs = body.get("tableChairs");
+  if (typeof tableChairs !== "string") {
+    tableChairs = "off";
+  }
+  let monitor = body.get("monitor");
+  if (typeof monitor !== "string") {
+    monitor = "off";
+  }
+  let whiteboard = body.get("whiteboard");
+  if (typeof whiteboard !== "string") {
+    whiteboard = "off";
+  }
+  let window = body.get("window");
+  if (typeof window !== "string") {
+    window = "off";
+  }
+
+  const queryObject = {
+    userId,
+    time,
+    accessible,
+    power,
+    reservable,
+    softSeating,
+    tableChairs,
+    monitor,
+    whiteboard,
+    window,
+  }
+  const result = await getAllAvailableRoomsByBlockAndAmenities(queryObject)
+  const availableRooms = getAvailableRoomsByBlock(result)
+  return redirect(`/dashboard/${time}/${availableRooms}`);
 };
 
 export default function DashboardReserveUserId() {
-  const { userId, dataArray } = useLoaderData<typeof loader>();
-//   console.log(dataArray);
+  const { time } = useLoaderData<typeof loader>();
   return (
     <div>
       <form method="post">
+        <input type="hidden" value={time} name="time" />
         <div className="items-top flex-box">
           <div className="items-top flex space-x-2">
             <input type="checkbox" name="accessible" id="accessible" />
@@ -124,6 +175,7 @@ export default function DashboardReserveUserId() {
         </div>
         <Button type="submit">Search</Button>
       </form>
+      <Outlet/>
     </div>
   );
 }

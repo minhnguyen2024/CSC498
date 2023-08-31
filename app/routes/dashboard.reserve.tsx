@@ -15,9 +15,8 @@ function partitionArrayByChunk(arr: any, chunk: number) {
 
 export async function loader({ request }: LoaderArgs) {
   const userId = requireUserId(request);
-  const session = await getSession(request)
-  console.log(session.get("userId"))
-  const blocks: any = await getAllBlocks();
+  const session = await getSession(request);
+  const blocks = await getAllBlocks();
   const partitionedBy10 = partitionArrayByChunk(blocks, 10);
   const partitionedBy10By7 = partitionArrayByChunk(partitionedBy10, 7);
   return { partitionedBy10, partitionedBy10By7 };
@@ -25,12 +24,14 @@ export async function loader({ request }: LoaderArgs) {
 
 export async function action({ request }: ActionArgs) {
   const userId = requireUserId(request);
-  console.log(userId)
   const body = await request.formData();
-  const items: string = body.get("items")?.toString() || ""
-    const blockIDByTime = JSON.parse(items)
-    const serializedArray = encodeURIComponent(JSON.stringify(items));
-  return redirect(`/dashboard/${serializedArray}`);
+//   const items: string = body.get("items")?.toString() || "";
+  const dataArrayString = body.get("items")?.toString() || "";
+  const dataArray = JSON.parse(dataArrayString)
+  const time = dataArray[0].time
+//   console.log(`time ${time}`)
+//   const serializedArray = encodeURIComponent(JSON.stringify(items));
+  return redirect(`/dashboard/${time}`);
 }
 export default function DashboardReserve() {
   const { partitionedBy10, partitionedBy10By7 } =
@@ -59,7 +60,6 @@ export default function DashboardReserve() {
                   Reserve
                 </button>
               </form>
-              <dialog open={true}></dialog>
             </CardContent>
           </Card>
         </div>,
@@ -79,24 +79,31 @@ export default function DashboardReserve() {
       {/* <Link to='/reserve/:userId'>To Reserve Page</Link> */}
       <div className="flex h-full bg-white">
         <div className="h-full w-40 border-r bg-gray-50" key={0}>
+          <p>Monday</p>
           {renderCardsInColumn(partitionedBy10By7[0], 0)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={1}>
+          <p>Tuesday</p>
           {renderCardsInColumn(partitionedBy10By7[1], 1)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={2}>
+          <p>Wednesday</p>
           {renderCardsInColumn(partitionedBy10By7[2], 2)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={3}>
+          <p>Thursday</p>
           {renderCardsInColumn(partitionedBy10By7[3], 3)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={4}>
+          <p>Friday</p>
           {renderCardsInColumn(partitionedBy10By7[4], 4)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={5}>
+          <p>Saturday</p>
           {renderCardsInColumn(partitionedBy10By7[5], 5)}
         </div>
         <div className="h-full w-40 border-r bg-gray-50" key={6}>
+          <p>Sunday</p>
           {renderCardsInColumn(partitionedBy10By7[6], 6)}
         </div>
         <div className="flex-1 p-6">
