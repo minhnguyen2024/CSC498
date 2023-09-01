@@ -1,17 +1,18 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 
 export async function getAllBlocks() {
-  return prisma.$queryRaw`SELECT * FROM Block ORDER BY time ASC`;
+  return await prisma.$queryRaw`SELECT * FROM Block ORDER BY time ASC`;
 }
 
 export async function getAllAvailableBlocks() {
-  return prisma.$queryRaw`SELECT User.username, Room.id, Block.id FROM Block, Room , User 
+  return await prisma.$queryRaw`SELECT User.username, Room.id, Block.id FROM Block, Room , User 
                 WHERE Block.room_id = Room.id 
                 AND Block.booked_user_id = 0`;
 }
 
 export async function getAllUnavailableBlocks() {
-  return prisma.$queryRaw`SELECT User.username, Room.id, Block.id FROM Block, Room , User 
+  return await prisma.$queryRaw`SELECT User.username, Room.id, Block.id FROM Block, Room , User 
                 WHERE Block.room_id = Room.id 
                 AND Block.booked_user_id != 0`;
 }
@@ -39,16 +40,7 @@ export async function getAllAvailableRoomsByBlockAndAmenities({
   whiteboard: string;
   window: string;
 }) {
-
-    let isAccessible = accessible === 'on' ? 1 : 0
-    let isPower = power === 'on' ? 1 : 0
-    let isReservable = reservable === 'on' ? 1 : 0
-    let isSoftSeating = softSeating === 'on' ? 1 : 0
-    let isTableChairs = tableChairs === 'on' ? 1 : 0
-    let isMonitor = monitor === 'on' ? 1 : 0
-    let isWhiteboard = whiteboard === 'on' ? 1 : 0
-    let isWindow = window === 'on' ? 1 : 0
-    return prisma.$queryRaw`SELECT 
+    const queryResult = await prisma.$queryRaw`SELECT 
         Room.id, 
         Block. booked_user_id, 
         Room.accessible, 
@@ -60,19 +52,17 @@ export async function getAllAvailableRoomsByBlockAndAmenities({
         Room.whiteboard, 
         Room.window 
         FROM Room, Block 
-        WHERE Block.room_id = Room.id  
-        AND Block.time = ${time}`    
+        WHERE Block.room_id = Room.id 
+        ${accessible === 'on' ? Prisma.sql`AND Room.accessible = 1` : Prisma.empty }
+        ${power === 'on' ? Prisma.sql`AND Room.power = 1` : Prisma.empty }
+        ${reservable === 'on' ? Prisma.sql`AND Room.reservable = 1` : Prisma.empty }
+        ${softSeating === 'on' ? Prisma.sql`AND Room.softSeating = 1` : Prisma.empty }
+        ${tableChairs === 'on' ? Prisma.sql`AND Room.tableChairs = 1` : Prisma.empty }
+        ${monitor === 'on' ? Prisma.sql`AND Room.monitor = 1` : Prisma.empty }
+        ${whiteboard === 'on' ? Prisma.sql`AND Room.whiteboard = 1` : Prisma.empty }
+        ${window === 'on' ? Prisma.sql`AND Room.window = 1` : Prisma.empty }
+        AND Block.time = ${time}`
+    return queryResult
 }
 
-// ${accessible === 'on' ? 'AND Room.accessible != 0' : 'OR Room.accessible = 0' }
-// ${power === 'on' ? 'AND Room.power != 0' : 'OR Room.power = 0' }
-// ${reservable === 'on' ? 'AND Room.reservable != 0' : 'OR Room.reservable = 0' }
-// ${softSeating === 'on' ? 'AND Room.softSeating != 0' : 'OR Room.softSeating = 0' }
-// OR Room.accessible = ${isAccessible}
-//     OR Room.power = ${isPower}
-// 	OR Room.reservable = ${isReservable}
-//     OR Room.softSeating = ${isSoftSeating}
-//     OR Room.tableChairs = ${isTableChairs}
-//     OR Room.monitor = ${isMonitor}
-//     OR Room.whiteboard = ${isWhiteboard}
-//     OR Room.window = ${isWindow}
+

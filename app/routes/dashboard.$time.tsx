@@ -73,8 +73,9 @@ export const action = async ({ request }: ActionArgs) => {
     window,
   }
   const result = await getAllAvailableRoomsByBlockAndAmenities(queryObject)
-  const availableRooms = getAvailableRoomsByBlock(result)
-  return redirect(`/dashboard/${time}/${availableRooms}`);
+  const serializedArray = encodeURIComponent(JSON.stringify(result))
+  // const availableRooms = getAvailableRoomsByBlock(result)
+  return redirect(`/dashboard/${time}/${serializedArray}`);
 };
 
 export default function DashboardReserveUserId() {
