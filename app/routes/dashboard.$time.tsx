@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { getAllAvailableRoomsByBlockAndAmenities } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
@@ -14,52 +15,43 @@ function getAvailableRoomsByBlock(arr: any) {
 }
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = await requireUserId(request);
+  const userId = (await requireUserId(request)).toString();
   invariant(params.time, "time not found");
   const time = JSON.parse(decodeURIComponent(params.time));
-  return { time };
-};
-
-export const action = async ({ request }: ActionArgs) => {
-  const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
-  let time = body.get("time")?.toString();
-  if (typeof time !== "string") {
-    time = "null";
+  const url = new URL(request.url)
+  const search = new URLSearchParams(url.search);
+  let accessible = search.get("accessible")
+  if(!accessible){
+      accessible = "off";
   }
-  let accessible = body.get("accessible");
-  if (typeof accessible !== "string") {
-    accessible = "off";
-  }
-  let power = body.get("power");
-  if (typeof power !== "string") {
+  let power = search.get("power")
+  if(!power){
     power = "off";
   }
-  let reservable = body.get("reservable");
-  if (typeof reservable !== "string") {
-    reservable = "off";
+  let reservable = search.get("reservable")
+  if(!reservable){
+      reservable = "off";
   }
-  let softSeating = body.get("soft-seating");
-  if (typeof softSeating !== "string") {
-    softSeating = "off";
+  let softSeating = search.get("soft-seating")
+  if(!softSeating){
+      softSeating = "off";
   }
-  let tableChairs = body.get("tableChairs");
-  if (typeof tableChairs !== "string") {
-    tableChairs = "off";
+  let tableChairs = search.get("table-chairs")
+  if(!tableChairs){
+      tableChairs = "off";
   }
-  let monitor = body.get("monitor");
-  if (typeof monitor !== "string") {
-    monitor = "off";
+  let monitor = search.get("monitor")
+  if(!monitor){
+      monitor = "off";
   }
-  let whiteboard = body.get("whiteboard");
-  if (typeof whiteboard !== "string") {
-    whiteboard = "off";
+  let whiteboard = search.get("whiteboard")
+  if(!whiteboard){
+      whiteboard = "off";
   }
-  let window = body.get("window");
-  if (typeof window !== "string") {
-    window = "off";
+  let window = search.get("window")
+  if(!window){
+      window = "off";
   }
-
   const queryObject = {
     userId,
     time,
@@ -74,19 +66,28 @@ export const action = async ({ request }: ActionArgs) => {
   }
   const result = await getAllAvailableRoomsByBlockAndAmenities(queryObject)
   const serializedArray = encodeURIComponent(JSON.stringify(result))
-  // const availableRooms = getAvailableRoomsByBlock(result)
-  return redirect(`/dashboard/${time}/${serializedArray}`);
+  return {time, serializedArray}
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  const body = await request.formData();
+  const userId = (await requireUserId(request)).toString();
+  const time = body.get("time");
+  const room = body.get("room")
+  // console.log(time, room)
+  //do sql UPDATE here then reroute and confirm
+  return redirect(`/confirm/${time}/${room}`)
 };
 
 export default function DashboardReserveUserId() {
-  const { time } = useLoaderData<typeof loader>();
+  const { time, serializedArray } = useLoaderData<typeof loader>();
+  const deserializedRooms = JSON.parse(decodeURIComponent(serializedArray));
   return (
     <div>
-      <form method="post">
-        <input type="hidden" value={time} name="time" />
+      <form method="get">
         <div className="items-top flex-box">
           <div className="items-top flex space-x-2">
-            <input type="checkbox" name="accessible" id="accessible" />
+            <input type="checkbox" name="accessible" id="accessible"/>
             <div className="grid gap-1.5 leading-none">
               <label
                 htmlFor="terms1"
@@ -176,6 +177,45 @@ export default function DashboardReserveUserId() {
         </div>
         <Button type="submit">Search</Button>
       </form>
+      <div>
+        <Table>
+          <TableCaption>A list of available Study Rooms</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="">Room #</TableHead>
+              <TableHead>Amenities</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {deserializedRooms.map((item: any) => (
+              <TableRow className="border rounded" key={item.id}>
+                <TableCell>{item.id}</TableCell>
+                <TableCell>
+                  {item.accessible == 1 ? "Accessible, " : " "}
+                  {item.power == 1 ? "Power, " : " "}
+                  {item.reservable == 1 ? "Reservable, " : " "}
+                  {item.softSeating == 1 ? "Soft-seating, " : " "}
+                  {item.tableChairs == 1 ? "Table and Chairs, " : " "}
+                  {item.monitor == 1 ? "Monitor, " : " "}
+                  {item.whiteboard == 1 ? "Whiteboard, " : " "}
+                  {item.window == 1 ? "Window, " : " "}
+                </TableCell>
+                <TableCell>
+                  <form method="post">
+                    <input type="hidden" value={time} name="time" />
+                    <input
+                      type="hidden"
+                      value={JSON.stringify(item)}
+                      name="room"
+                    />
+                    <Button className="border rounded bg-green-500 text-white">Confirm</Button>
+                  </form>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <Outlet/>
     </div>
   );
