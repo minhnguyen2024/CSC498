@@ -67,5 +67,3 @@ export async function getAllAvailableRoomsByBlockAndAmenities({
         AND Block.booked_user_id = 0`
     return queryResult
 }
-
-
