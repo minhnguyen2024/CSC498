@@ -11,7 +11,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   invariant(params.room, "room not found");
   // const isConfirmed = await confirmRoomBookingWithUserId(userId.toString())
   const room = JSON.parse(decodeURIComponent(params.room));
-  console.log(room);
   return json(room);
 };
 
