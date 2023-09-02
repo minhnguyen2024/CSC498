@@ -3,6 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { updateBlockWithUserId } from "~/models/confirm.server";
 import { getAllAvailableRoomsByBlockAndAmenities } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
 
@@ -13,6 +14,14 @@ function getAvailableRoomsByBlock(arr: any) {
   }
   return result;
 }
+
+// function formDataToObject(formData: FormDataEntryValue) {
+//   const object = {};
+//   for (const [key, value] of formData.entries()) {
+//     object[key] = value;
+//   }
+//   return object;
+// }
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
@@ -74,8 +83,8 @@ export const action = async ({ request }: ActionArgs) => {
   const userId = (await requireUserId(request)).toString();
   const time = body.get("time");
   const room = body.get("room")
-  // console.log(time, room)
-  //do sql UPDATE here then reroute and confirm
+  invariant(room, "room not found")
+  // const confirmResult = await updateBlockWithUserId({userId, room})
   return redirect(`/confirm/${time}/${room}`)
 };
 
@@ -188,8 +197,8 @@ export default function DashboardReserveUserId() {
           </TableHeader>
           <TableBody>
             {deserializedRooms.map((item: any) => (
-              <TableRow className="border rounded" key={item.id}>
-                <TableCell>{item.id}</TableCell>
+              <TableRow className="border rounded" key={item.roomId}>
+                <TableCell>{item.roomId}</TableCell>
                 <TableCell>
                   {item.accessible == 1 ? "Accessible, " : " "}
                   {item.power == 1 ? "Power, " : " "}

@@ -41,8 +41,10 @@ export async function getAllAvailableRoomsByBlockAndAmenities({
   window: string;
 }) {
     const queryResult = await prisma.$queryRaw`SELECT 
-        Room.id, 
-        Block. booked_user_id, 
+        Room.id as roomId,
+        Block.id AS blockId, 
+        Block.time AS time,
+        Block.booked_user_id, 
         Room.accessible, 
         Room.power, 
         Room.reservable, 
