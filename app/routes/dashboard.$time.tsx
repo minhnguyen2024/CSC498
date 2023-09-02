@@ -3,7 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { updateBlockWithUserId } from "~/models/confirm.server";
+import { confirmRoomBookingWithUserId, updateBlockWithUserId } from "~/models/confirm.server";
 import { getAllAvailableRoomsByBlockAndAmenities } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
 
@@ -84,6 +84,12 @@ export const action = async ({ request }: ActionArgs) => {
   const time = body.get("time");
   const room = body.get("room")
   invariant(room, "room not found")
+  const userReservation: object[] = await confirmRoomBookingWithUserId(userId)
+  let isUserReserved = userReservation.length === 1 ? true : false
+  if(isUserReserved){
+    return redirect('/error/reservationDenied')
+  }
+  
   const confirmResult = await updateBlockWithUserId({userId, room})
   return redirect(`/confirm/${time}/${room}`)
 };

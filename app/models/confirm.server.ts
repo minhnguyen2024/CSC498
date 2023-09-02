@@ -15,17 +15,10 @@ export async function updateBlockWithUserId({ userId, room }: { userId: string, 
     return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${roomObj.blockId}`
 }
 
-export async function confirmRoomBookingWithUserId(userId: string){
-    const queryResult: object[] = await prisma.$queryRaw`SELECT * FROM Room, Block 
+export async function confirmRoomBookingWithUserId(userId: string): Promise<object[]>{
+    return await prisma.$queryRaw`SELECT Block.id AS blockId, Room.id AS roomId, Block.time AS time, * FROM Room, Block 
             WHERE Block.room_id = Room.id 
             AND Block.booked_user_id = ${userId}`
-
-    if(queryResult.length == 1){
-        return true
-    }
-    else{
-        return false
-    }
 }
 
 
