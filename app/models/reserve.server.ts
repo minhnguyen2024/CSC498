@@ -63,7 +63,8 @@ export async function getAllAvailableRoomsByBlockAndAmenities({
         ${monitor === 'on' ? Prisma.sql`AND Room.monitor = 1` : Prisma.empty }
         ${whiteboard === 'on' ? Prisma.sql`AND Room.whiteboard = 1` : Prisma.empty }
         ${window === 'on' ? Prisma.sql`AND Room.window = 1` : Prisma.empty }
-        AND Block.time = ${time}`
+        AND Block.time = ${time}
+        AND Block.booked_user_id = 0`
     return queryResult
 }
 

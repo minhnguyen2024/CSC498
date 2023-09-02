@@ -84,7 +84,7 @@ export const action = async ({ request }: ActionArgs) => {
   const time = body.get("time");
   const room = body.get("room")
   invariant(room, "room not found")
-  // const confirmResult = await updateBlockWithUserId({userId, room})
+  const confirmResult = await updateBlockWithUserId({userId, room})
   return redirect(`/confirm/${time}/${room}`)
 };
 
