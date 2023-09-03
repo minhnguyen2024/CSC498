@@ -25,12 +25,9 @@ export async function loader({ request }: LoaderArgs) {
 export async function action({ request }: ActionArgs) {
   const userId = requireUserId(request);
   const body = await request.formData();
-//   const items: string = body.get("items")?.toString() || "";
   const dataArrayString = body.get("items")?.toString() || "";
   const dataArray = JSON.parse(dataArrayString)
   const time = dataArray[0].time
-//   console.log(`time ${time}`)
-//   const serializedArray = encodeURIComponent(JSON.stringify(items));
   return redirect(`/dashboard/${time}`);
 }
 export default function DashboardReserve() {

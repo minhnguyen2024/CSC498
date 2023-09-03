@@ -43,9 +43,6 @@ export default function ConfirmReservation() {
             {data.whiteboard === 1 ? <p>✅ Whiteboard</p> : <></>}
             {data.window === 1 ? <p>✅ Window</p> : <></>}
           </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
         </Card>
       </div>
     </div>

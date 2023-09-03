@@ -11,8 +11,13 @@ export async function getBlockByTimeAndRoomId({ time, roomId } : { time: string,
 
 //can also be used to delete reservation by setting userId = 0
 export async function updateBlockWithUserId({ userId, room }: { userId: string, room: any}) {
-    const roomObj = JSON.parse(room)
-    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${roomObj.blockId}`
+    if(typeof room === "string"){
+        const roomObj = JSON.parse(room)
+        return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${roomObj.blockId}`
+    }
+    else{
+        return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${room.blockId}`
+    }
 }
 
 export async function confirmRoomBookingWithUserId(userId: string): Promise<object[]>{
