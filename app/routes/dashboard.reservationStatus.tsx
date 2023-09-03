@@ -39,7 +39,7 @@ export async function action({ request }: ActionArgs) {
   let blockId = body.get("blockId");
   invariant(blockId, "blockId not found");
   const roomObj: any = { blockId: blockId.toString() };
-await updateBlockWithUserId({
+  await updateBlockWithUserId({
     userId: "0",
     room: roomObj,
   });
@@ -76,7 +76,9 @@ export default function ReservationStatus() {
             <CardFooter>
               <Form method="post">
                 <input type="hidden" value={data.blockId} name="blockId" />
-                <Button>Cancel Reservation</Button>
+                <Button className="border rounded bg-red-500 text-white">
+                  Cancel Reservation
+                </Button>
               </Form>
             </CardFooter>
           </Card>

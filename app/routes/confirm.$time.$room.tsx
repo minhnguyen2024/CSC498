@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LoaderArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { confirmRoomBookingWithUserId } from "~/models/confirm.server";
 import { requireUserId } from "~/session.server";
@@ -16,7 +16,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = await requireUserId(request);
   invariant(params.time, "time not found");
   invariant(params.room, "room not found");
-  const isConfirmed = await confirmRoomBookingWithUserId(userId.toString())
+  const isConfirmed = await confirmRoomBookingWithUserId(userId.toString());
   const room = JSON.parse(decodeURIComponent(params.room));
   return json(room);
 };
@@ -44,6 +44,12 @@ export default function ConfirmReservation() {
             {data.window === 1 ? <p>✅ Window</p> : <></>}
           </CardContent>
         </Card>
+        <Link
+          className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
+          to="/dashboard/reservationStatus"
+        >
+          Check Reservation Status
+        </Link>
       </div>
     </div>
   );
