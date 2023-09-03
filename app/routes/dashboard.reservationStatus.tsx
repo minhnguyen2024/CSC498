@@ -39,14 +39,13 @@ export async function action({ request }: ActionArgs) {
   let blockId = body.get("blockId");
   invariant(blockId, "blockId not found");
   const roomObj: any = { blockId: blockId.toString() };
-  const cancelledReservation = await updateBlockWithUserId({
+await updateBlockWithUserId({
     userId: "0",
     room: roomObj,
   });
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
   if (isUserCancelled) {
-    console.log("resevation cancelled");
     return redirect("/dashboard");
   }
   return null;
@@ -54,7 +53,6 @@ export async function action({ request }: ActionArgs) {
 
 export default function ReservationStatus() {
   const data: any = useLoaderData<typeof loader>();
-  console.log(data);
   return (
     <div>
       {data ? (

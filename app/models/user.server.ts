@@ -18,10 +18,6 @@ export async function createUser(email: User["username"], password: string) {
   return null
 }
 
-// export async function deleteUserByEmail(email: User["email"]) {
-//   return prisma.user.delete({ where: { email } });
-// }
-
 export async function verifyLogin(
   username: string,
   password: string,
@@ -32,7 +28,6 @@ export async function verifyLogin(
   }
   return null
 }
-
 
 export async function getAllUsers(){
   const allUsers = await prisma.$queryRaw`SELECT * FROM User`

@@ -1,4 +1,16 @@
+import { json, type LoaderArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
+import { getUserById } from "~/models/user.server";
+import { logout, requireUserId } from "~/session.server";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const userId = await requireUserId(request);
+  // const user = await getUserById(userId);
+  if (userId){
+    logout(request);
+  }
+  return json({});
+}
 
 export default function Index() {
   return (
