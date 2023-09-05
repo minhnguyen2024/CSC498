@@ -20,17 +20,20 @@ import {
   updateBlockWithUserId,
 } from "~/models/confirm.server";
 import { requireUserId } from "~/session.server";
+import { getFeatureByName, type Feature } from "~/models/manage.server";
+import { type BookingInfo } from "~/models/confirm.server";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const userReservation: object[] = await confirmRoomBookingWithUserId(
+  const featureFlag: Feature[] = await getFeatureByName("reserveStudyRoom");
+  const userReservation: BookingInfo[] = await confirmRoomBookingWithUserId(
     userId.toString(),
   );
+  const data: BookingInfo = userReservation[0]
   if (userReservation.length > 0) {
-    const userReservationObj = userReservation[0];
-    return json(userReservationObj);
+    return { data, featureFlag: featureFlag[0]}
   }
-  return null;
+  return {data, featureFlag: featureFlag[0] };
 }
 
 export async function action({ request }: ActionArgs) {
@@ -52,40 +55,43 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function ReservationStatus() {
-  const data: any = useLoaderData<typeof loader>();
-  return (
-    <div>
-      {data ? (
-        <div className="min-h-screen flex items-center justify-center">
-          <Card className="w-[380px] border rounded">
-            <CardHeader>
-              <CardTitle>Your Reservation Has Been Confirmed!</CardTitle>
-              <CardDescription>See below for details</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Room Number: {data.roomId}</p>
-              {data.accessible === 1 ? <p>✅ Accessible</p> : <></>}
-              {data.power === 1 ? <p>✅ Power </p> : <></>}
-              {data.reservable === 1 ? <p>✅ Reservable</p> : <></>}
-              {data.softSeating === 1 ? <p>✅ Soft Seating</p> : <></>}
-              {data.tableChairs === 1 ? <p>✅ Table and Chairs</p> : <></>}
-              {data.monitor === 1 ? <p>✅ Monitor</p> : <></>}
-              {data.whiteboard === 1 ? <p>✅ Whiteboard</p> : <></>}
-              {data.window === 1 ? <p>✅ Window</p> : <></>}
-            </CardContent>
-            <CardFooter>
-              <Form method="post">
-                <input type="hidden" value={data.blockId} name="blockId" />
-                <Button className="border rounded bg-red-500 text-white">
-                  Cancel Reservation
-                </Button>
-              </Form>
-            </CardFooter>
-          </Card>
-        </div>
-      ) : (
-        <p>No Study Rooms Reserved</p>
-      )}
-    </div>
-  );
+  const { data, featureFlag } = useLoaderData<typeof loader>() 
+  return <div>
+  {featureFlag.enabled === 1 ? (<div>
+        {data ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <Card className="w-[380px] border rounded">
+              <CardHeader>
+                <CardTitle>Your Reservation Has Been Confirmed!</CardTitle>
+                <CardDescription>See below for details</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Room Number: {data.roomId}</p>
+                {data.accessible === 1 ? <p>✅ Accessible</p> : <></>}
+                {data.power === 1 ? <p>✅ Power </p> : <></>}
+                {data.reservable === 1 ? <p>✅ Reservable</p> : <></>}
+                {data.softSeating === 1 ? <p>✅ Soft Seating</p> : <></>}
+                {data.tableChairs === 1 ? <p>✅ Table and Chairs</p> : <></>}
+                {data.monitor === 1 ? <p>✅ Monitor</p> : <></>}
+                {data.whiteboard === 1 ? <p>✅ Whiteboard</p> : <></>}
+                {data.window === 1 ? <p>✅ Window</p> : <></>}
+              </CardContent>
+              <CardFooter>
+                <Form method="post">
+                  <input type="hidden" value={data.blockId} name="blockId" />
+                  <Button className="border rounded bg-red-500 text-white">
+                    Cancel Reservation
+                  </Button>
+                </Form>
+              </CardFooter>
+            </Card>
+          </div>
+        ) : (
+          <p>No Study Rooms Reserved</p>
+        )}
+      </div>): (<div>
+          <p>Feature disabled</p>
+        </div>)}
+  </div>
+    
 }

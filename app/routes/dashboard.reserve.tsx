@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type LoaderArgs, json, ActionArgs, redirect } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
+import { getFeatureByName } from "~/models/manage.server";
 import { getAllBlocks } from "~/models/reserve.server";
 import { getSession, requireUserId } from "~/session.server";
+import { type Feature } from "~/models/manage.server";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -14,12 +16,12 @@ function partitionArrayByChunk(arr: any, chunk: number) {
 }
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = requireUserId(request);
-  const session = await getSession(request);
+  const userId: number = await requireUserId(request);
   const blocks = await getAllBlocks();
   const partitionedBy10 = partitionArrayByChunk(blocks, 10);
   const partitionedBy10By7 = partitionArrayByChunk(partitionedBy10, 7);
-  return { partitionedBy10, partitionedBy10By7 };
+  const featureFlag: Feature[] = await getFeatureByName("reserveStudyRoom");
+  return { partitionedBy10, partitionedBy10By7, featureFlag: featureFlag[0] };
 }
 
 export async function action({ request }: ActionArgs) {
@@ -31,7 +33,7 @@ export async function action({ request }: ActionArgs) {
   return redirect(`/dashboard/${time}`);
 }
 export default function DashboardReserve() {
-  const { partitionedBy10By7 } = useLoaderData<typeof loader>();
+  const { partitionedBy10By7, featureFlag } = useLoaderData<typeof loader>();
 
   const renderCardsInColumn = (roomsByBlock: any[], partitionIndex: number) => {
     const cardItems = [];
@@ -67,49 +69,57 @@ export default function DashboardReserve() {
 
   return (
     <div>
-      <div className="flex h-full">
-        <div className="h-full w-15 mb-8 px-2 border-r">
-          <p className="pt-7 pb-14">8:AM</p>
-          <p className="pt-2 pb-14">10:AM</p>
-          <p className="pt-2 pb-14">12:PM</p>
-          <p className="pt-2 pb-14">2:PM</p>
-          <p className="pt-2 pb-14">4:PM</p>
-          <p className="pt-2 pb-14">6:PM</p>
-          <p className="pt-2 pb-14">8:PM</p>
-          <p className="">10:PM</p>
+      {featureFlag.enabled === 1 ? (
+        <>
+          <div className="flex h-full">
+            <div className="h-full w-15 mb-8 px-2 border-r">
+              <p className="pt-7 pb-14">8:AM</p>
+              <p className="pt-2 pb-14">10:AM</p>
+              <p className="pt-2 pb-14">12:PM</p>
+              <p className="pt-2 pb-14">2:PM</p>
+              <p className="pt-2 pb-14">4:PM</p>
+              <p className="pt-2 pb-14">6:PM</p>
+              <p className="pt-2 pb-14">8:PM</p>
+              <p className="">10:PM</p>
+            </div>
+            <div className="h-full w-40" key={0}>
+              <p>Monday</p>
+              {renderCardsInColumn(partitionedBy10By7[0], 0)}
+            </div>
+            <div className="h-full w-40" key={1}>
+              <p>Tuesday</p>
+              {renderCardsInColumn(partitionedBy10By7[1], 1)}
+            </div>
+            <div className="h-full w-40" key={2}>
+              <p>Wednesday</p>
+              {renderCardsInColumn(partitionedBy10By7[2], 2)}
+            </div>
+            <div className="h-full w-40" key={3}>
+              <p>Thursday</p>
+              {renderCardsInColumn(partitionedBy10By7[3], 3)}
+            </div>
+            <div className="h-full w-40" key={4}>
+              <p>Friday</p>
+              {renderCardsInColumn(partitionedBy10By7[4], 4)}
+            </div>
+            <div className="h-full w-40" key={5}>
+              <p>Saturday</p>
+              {renderCardsInColumn(partitionedBy10By7[5], 5)}
+            </div>
+            <div className="h-full w-40" key={6}>
+              <p>Sunday</p>
+              {renderCardsInColumn(partitionedBy10By7[6], 6)}
+            </div>
+            <div className="flex-1 p-6">
+              <Outlet />
+            </div>
+          </div>
+        </>
+      ) : (
+        <div>
+          <p>Feature disabled</p>
         </div>
-        <div className="h-full w-40" key={0}>
-          <p>Monday</p>
-          {renderCardsInColumn(partitionedBy10By7[0], 0)}
-        </div>
-        <div className="h-full w-40" key={1}>
-          <p>Tuesday</p>
-          {renderCardsInColumn(partitionedBy10By7[1], 1)}
-        </div>
-        <div className="h-full w-40" key={2}>
-          <p>Wednesday</p>
-          {renderCardsInColumn(partitionedBy10By7[2], 2)}
-        </div>
-        <div className="h-full w-40" key={3}>
-          <p>Thursday</p>
-          {renderCardsInColumn(partitionedBy10By7[3], 3)}
-        </div>
-        <div className="h-full w-40" key={4}>
-          <p>Friday</p>
-          {renderCardsInColumn(partitionedBy10By7[4], 4)}
-        </div>
-        <div className="h-full w-40" key={5}>
-          <p>Saturday</p>
-          {renderCardsInColumn(partitionedBy10By7[5], 5)}
-        </div>
-        <div className="h-full w-40" key={6}>
-          <p>Sunday</p>
-          {renderCardsInColumn(partitionedBy10By7[6], 6)}
-        </div>
-        <div className="flex-1 p-6">
-          <Outlet />
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 
+export type Feature = {
+    id: number;
+    featureName: string;
+    enabled: number;
+};
 export async function selectAllReserved(): Promise<object[]>{
     return await prisma.$queryRaw`SELECT Block.id AS blockId, Block.room_id AS roomId, Block.booked_user_id AS userId, User.username, Block.time FROM Block, Room , User 
     WHERE Block.room_id = Room.id 
@@ -10,4 +15,8 @@ export async function selectAllReserved(): Promise<object[]>{
 
 export async function toggleFeature(){
     return await prisma.$queryRaw`SELECT * From Feature`
+}
+
+export async function getFeatureByName(featureName: string): Promise<Feature[]>{
+    return await prisma.$queryRaw`SELECT * From Feature WHERE featureName = ${featureName}`
 }
