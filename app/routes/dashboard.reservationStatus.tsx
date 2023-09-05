@@ -46,7 +46,7 @@ export async function action({ request }: ActionArgs) {
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
   if (isUserCancelled) {
-    return redirect("/dashboard");
+    return redirect("/dashboard/reserve");
   }
   return null;
 }

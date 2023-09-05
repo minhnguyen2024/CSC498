@@ -7,3 +7,7 @@ export async function selectAllReserved(): Promise<object[]>{
     AND Block.booked_user_id = User.id
     AND Block.booked_user_id != 0`
 }
+
+export async function toggleFeature(){
+    
+}

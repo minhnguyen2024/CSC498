@@ -127,6 +127,19 @@ const blocks = [
   },
 ]
 
+const features = [
+  {
+    id: 1,
+    featureName: "reserveStudyRoom",
+    enabled: 1
+  },
+  {
+    id:2,
+    featureName: "orderCafeRoy",
+    enabled: 1
+  },
+]
+
 function seedUser() {
   users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password}, ${item.admin})`)
   console.log(`User table has been seeded. 🌱`);
@@ -157,8 +170,16 @@ async function seedSingleUser({username, password}: {username: string, password:
   await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`
 }
 
+async function seedFeature(){
+  for(let i = 0; i < features.length; i++){
+    await prisma.$executeRaw`INSERT INTO Feature (id, featureName, enabled) VALUES (${features[i].id}, ${features[i].featureName}, ${features[i].enabled})`
+  }
+  console.log(`Feature table has been seeded. 🌱`);
+}
+
 seedUser()
 seedBlock()
 seedRoom()
+seedFeature()
 
 
