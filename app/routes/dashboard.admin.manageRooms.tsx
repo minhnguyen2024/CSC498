@@ -37,7 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
   if (isUserCancelled) {
-    return redirect("/dashboard");
+    return redirect("/dashboard/admin/manageRooms");
   }
 };
 
@@ -73,6 +73,11 @@ export default function ManageRooms() {
                     type="hidden"
                     value={JSON.stringify(item)}
                     name="room"
+                  />
+                  <input
+                    type="hidden"
+                    value={item.blockId}
+                    name="blockId"
                   />
                   <Button className="border rounded bg-red-500 text-white">
                     Cancel

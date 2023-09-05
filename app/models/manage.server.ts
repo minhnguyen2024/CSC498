@@ -9,5 +9,5 @@ export async function selectAllReserved(): Promise<object[]>{
 }
 
 export async function toggleFeature(){
-    
+    return await prisma.$queryRaw`SELECT * From Feature`
 }
