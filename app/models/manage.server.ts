@@ -20,3 +20,12 @@ export async function toggleFeature(){
 export async function getFeatureByName(featureName: string): Promise<Feature[]>{
     return await prisma.$queryRaw`SELECT * From Feature WHERE featureName = ${featureName}`
 }
+
+export async function updateFeatureByName({featureName, featureStatus}:{featureName: string, featureStatus: string}) {
+    if (featureStatus == "1"){
+        return await prisma.$executeRaw`UPDATE Feature SET enabled = 0 WHERE featureName = ${featureName}`
+    }
+    else{
+        return await prisma.$executeRaw`UPDATE Feature SET enabled = 1 WHERE featureName = ${featureName}`
+    }
+}

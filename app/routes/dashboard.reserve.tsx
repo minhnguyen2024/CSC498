@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { type LoaderArgs, json, ActionArgs, redirect } from "@remix-run/node";
-import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
+import { type LoaderArgs, ActionArgs, redirect } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { getFeatureByName } from "~/models/manage.server";
 import { getAllBlocks } from "~/models/reserve.server";
-import { getSession, requireUserId } from "~/session.server";
+import { requireUserId } from "~/session.server";
 import { type Feature } from "~/models/manage.server";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -69,6 +70,7 @@ export default function DashboardReserve() {
 
   return (
     <div>
+      
       {featureFlag.enabled === 1 ? (
         <>
           <div className="flex h-full">

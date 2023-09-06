@@ -9,10 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { type LoaderArgs, type ActionArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { type LoaderArgs, type ActionArgs, redirect } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 
-import { toggleFeature } from "~/models/manage.server";
+import { toggleFeature, updateFeatureByName } from "~/models/manage.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -22,7 +23,16 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  return null;
+  const body = await request.formData();
+  const featureStatus = body.get("featureStatus")?.toString();
+  const featureName = body.get("featureName")?.toString();
+  invariant(featureName, "featureName not found");
+  invariant(featureStatus, "featureStatus not found");
+  const updatedFeatureStatus = await updateFeatureByName({
+    featureName,
+    featureStatus,
+  });
+  return redirect("/dashboard/admin/manageFeatures");
 };
 type Feature = {
   id: number;
@@ -35,24 +45,69 @@ export default function ManageFeatures() {
   return (
     <div>
       <p>Feature Flags</p>
-      <Form method="post">
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableHead>Feature Name</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-            {features.map((feature: Feature) => (
-              <TableRow key={feature.id}>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableHead>Feature Name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+          {features.map((feature: Feature) => (
+         
+              <TableRow key={feature.id} className="h-[50px] border">
                 <TableCell>{feature.featureName}</TableCell>
-                <TableCell></TableCell>
+                <TableCell>
+                  <Form method="post">
+                    <input
+                      type="hidden"
+                      value={feature.enabled}
+                      name="featureStatus"
+                    />
+                    <input
+                      type="hidden"
+                      value={feature.featureName}
+                      name="featureName"
+                    />
+                    {feature.enabled == 1 ? (
+                      <Button className="bg-green-500 rounded w-24 hover:bg-green-300">
+                        Enabled
+                      </Button>
+                    ) : (
+                      <Button className="bg-red-500 rounded w-24 hover:bg-red-300">
+                        Disabled
+                      </Button>
+                    )}
+                  </Form>
+                </TableCell>
+                <TableCell>
+                  {feature.featureName === "reserveStudyRoom" &&
+                  feature.enabled == 1 ? (
+                    <Link
+                      to="/admin/manageRooms"
+                      className="bg-green-500 rounded hover:bg-green-300 p-3"
+                    >
+                      Manage Reserve Study Room
+                    </Link>
+                  ) : (
+                    <></>
+                  )}
+                  {feature.featureName === "orderCafeRoy" &&
+                  feature.enabled == 1 ? (
+                    <Link
+                      to=""
+                      className="bg-green-500 rounded hover:bg-green-300 py-3"
+                    >
+                      Manage Cafe Roy
+                    </Link>
+                  ) : (
+                    <></>
+                  )}
+                </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Button>Save</Button>
-      </Form>
-      
+          
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

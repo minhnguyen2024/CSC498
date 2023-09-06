@@ -93,5 +93,4 @@ export default function ReservationStatus() {
           <p>Feature disabled</p>
         </div>)}
   </div>
-    
 }
