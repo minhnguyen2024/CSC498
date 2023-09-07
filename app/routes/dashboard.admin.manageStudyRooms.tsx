@@ -4,25 +4,32 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const url = new URL(request.url)
+  const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  console.log("loader")
-  let viewRooms = search.get("view-rooms")
-  console.log(viewRooms)
-  if(viewRooms){
-    console.log('hello')
-    return redirect("/dashboard/reserve")
+  console.log("loader");
+  let viewRooms = search.get("view-rooms");
+  console.log(viewRooms);
+  if (viewRooms) {
+    return redirect("/dashboard/admin/manageStudyRooms/view");
   }
-  let addRoom = search.get("add-room")
-  let updateRoom = search.get("update-room")
-  let deleteRoom = search.get("delete-room")
+  let addRoom = search.get("add-room");
+  if (addRoom) {
+    return redirect("/dashboard/admin/manageStudyRooms/add");
+  }
+  let updateRoom = search.get("update-room");
+  if (updateRoom) {
+    return redirect("/dashboard/admin/manageStudyRooms/update");
+  }
+  let deleteRoom = search.get("delete-room");
+  if (deleteRoom) {
+    return redirect("/dashboard/admin/manageStudyRooms/delete");
+  }
 
   const features: Feature[] = await toggleFeature();
-  return null
+  return null;
 };
 
 export default function SelectFeature() {
-
   return (
     <form method="get">
       <div className="items-top flex-box">
@@ -70,10 +77,10 @@ export default function SelectFeature() {
             </label>
           </div>
         </div>
-        
+
         <Button type="submit">Select</Button>
       </div>
-      <Outlet/>
+      <Outlet />
     </form>
   );
 }
