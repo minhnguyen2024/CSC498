@@ -1,24 +1,44 @@
 import { Feature, toggleFeature } from "~/models/manage.server";
 import { redirect, type LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-
-import { useForm } from "react-hook-form";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const url = new URL(request.url)
+  const search = new URLSearchParams(url.search);
+  console.log("loader")
+  let viewRooms = search.get("view-rooms")
+  console.log(viewRooms)
+  if(viewRooms){
+    console.log('hello')
+    return redirect("/dashboard/reserve")
+  }
+  let addRoom = search.get("add-room")
+  let updateRoom = search.get("update-room")
+  let deleteRoom = search.get("delete-room")
+
   const features: Feature[] = await toggleFeature();
-  return { features };
+  return null
 };
 
 export default function SelectFeature() {
-  const { features } = useLoaderData<typeof loader>();
-  const form = useForm();
 
   return (
     <form method="get">
       <div className="items-top flex-box">
         <div className="items-top flex space-x-2">
-          <input type="checkbox" name={features[0].featureName} id={features[0].featureName} />
+          <input type="checkbox" name="view-rooms" id="view-rooms" />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              View All Rooms
+            </label>
+          </div>
+        </div>
+        <div className="items-top flex space-x-2">
+          <input type="checkbox" name="add-room" id="add-room" />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="terms1"
@@ -29,18 +49,31 @@ export default function SelectFeature() {
           </div>
         </div>
         <div className="items-top flex space-x-2">
-          <input type="checkbox" name={features[1].featureName} id={features[1].featureName} />
+          <input type="checkbox" name="update-room" id="update-room" />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="terms1"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {features[1].featureName}
+              Update a Current Study Room
             </label>
           </div>
         </div>
+        <div className="items-top flex space-x-2">
+          <input type="checkbox" name="delete-room" id="delete-room" />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Delete a Room
+            </label>
+          </div>
+        </div>
+        
         <Button type="submit">Select</Button>
       </div>
+      <Outlet/>
     </form>
   );
 }

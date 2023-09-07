@@ -79,7 +79,7 @@ export default function ManageRoomsConsole() {
                     />
                     <input type="hidden" value={item.blockId} name="blockId" />
                     <Button className="border rounded bg-red-500 text-white">
-                      Cancel
+                      Remove
                     </Button>
                   </form>
                 </TableCell>
