@@ -81,9 +81,9 @@ export default function ManageFeatures() {
                 </TableCell>
                 <TableCell>
                   {feature.featureName === "reserveStudyRoom" &&
-                  feature.enabled == 1 ? (
+                  feature.enabled == 0 ? (
                     <Link
-                      to="/admin/manageRooms"
+                      to="/dashboard/admin/manageStudyRooms"
                       className="bg-green-500 rounded hover:bg-green-300 p-3"
                     >
                       Manage Reserve Study Room
@@ -92,9 +92,9 @@ export default function ManageFeatures() {
                     <></>
                   )}
                   {feature.featureName === "orderCafeRoy" &&
-                  feature.enabled == 1 ? (
+                  feature.enabled == 0 ? (
                     <Link
-                      to=""
+                      to="/admin"
                       className="bg-green-500 rounded hover:bg-green-300 py-3"
                     >
                       Manage Cafe Roy

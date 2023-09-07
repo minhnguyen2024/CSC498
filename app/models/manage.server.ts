@@ -13,7 +13,7 @@ export async function selectAllReserved(): Promise<object[]>{
     AND Block.booked_user_id != 0`
 }
 
-export async function toggleFeature(){
+export async function toggleFeature(): Promise<Feature[]>{
     return await prisma.$queryRaw`SELECT * From Feature`
 }
 

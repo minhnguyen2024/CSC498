@@ -15,13 +15,6 @@ function getAvailableRoomsByBlock(arr: any) {
   return result;
 }
 
-// function formDataToObject(formData: FormDataEntryValue) {
-//   const object = {};
-//   for (const [key, value] of formData.entries()) {
-//     object[key] = value;
-//   }
-//   return object;
-// }
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
