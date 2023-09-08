@@ -8,8 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type LoaderArgs, type ActionArgs } from "@remix-run/node";
+import { type LoaderArgs, type ActionArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 import { Room, selectAllRooms } from "~/models/room.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -19,9 +20,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
-  const roomId = body.get("roomId");
-  console.log(roomId)
-  return null
+  invariant(body.get("roomId"), "")
+  if(body.get("roomId")){
+    return 
+  }
+  const roomId: string = body.get("roomId").toString();
+  
+  console.log(typeof parseInt(roomId))
+  return redirect("/dashboard/admin/manageStudyRooms/delete")
 };
 
 //testing SQL delete model, will change to table with delete button, pop a modal
