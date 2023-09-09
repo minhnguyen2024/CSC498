@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  console.log("loader");
   let viewRooms = search.get("view-rooms");
-  console.log(viewRooms);
   if (viewRooms) {
     return redirect("/dashboard/admin/manageStudyRooms/view");
   }

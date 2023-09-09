@@ -9,17 +9,16 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  //   const body = request.formData();
-  const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
-  const accessible = search.get("accessible") === "on" ? 1 : 0;
-  const power = search.get("power") === "on" ? 1 : 0;
-  const reservable = search.get("reservable") === "on" ? 1 : 0;
-  const softSeating = search.get("softSeating") === "on" ? 1 : 0;
-  const tableChairs = search.get("tableChairs") === "on" ? 1 : 0;
-  const monitor = search.get("monitor") === "on" ? 1 : 0;
-  const whiteboard = search.get("whiteboard") === "on" ? 1 : 0;
-  const window = search.get("window") === "on" ? 1 : 0;
+  const body = await request.formData()
+
+  const accessible: number = body.get("accessible") === "on" ? 1 : 0;
+  const power: number = body.get("power") === "on" ? 1 : 0;
+  const reservable: number = body.get("reservable") === "on" ? 1 : 0;
+  const softSeating: number = body.get("softSeating") === "on" ? 1 : 0;
+  const tableChairs: number = body.get("tableChairs") === "on" ? 1 : 0;
+  const monitor: number = body.get("monitor") === "on" ? 1 : 0;
+  const whiteboard: number = body.get("whiteboard") === "on" ? 1 : 0;
+  const window: number = body.get("window") === "on" ? 1 : 0;
 
   const insertResult = await createRoom({
     accessible,

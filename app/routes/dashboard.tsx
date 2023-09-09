@@ -7,13 +7,11 @@ export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const allUsers = await getAllUsers();
   const user: any = await getUserById(userId);
-  console.log(user[0]);
-
-  return user[0];
+  return { user:user[0] } ;
 }
 
 export default function DashboardIndex() {
-  const user = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<typeof loader>();
   return (
     <>
       <div className="flex h-full bg-white">

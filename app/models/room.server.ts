@@ -37,7 +37,7 @@ export async function deleteRoombyId({ roomId }: { roomId: number }) {
   const numDeletedRooms =
     await prisma.$executeRaw`DELETE FROM Room where id = ${roomId}`;
   const numDeletedBlocks =
-    await prisma.$executeRaw`DELETE FROM Block where id = ${roomId}`;
+    await prisma.$executeRaw`DELETE FROM Block where room_id = ${roomId}`;
     console.log(`Successful: ${numDeletedRooms} entry from Room table deleted`)
     console.log(`Successful: ${numDeletedBlocks} entry from Block table deleted`)
     

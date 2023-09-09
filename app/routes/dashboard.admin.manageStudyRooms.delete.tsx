@@ -11,7 +11,7 @@ import {
 import { type LoaderArgs, type ActionArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { Room, selectAllRooms } from "~/models/room.server";
+import { Room, deleteRoombyId, selectAllRooms } from "~/models/room.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const rooms: Room[] = await selectAllRooms();
@@ -21,12 +21,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   invariant(body.get("roomId"), "")
-  if(body.get("roomId")){
-    return 
-  }
-  const roomId: string = body.get("roomId").toString();
-  
-  console.log(typeof parseInt(roomId))
+  const roomId = body.get("roomId") as string
+  const deleteQuery = await deleteRoombyId({ roomId: parseInt(roomId) })
   return redirect("/dashboard/admin/manageStudyRooms/delete")
 };
 
@@ -52,8 +48,8 @@ export default function DeleteRoom() {
           </TableHeader>
           <TableBody>
             {rooms.map((item: any) => (
-              <TableRow className="border rounded" key={item.roomId}>
-                <TableCell>{item.roomId}</TableCell>
+              <TableRow className="border rounded" key={item.id}>
+                <TableCell>{item.id}</TableCell>
                 <TableCell>
                   {item.accessible == 1 ? "Accessible, " : " "}
                   {item.power == 1 ? "Power, " : " "}
