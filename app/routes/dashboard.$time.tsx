@@ -187,7 +187,7 @@ export default function DashboardReserveUserId() {
       </form>
       <div>
         <Table>
-          <TableCaption>A list of available Study Rooms</TableCaption>
+          <TableCaption>Available Study Rooms</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="">Room #</TableHead>
