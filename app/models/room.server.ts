@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client";
+import { as } from "vitest/dist/reporters-2ff87305";
 import { prisma } from "~/db.server";
 export type Room = {
-    id?: number
+  id?: number;
   accessible: number;
   power: number;
   reservable: number;
@@ -33,21 +34,48 @@ export async function createRoom({
 
 //also delete block
 export async function deleteRoombyId({ roomId }: { roomId: number }) {
-    console.log("Deleting Room....")
+  console.log("Deleting Room....");
   const numDeletedRooms =
     await prisma.$executeRaw`DELETE FROM Room where id = ${roomId}`;
   const numDeletedBlocks =
     await prisma.$executeRaw`DELETE FROM Block where room_id = ${roomId}`;
-    console.log(`Successful: ${numDeletedRooms} entry from Room table deleted`)
-    console.log(`Successful: ${numDeletedBlocks} entry from Block table deleted`)
-    
+  console.log(`Successful: ${numDeletedRooms} entry from Room table deleted`);
+  console.log(`Successful: ${numDeletedBlocks} entry from Block table deleted`);
+
   return null;
 }
 
-export async function updateRoom() {
-  return null;
+export async function updateRoom({
+  id,
+  accessible,
+  power,
+  reservable,
+  softSeating,
+  tableChairs,
+  monitor,
+  whiteboard,
+  window,
+}: Room) {
+  return prisma.$executeRaw`UPDATE Room 
+  SET accessible= ${accessible},
+  power = ${power},
+  reservable = ${reservable},
+  softSeating = ${softSeating},
+  tableChairs = ${tableChairs},
+  monitor = ${monitor},
+  whiteboard = ${whiteboard},
+  window = ${window}
+  WHERE id = ${id}`;
 }
 
-export async function selectAllRooms(): Promise<Room[]>{
-    return await prisma.$queryRaw`SELECT * From Room`
+export async function selectAllRooms(): Promise<Room[]> {
+  return await prisma.$queryRaw`SELECT * From Room`;
+}
+
+export async function selectRoomById({
+  roomId,
+}: {
+  roomId: number;
+}): Promise<Room[]> {
+  return await prisma.$queryRaw`SELECT * From Room WHERE id = ${roomId}`;
 }
