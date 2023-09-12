@@ -223,11 +223,12 @@ async function seedInventoryAndOrder() {
   }
   console.log(`Inventory table has been seeded. 🌱`);
   const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`
-  console.log(result)
+  // console.log(result)
   for(let i = 0; i < result.length; i++){
-    // await prisma.$executeRaw`INSERT INTO Order (id, userId, invId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id})`
-    await prisma.$executeRaw`INSERT INTO Order (id, userId, invId) VALUES (${"dsfdsfs"},${0}, ${"0"})`
+    await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id})`
   }
+  const cafeOrder: any[] = await prisma.$queryRaw`SELECT * FROM CafeOrder`
+  console.log(cafeOrder)
   console.log(`Order table has been seeded. 🌱`);
 }
 

@@ -39,7 +39,7 @@ model Feature{
   enabled Int
 }
 
-model Order{
+model CafeOrder{
   id String @id @default(uuid())
   userId Int
   invId String
