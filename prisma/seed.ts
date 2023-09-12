@@ -1,6 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+const { v4: uuidv4 } = require('uuid');
 
 const prisma = new PrismaClient();
+
+function getRandomInteger(min:number, max:number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 const users = [
   {
@@ -140,6 +146,40 @@ const features = [
   },
 ]
 
+const orders = [
+  {
+    userId: 3,
+    invId: 1,
+  },
+  {
+    userId: 1,
+    invId: 3,
+  },
+  {
+    userId: 2,
+    invId: 4,
+  }
+]
+
+const inventory = [
+  {
+    name: "Latte",
+    iced: 1,
+  },
+  {
+    name: "Cappucino",
+    iced: 1,
+  },
+  {
+    name: "Cappucino",
+    iced: 0,
+  },
+  {
+    name: "Latte",
+    iced: 1,
+  }
+]
+
 function seedUser() {
   users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password}, ${item.admin})`)
   console.log(`User table has been seeded. 🌱`);
@@ -177,9 +217,24 @@ async function seedFeature(){
   console.log(`Feature table has been seeded. 🌱`);
 }
 
+async function seedInventoryAndOrder() {
+  for(let i = 0; i < orders.length; i++){
+    await prisma.$executeRaw`INSERT INTO Inventory (id, name, iced) VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced})`
+  }
+  console.log(`Inventory table has been seeded. 🌱`);
+  const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`
+  console.log(result)
+  for(let i = 0; i < result.length; i++){
+    // await prisma.$executeRaw`INSERT INTO Order (id, userId, invId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id})`
+    await prisma.$executeRaw`INSERT INTO Order (id, userId, invId) VALUES (${"dsfdsfs"},${0}, ${"0"})`
+  }
+  console.log(`Order table has been seeded. 🌱`);
+}
+
 seedUser()
 seedBlock()
 seedRoom()
 seedFeature()
+seedInventoryAndOrder()
 
 

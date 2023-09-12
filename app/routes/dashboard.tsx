@@ -65,7 +65,7 @@ export default function DashboardIndex() {
                   </Link>
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
-                  <Link to="" className="">
+                  <Link to="cafeRoy" className="">
                     Order at Cafe Roy
                   </Link>
                 </li>

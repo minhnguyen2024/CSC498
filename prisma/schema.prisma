@@ -38,3 +38,15 @@ model Feature{
   featureName String
   enabled Int
 }
+
+model Order{
+  id String @id @default(uuid())
+  userId Int
+  invId String
+}
+
+model Inventory{
+  id String @id @default(uuid())
+  name String
+  iced Int
+}
