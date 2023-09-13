@@ -1,36 +1,42 @@
 import { Button } from "@/components/ui/button";
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { Form, Outlet } from "@remix-run/react";
+import { selectAllInventoryByCondition } from "~/models/order.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search);
   return null;
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  return null;
+    const body = await request.formData()
+    const iced: number = body.get("condition") === "iced" ? 1 : 0;
+    return redirect(`/dashboard/cafeRoy/${iced}`);
 };
 
 export default function CafeRoyOrder() {
   return (
     <div>
       <div className="flex-box">
-        <Form method="get">
+        <Form method="post">
           <div className="flex">
-            <label>Iced</label>
             <input type="radio" name="condition" value="iced" />
+            <label>Iced</label>
           </div>
           <div className="flex">
-            <label>Hot</label>
             <input type="radio" name="condition" value="hot" />
+            <label>Hot</label>
           </div>
           <div className="flex">
-            <label>Whipped Cream</label>
             <input type="radio" name="whippedCream" value="on" />
+            <label>Whipped Cream</label>
           </div>
-          
-          <Button type="submit">Continue</Button>
+
+          <Button>Continue</Button>
         </Form>
       </div>
+      <Outlet/>
     </div>
   );
 }

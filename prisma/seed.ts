@@ -177,6 +177,26 @@ const inventory = [
   {
     name: "Latte",
     iced: 1,
+  },
+  {
+    name: "Latte",
+    iced: 1,
+  },
+  {
+    name: "Latte",
+    iced: 1,
+  },
+  {
+    name: "Mocha",
+    iced: 1,
+  },
+  {
+    name: "Mocha",
+    iced: 1,
+  },
+  {
+    name: "Espresso",
+    iced: 0,
   }
 ]
 
@@ -218,18 +238,15 @@ async function seedFeature(){
 }
 
 async function seedInventoryAndOrder() {
-  for(let i = 0; i < orders.length; i++){
+  for(let i = 0; i < inventory.length; i++){
     await prisma.$executeRaw`INSERT INTO Inventory (id, name, iced) VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced})`
   }
   console.log(`Inventory table has been seeded. 🌱`);
   const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`
-  // console.log(result)
   for(let i = 0; i < result.length; i++){
     await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id})`
   }
-  const cafeOrder: any[] = await prisma.$queryRaw`SELECT * FROM CafeOrder`
-  console.log(cafeOrder)
-  console.log(`Order table has been seeded. 🌱`);
+  console.log(`CafeOrder table has been seeded. 🌱`);
 }
 
 seedUser()
