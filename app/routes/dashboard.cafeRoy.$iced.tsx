@@ -57,7 +57,7 @@ export default function CafeRoyOrder() {
               <label>Large</label>
             </div>
 
-            <Button>Confirm</Button>
+            <Button className="border rounded bg-green-500 text-white">Confirm</Button>
           </Form>
         </div>
       </div>

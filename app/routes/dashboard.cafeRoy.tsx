@@ -10,9 +10,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-    const body = await request.formData()
-    const iced: number = body.get("condition") === "iced" ? 1 : 0;
-    return redirect(`/dashboard/cafeRoy/${iced}`);
+  const body = await request.formData();
+  const iced: number = body.get("condition") === "iced" ? 1 : 0;
+  return redirect(`/dashboard/cafeRoy/${iced}`);
 };
 
 export default function CafeRoyOrder() {
@@ -33,10 +33,12 @@ export default function CafeRoyOrder() {
             <label>Whipped Cream</label>
           </div>
 
-          <Button>Continue</Button>
+          <Button className="border rounded bg-blue-500 text-white">
+            Continue
+          </Button>
         </Form>
       </div>
-      <Outlet/>
+      <Outlet />
     </div>
   );
 }

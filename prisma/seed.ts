@@ -23,7 +23,7 @@ const users = [
   },
   {
     id: 3,
-    username: "alex_2024",
+    username: "johndoe_2027",
     password: "password",
     admin: 0
   },
@@ -44,6 +44,18 @@ const users = [
     username: "admin",
     password: "password",
     admin: 1
+  },
+  {
+    id: 7,
+    username: "cafe_roy_1",
+    password: "password",
+    admin: 2
+  },
+  {
+    id: 8,
+    username: "cafe_roy_2",
+    password: "password",
+    admin: 2
   },
 ]
 
@@ -244,7 +256,7 @@ async function seedInventoryAndOrder() {
   console.log(`Inventory table has been seeded. 🌱`);
   const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`
   for(let i = 0; i < result.length; i++){
-    await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id})`
+    await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId, orderStatus, cafeRoyEmpId) VALUES (${uuidv4()}, ${getRandomInteger(1, 4)}, ${result[i].id}, "notPrepared", 0)`
   }
   console.log(`CafeOrder table has been seeded. 🌱`);
 }

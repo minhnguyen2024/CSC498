@@ -7,7 +7,7 @@ export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const allUsers = await getAllUsers();
   const user: any = await getUserById(userId);
-  return { user:user[0] } ;
+  return { user: user[0] };
 }
 
 export default function DashboardIndex() {
@@ -16,7 +16,7 @@ export default function DashboardIndex() {
     <>
       <div className="flex h-full bg-white">
         <div className="h-full w-80 border-r bg-gray-50">
-          <p>Welcome, {user.username}</p>
+          <p>Welcome, {user.username}, {user.admin}</p>
 
           <ul className="p-3 h-full">
             {user.admin == 1 ? (
@@ -52,7 +52,7 @@ export default function DashboardIndex() {
                   </Link>
                 </li>
               </>
-            ) : (
+            ) : user.admin == 0 ? (
               <>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="reserve" className="">
@@ -67,6 +67,19 @@ export default function DashboardIndex() {
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="cafeRoy" className="">
                     Order at Cafe Roy
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                  <Link to="/dashboard/cafeRoyAdmin/viewOrders" className="">
+                    View Orders
+                  </Link>
+                </li>
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                  <Link to="/dashboard/cafeRoyAdmin/manageInventory" className="">
+                    Manage Inventory
                   </Link>
                 </li>
               </>

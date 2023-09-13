@@ -43,6 +43,8 @@ model CafeOrder{
   id String @id @default(uuid())
   userId Int
   invId String
+  orderStatus String
+  cafeRoyEmpId Int
 }
 
 model Inventory{
