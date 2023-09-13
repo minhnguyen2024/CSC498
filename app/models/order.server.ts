@@ -19,10 +19,6 @@ export async function selectOrders() {
   WHERE CafeOrder.invId = Inventory.id
   AND User.id = CafeOrder.userId`
 
-  return await prisma.$queryRaw`
-SELECT * FROM CafeOrder, Inventory, User
-WHERE CafeOrder.invId = Inventory.id
-AND User.id = CafeOrder.userId`;
 }
 export async function selectAllInventoryByCondition({
   iced,
@@ -62,4 +58,13 @@ export async function createOrder({
 export async function deleteOrderAndInventory({ invId }: { invId: string }) {
   await prisma.$executeRaw`DELETE FROM Inventory WHERE id = ${invId}`;
   await prisma.$executeRaw`DELETE FROM CafeOrder WHERE invId = ${invId}`;
+}
+
+//function to update prepare status
+export async function updateOrderStatus({ orderStatus, orderId}: { orderStatus: string, orderId: string}) {
+  // console.log({ orderStatus, orderId })
+  return await prisma.$executeRaw`
+  UPDATE CafeOrder 
+  SET orderStatus=${orderStatus}
+  WHERE id=${orderId}`
 }
