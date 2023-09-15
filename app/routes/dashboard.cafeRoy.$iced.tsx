@@ -31,7 +31,8 @@ export const action = async ({ request }: ActionArgs) => {
   const iced: number = parseInt(body.get("iced") as string);
   const result: any = await selectInventoryByNameAndCondition({ name, iced });
   const invId: any = result[0].invId;
-  await createOrder({ invId, userId });
+  const createdAt: number = Date.now()
+  await createOrder({ invId, userId, createdAt });
   return redirect("/dashboard");
 };
 

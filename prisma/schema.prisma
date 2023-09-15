@@ -43,6 +43,7 @@ model CafeOrder{
   id String @id @default(uuid())
   userId Int
   invId String
+  createdAt Int
   orderStatus String
   cafeRoyEmpId Int
 }
@@ -51,4 +52,6 @@ model Inventory{
   id String @id @default(uuid())
   name String
   iced Int
+  size String
+  price Float
 }

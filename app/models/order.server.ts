@@ -49,13 +49,15 @@ export async function selectInventoryByNameAndCondition({
 export async function createOrder({
   invId,
   userId,
+  createdAt
 }: {
   invId: string;
   userId: number;
+  createdAt: number;
 }) {
   return await prisma.$executeRaw`
-  INSERT INTO CafeOrder (id, userId, invId, orderStatus, cafeRoyEmpId) 
-  VALUES (${uuidv4()},${userId}, ${invId}, "notPrepared", 0)`;
+  INSERT INTO CafeOrder (id, userId, invId, createdAt, orderStatus, cafeRoyEmpId) 
+  VALUES (${uuidv4()},${userId}, ${invId}, ${createdAt}, "notPrepared", 0)`;
 }
 
 //One order can contains many inventory
@@ -73,11 +75,11 @@ export async function updateOrderStatus({ orderStatus, orderId}: { orderStatus: 
   WHERE id=${orderId}`
 }
 
-export async function createInventory({ iced, name, quantity }: { iced: number, name: string, quantity: number }) {
+export async function createInventory({ iced, name, quantity, size, price }: { iced: number, name: string, quantity: number, size: string, price: number }) {
   for (let i = 0; i < quantity; i++){
     await prisma.$executeRaw`
-    INSERT INTO Inventory (id, name, iced) 
-    VALUES (${uuidv4()}, ${name}, ${iced})`
+    INSERT INTO Inventory (id, name, iced, size, price) 
+    VALUES (${uuidv4()}, ${name}, ${iced},${size}, ${price})`
   }
   return null
 }

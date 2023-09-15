@@ -7,6 +7,9 @@ export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const allUsers = await getAllUsers();
   const user: any = await getUserById(userId);
+  // console.log(new Date().toUTCString())
+  // console.log(new Date().toISOString())
+  console.log(Date.now())
   return { user: user[0] };
 }
 
