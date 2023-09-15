@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { selectAllInventoryByCondition, selectInventoryByNameAndCondition } from "~/models/order.server";
+import {
+  createOrder,
+  selectAllInventoryByCondition,
+  selectInventoryByNameAndCondition,
+} from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -9,7 +13,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const availableInventory: any = await selectAllInventoryByCondition({ iced });
   const availableNames = new Map();
   for (let i = 0; i < availableInventory.length; i++) {
-    if (!Array.from(availableNames.values()).includes(availableInventory[i].name)) {
+    if (
+      !Array.from(availableNames.values()).includes(availableInventory[i].name)
+    ) {
       availableNames.set(i, availableInventory[i].name);
     }
   }
@@ -18,19 +24,15 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const userId = await requireUserId(request)
-  const body = await request.formData()
-  const name: string = body.get("name") as string
-  const size: string = body.get("size") as string
+  const userId = await requireUserId(request);
+  const body = await request.formData();
+  const name: string = body.get("name") as string;
+  const size: string = body.get("size") as string;
   const iced: number = parseInt(body.get("iced") as string);
-  console.log({ name, size, iced})
-  //SQL insert a new order with according userId
-  const result: any = await selectInventoryByNameAndCondition({name, iced})
-  console.log(result)
-  //get info of the first element to use for order
-  const item: any = result[0]
-  //SQL delete ONE entry by order name
-  return null;
+  const result: any = await selectInventoryByNameAndCondition({ name, iced });
+  const invId: any = result[0].invId;
+  await createOrder({ invId, userId });
+  return redirect("/dashboard");
 };
 
 export default function CafeRoyOrder() {
@@ -38,28 +40,38 @@ export default function CafeRoyOrder() {
   return (
     <div>
       <div className="flex-box">
-        <div className="flex-box">
-          <Form method="post">
-            <input type="hidden" value={iced} name="iced"/>
-            {availableItemsArr.map((item: string, index: number) => (
-              <div key={index}>
-                <input type="radio" name="name" value={item} />
-                <label>{item}</label>
-              </div>
-            ))}
-            <p>Select Size</p>
-            <div>
-              <input type="radio" name="size" value="M" />
-              <label>Medium</label>
-            </div>
-            <div>
-              <input type="radio" name="size" value="L" />
-              <label>Large</label>
-            </div>
+        {availableItemsArr.length !== 0 ? (
+          <>
+            <div className="flex-box">
+              <Form method="post">
+                <input type="hidden" value={iced} name="iced" />
+                {availableItemsArr.map((item: string, index: number) => (
+                  <div key={index}>
+                    <input type="radio" name="name" value={item} />
+                    <label>{item}</label>
+                  </div>
+                ))}
+                <p>Select Size</p>
+                <div>
+                  <input type="radio" name="size" value="M" />
+                  <label>Medium</label>
+                </div>
+                <div>
+                  <input type="radio" name="size" value="L" />
+                  <label>Large</label>
+                </div>
 
-            <Button className="border rounded bg-green-500 text-white">Confirm</Button>
-          </Form>
-        </div>
+                <Button className="border rounded bg-green-500 hover:bg-green-200 text-white">
+                  Confirm
+                </Button>
+              </Form>
+            </div>
+          </>
+        ) : (
+          <>
+            <p>Not available</p>
+          </>
+        )}
       </div>
     </div>
   );

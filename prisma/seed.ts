@@ -265,6 +265,6 @@ seedUser()
 seedBlock()
 seedRoom()
 seedFeature()
-seedInventoryAndOrder()
+// seedInventoryAndOrder()
 
 

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Outlet, useLoaderData } from "@remix-run/react";
-import { selectOrders, updateOrderStatus } from "~/models/order.server";
+import { deleteOrderAndInventory, selectOrders, updateOrderStatus } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -34,7 +34,9 @@ export const action = async ({ request }: ActionArgs) => {
   } else if (orderStatus === "ready") {
     const result = await updateOrderStatus({ orderStatus, orderId });
   } else {
-    const result = await updateOrderStatus({ orderStatus, orderId });
+    const invId = body.get("invId") as string
+    await updateOrderStatus({ orderStatus, orderId });
+    await deleteOrderAndInventory({ invId })
   }
   return redirect("");
 };
@@ -118,6 +120,11 @@ export default function DashboardReserveUserId() {
                             type="hidden"
                             name="orderId"
                             value={item.ordId}
+                          />
+                          <input
+                            type="hidden"
+                            name="invId"
+                            value={item.invId}
                           />
                           <Button className="border rounded bg-green-500 hover:bg-green-200 text-white">
                             Ready for pick-up

@@ -1,0 +1,55 @@
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { Form, Outlet, useLoaderData } from "@remix-run/react";
+import { createInventory } from "~/models/order.server";
+import { requireUserId } from "~/session.server";
+
+/**
+ * admin insert iced or hot, name, number of inventory 
+ * 
+ */
+
+export const loader = async ({ params, request }: LoaderArgs) => {
+  const userId = (await requireUserId(request)).toString();
+  return null
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  const body = await request.formData();
+  const userId = (await requireUserId(request)).toString();
+  const iced: number = body.get("condition") === "iced" ? 1 : 0;
+  const name: string = body.get("name") as string
+  const quantity: number = parseInt(body.get("quantity") as string)
+  console.log({ iced, name, quantity })
+  //create SQL insert model
+  await createInventory({ iced, name, quantity })
+  return null
+};
+
+export default function CafeRoyManageInventoryAdd() {
+  return (
+    <div>
+        <Form method="post">
+        <div className="flex">
+            <input type="radio" name="condition" value="iced" />
+            <label>Iced</label>
+          </div>
+          <div className="flex">
+            <input type="radio" name="condition" value="hot" />
+            <label>Hot</label>
+          </div>
+          <div className="flex">
+            <label>Name</label>
+            <input type="text" name="name" className="border"/>
+          </div>
+          <div className="flex">
+            <label>Quantity</label>
+            <input type="text" name="quantity" className="border"/>
+          </div>
+          <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">Submit</Button>
+        </Form>
+      <Outlet/>
+    </div>
+  );
+}

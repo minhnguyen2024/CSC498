@@ -33,7 +33,7 @@ export default function CafeRoyOrder() {
             <label>Whipped Cream</label>
           </div>
 
-          <Button className="border rounded bg-blue-500 text-white">
+          <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">
             Continue
           </Button>
         </Form>
