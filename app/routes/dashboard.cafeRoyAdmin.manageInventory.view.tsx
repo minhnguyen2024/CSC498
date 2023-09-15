@@ -36,6 +36,8 @@ export default function CafeRoyManageInventoryView() {
               <TableHead>Inventory #</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Iced</TableHead>
+              <TableHead>Size</TableHead>
+              <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -46,6 +48,8 @@ export default function CafeRoyManageInventoryView() {
               <TableCell>
                 {item.iced === 1 ? "Iced" : "Hot"}
               </TableCell>
+              <TableCell>{item.size}</TableCell>
+              <TableCell>${item.price}</TableCell>
             </TableRow>
             ))}
           </TableBody>

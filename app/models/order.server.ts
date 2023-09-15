@@ -33,7 +33,7 @@ export async function selectAllInventoryByCondition({
   ORDER BY name ASC`;
 }
 
-export async function selectInventoryByNameAndCondition({
+export async function selectInventoryByNameCondition({
   name,
   iced,
 }: {
@@ -41,9 +41,25 @@ export async function selectInventoryByNameAndCondition({
   iced: number;
 }): Promise<Inventory[]> {
   return await prisma.$queryRaw`
-  SELECT id AS invId FROM Inventory 
+  SELECT * FROM Inventory 
   WHERE iced = ${iced}
   AND name = ${name}`;
+}
+
+export async function selectInventoryByNameConditionSize({
+  name,
+  iced,
+  size,
+}: {
+  name: string;
+  iced: number;
+  size: string
+}): Promise<Inventory[]> {
+  return await prisma.$queryRaw`
+  SELECT id AS invId FROM Inventory 
+  WHERE iced = ${iced}
+  AND name = ${name}
+  AND size = ${size}`;
 }
 
 export async function createOrder({

@@ -9,7 +9,7 @@ export async function loader({ request }: LoaderArgs) {
   const user: any = await getUserById(userId);
   // console.log(new Date().toUTCString())
   // console.log(new Date().toISOString())
-  console.log(Date.now())
+  // console.log(Date.now())
   return { user: user[0] };
 }
 
