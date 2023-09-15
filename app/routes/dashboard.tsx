@@ -3,6 +3,19 @@ import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getAllUsers, getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+import React from "react";
+
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const allUsers = await getAllUsers();
@@ -19,7 +32,7 @@ export default function DashboardIndex() {
     <>
       <div className="flex h-full bg-white">
         <div className="h-full w-80 border-r bg-gray-50">
-          <p>Welcome, {user.username}, {user.admin}</p>
+          <p>Welcome, {user.username}</p>
 
           <ul className="p-3 h-full">
             {user.admin == 1 ? (
@@ -67,10 +80,39 @@ export default function DashboardIndex() {
                     Check Resvervation Status
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                {/* <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="cafeRoy" className="">
-                    Order at Cafe Roy
+                    Cafe Roy
                   </Link>
+                </li> */}
+                <li>
+                  <NavigationMenu className="bg-yellow-500 rounded">
+                    <NavigationMenuList>
+                      <NavigationMenuItem className="flex items-center justify-center">
+                        <NavigationMenuTrigger className="justify-center font-medium text-white">Cafe Roy</NavigationMenuTrigger>
+                        <NavigationMenuContent className="flex-box">
+                          <NavigationMenuLink>
+                            <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
+                              <li className="my-2">
+                                <ListItem
+                                  href="/dashboard/cafeRoy/order"
+                                  title="Order"
+                                  className="bg-green-500 hover:bg-green-300 rounded"
+                                />
+                              </li>
+                              <li className="my-2">
+                                <ListItem
+                                  href="/dashboard/cafeRoy/viewOrder"
+                                  className="bg-green-500 hover:bg-green-300 rounded"
+                                  title="View Order Status"
+                                />
+                              </li>
+                            </ul>
+                          </NavigationMenuLink>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    </NavigationMenuList>
+                  </NavigationMenu>
                 </li>
               </>
             ) : (
@@ -81,13 +123,16 @@ export default function DashboardIndex() {
                   </Link>
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
-                  <Link to="/dashboard/cafeRoyAdmin/manageInventory" className="">
+                  <Link
+                    to="/dashboard/cafeRoyAdmin/manageInventory"
+                    className=""
+                  >
                     Manage Inventory
                   </Link>
                 </li>
               </>
             )}
-            <div className="mt-30px">
+            <div className="mt-[500px]">
               <li className="my-2 mt-auto flex items-center justify-center rounded bg-red-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
                 <div>
                   {user ? (
@@ -114,3 +159,29 @@ export default function DashboardIndex() {
     </>
   );
 }
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className,
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

@@ -71,13 +71,12 @@ export const action = async ({ request }: ActionArgs) => {
   const invId: any = result[0].invId;
   const createdAt: number = Date.now();
   await createOrder({ invId, userId, createdAt });
-  return redirect("/dashboard");
+  return redirect("/dashboard/cafeRoy/viewOrder");
 };
 
 export default function CafeRoyOrder() {
   const { availableItemsArr, iced, availableSizePriceArr, name } =
     useLoaderData<typeof loader>();
-  console.log({ availableSizePriceArr, name });
   return (
     <div>
       <div className="flex-box">
