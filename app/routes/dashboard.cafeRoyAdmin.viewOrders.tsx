@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Outlet, useLoaderData } from "@remix-run/react";
-import { deleteOrderAndInventory, selectOrders, updateOrderStatus } from "~/models/order.server";
+import { updateOrderAndInventory, selectOrders, updateOrderStatus } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionArgs) => {
   } else {
     const invId = body.get("invId") as string
     await updateOrderStatus({ orderStatus, orderId });
-    await deleteOrderAndInventory({ invId })
+    await updateOrderAndInventory({ invId, sold: 1 })
   }
   return redirect("");
 };

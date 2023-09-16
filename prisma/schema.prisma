@@ -55,4 +55,5 @@ model Inventory{
   size String
   image String
   price Decimal
+  sold Int
 }

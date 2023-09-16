@@ -21,8 +21,13 @@ import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
-  const orders: any = await selectOrderByUserId({ userId });
-  return { orders };
+  const order: any = await selectOrderByUserId({ userId });
+
+  if (order.length > 1) {
+    throw new Error("not valid");
+  }
+
+  return { order: order[0] };
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -33,48 +38,26 @@ export const action = async ({ request }: ActionArgs) => {
 };
 //TODO: No display order when status is finshed
 export default function CafeRoyViewOrder() {
-  const { orders } = useLoaderData<typeof loader>();
+  const { order } = useLoaderData<typeof loader>();
+  console.log(order);
   return (
     <div>
       <div>
-        <Table>
-          <TableCaption>Order Status</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order #</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Iced</TableHead>
-              <TableHead>Size</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.length !== 0 ? (
-              <>
-                {orders.map((item: any) => {
-                  if(item.orderStatus === "finshed"){
-                    return <></>
-                  }
-                  return (
-                    <TableRow className="border rounded" key={item.ordId}>
-                      <TableCell>{item.ordId}</TableCell>
-                      <TableCell>{item.orderName}</TableCell>
-                      <TableCell>{item.iced === 1 ? "Iced" : "Hot"}</TableCell>
-                      <TableCell>{item.size}</TableCell>
-                      <TableCell>${item.price}</TableCell>
-                      <TableCell>{item.orderStatus}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </>
-            ) : (
-              <>
-                <p>No Pending Orders</p>
-              </>
-            )}
-          </TableBody>
-        </Table>
+        <div className="flex-box w-full bg-[#1e3932] justify-center h-screen">
+          <img
+            className=" object-scale-down mx-auto"
+            src={order.image}
+          />
+          <div className="">
+            <h1 className="text-white text-4xl font-extrabold">
+              {order.orderName}
+            </h1>
+          </div>
+          <p className="text-white font-extrabold">
+            Status: {order.orderStatus}
+          </p>
+        </div>
+        <div></div>
       </div>
       <Outlet />
     </div>

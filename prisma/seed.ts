@@ -46,8 +46,8 @@ async function seedInventory(numReps: number){
   for(let i = 0; i < inventory.length; i++){
     for (let j = 0; j < numReps; j++){
       await prisma.$executeRaw`
-      INSERT INTO Inventory (id, name, iced, size, image, price) 
-      VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced}, ${inventory[i].size}, ${inventory[i].image}, ${inventory[i].price})`
+      INSERT INTO Inventory (id, name, iced, size, image, price, sold) 
+      VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced}, ${inventory[i].size}, ${inventory[i].image}, ${inventory[i].price}, 0)`
     }
   }
   console.log(`Inventory table has been seeded. 🌱`);

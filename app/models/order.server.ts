@@ -4,10 +4,23 @@ import { prisma } from "~/db.server";
 const { v4: uuidv4 } = require("uuid");
 
 export type Inventory = {
-  id: string;
+  id?: string;
   name: string;
   iced: number;
+  size?: string,
+  image: string,
+  price?: number
 };
+
+export type CafeOrder = {
+  id: string,
+  userId: number,
+  invId: string,
+  createdAt: number,
+  orderStatus: string,
+  cafeRoyEmpId: number
+}
+
 
 export async function selectOrderByUserId({ userId }: { userId: string }) {
   return await prisma.$queryRaw`
@@ -17,7 +30,9 @@ export async function selectOrderByUserId({ userId }: { userId: string }) {
     Inventory.name AS orderName,
     Inventory.price AS price,
     Inventory.size AS size,
-    Inventory.iced AS iced FROM CafeOrder, Inventory, User
+    Inventory.iced AS iced,
+    Inventory.image AS image
+    FROM CafeOrder, Inventory, User
     WHERE CafeOrder.invId = Inventory.id
     AND User.id = CafeOrder.userId
     AND CafeOrder.userId = ${userId}
@@ -42,7 +57,8 @@ export async function selectAllInventoryByCondition({
   iced: number;
 }): Promise<Inventory[]> {
   return await prisma.$queryRaw`
-  SELECT * FROM Inventory 
+  SELECT name, iced, image
+  FROM Inventory 
   WHERE iced = ${iced}
   ORDER BY name ASC`;
 }
@@ -91,10 +107,12 @@ export async function createOrder({
 }
 
 //One order can contains many inventory
-export async function deleteOrderAndInventory({ invId }: { invId: string }) {
+export async function updateOrderAndInventory({ invId, sold }: { invId: string, sold: number }) {
   //delete from CafeOrder first because it is referencing Inventory
-  await prisma.$executeRaw`DELETE FROM CafeOrder WHERE invId = ${invId}`;
-  await prisma.$executeRaw`DELETE FROM Inventory WHERE id = ${invId}`;
+  // await prisma.$executeRaw`DELETE FROM CafeOrder WHERE invId = ${invId}`;
+  // await prisma.$executeRaw`DELETE FROM Inventory WHERE id = ${invId}`;
+  await prisma.$executeRaw`UPDATE Inventory SET sold = ${sold} WHERE id = ${invId}`
+
 }
 
 //function to update prepare status

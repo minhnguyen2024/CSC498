@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import {
+  Inventory,
   createOrder,
   selectAllInventoryByCondition,
   selectInventoryByNameCondition,
@@ -17,22 +18,21 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
   const iced: number = parseInt(params.iced as string);
-  const availableInventory: any = await selectAllInventoryByCondition({ iced });
+  const availableInventory: Inventory[] = await selectAllInventoryByCondition({ iced });
   const name = search.get("name") as string;
 
-  const availableNames = new Map();
-  let availableItemsArr: string[] = [];
+  const availableInventoryCondensedMap = new Map();
+  let availableInventoryCondensed: Inventory[] = [];
   let availableSizePriceArr: object[] = [];
 
   for (let i = 0; i < availableInventory.length; i++) {
     if (
-      !Array.from(availableNames.values()).includes(availableInventory[i].name)
+      !Array.from(availableInventoryCondensedMap.values()).includes(JSON.stringify(availableInventory[i]))
     ) {
-      availableNames.set(i, availableInventory[i].name);
+      availableInventoryCondensedMap.set(i, JSON.stringify(availableInventory[i]));
     }
   }
-  availableItemsArr = Array.from(availableNames.values());
-
+  Array.from(availableInventoryCondensedMap.values()).forEach((item: string) => availableInventoryCondensed.push(JSON.parse(item)))
   if (name) {
     const availableSizePrice: any[] = await selectInventoryByNameCondition({
       name,
@@ -57,9 +57,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
     result.forEach((item: string) =>
       availableSizePriceArr.push(JSON.parse(item)),
     );
-    return { availableItemsArr, iced, availableSizePriceArr, name };
+    return { availableInventoryCondensed, iced, availableSizePriceArr, name };
   }
-  return { availableItemsArr, iced, availableSizePriceArr, name };
+  return { availableInventoryCondensed, iced, availableSizePriceArr, name };
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -83,25 +83,25 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function CafeRoyOrder() {
-  const { availableItemsArr, iced, availableSizePriceArr, name } =
+  const { availableInventoryCondensed, iced, availableSizePriceArr, name } =
     useLoaderData<typeof loader>();
   return (
     <div>
       <div className="flex-box">
-        {availableItemsArr.length !== 0 ? (
+        {availableInventoryCondensed.length !== 0 ? (
           <>
             <div className="grid grid-cols-4 gap-4">
-              {availableItemsArr.map((item: string, index: number) => (
-                <div key={item}>
+              {availableInventoryCondensed.map((item: Inventory, index: number) => (
+                <div key={item.id}>
                   <Card className="rounded">
                     <img
                       className="h-full w-full object-cover"
-                      src={getRandomImageURL()}
+                      src={item.image}
                     />
                     <Form method="get">
-                      <input type="hidden" name="name" value={item} />
+                      <input type="hidden" name="name" value={item.name} />
                       <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
-                        {item}
+                        {item.name}
                       </Button>
                     </Form>
                   </Card>
