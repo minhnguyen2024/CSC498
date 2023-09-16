@@ -20,22 +20,30 @@ export default function CafeRoyOrder() {
     <div>
       <div className="flex-box">
         <Form method="post">
-          <div className="flex">
+          {/* <div className="flex">
             <input type="radio" name="condition" value="iced" />
             <label>Iced</label>
           </div>
           <div className="flex">
             <input type="radio" name="condition" value="hot" />
             <label>Hot</label>
-          </div>
+          </div> */}
           <div className="flex">
-            <input type="radio" name="whippedCream" value="on" />
-            <label>Whipped Cream</label>
+            <Button
+              name="condition"
+              value="iced"
+              className="border w-full rounded bg-orange-500 hover:bg-orange-300 text-white"
+            >
+              Iced
+            </Button>
+            <Button
+              name="condition"
+              value="hot"
+              className="border w-full  rounded bg-blue-500 hover:bg-blue-300 text-white"
+            >
+              Hot
+            </Button>
           </div>
-
-          <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">
-            Continue
-          </Button>
         </Form>
       </div>
       <Outlet />

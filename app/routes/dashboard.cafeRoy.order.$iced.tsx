@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import {
@@ -8,6 +11,7 @@ import {
   selectInventoryByNameConditionSize,
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
+import { getRandomImageURL } from "~/utils/helpers";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -64,10 +68,14 @@ export const action = async ({ request }: ActionArgs) => {
   const name: string = body.get("name") as string;
   const size: string = body.get("size") as string;
   const iced: number = parseInt(body.get("iced") as string);
-  console.log({ userId, name, size, iced})
-  const result: any = await selectInventoryByNameConditionSize({ name, iced, size });
-  console.log(result)
-  //error check if result = [] 
+  console.log({ userId, name, size, iced });
+  const result: any = await selectInventoryByNameConditionSize({
+    name,
+    iced,
+    size,
+  });
+  console.log(result);
+  //error check if result = []
   const invId: any = result[0].invId;
   const createdAt: number = Date.now();
   await createOrder({ invId, userId, createdAt });
@@ -82,16 +90,21 @@ export default function CafeRoyOrder() {
       <div className="flex-box">
         {availableItemsArr.length !== 0 ? (
           <>
-            <div className="flex-box">
-              
+            <div className="grid grid-cols-4 gap-4">
               {availableItemsArr.map((item: string, index: number) => (
                 <div key={item}>
-                  <Form method="get">
-                    <input type="hidden" name="name" value={item} />
-                    <Button className="border rounded bg-slate-500 hover:bg-slate-300 text-white">
-                      {item}
-                    </Button>
-                  </Form>
+                  <Card className="rounded">
+                    <img
+                      className="h-full w-full object-cover"
+                      src={getRandomImageURL()}
+                    />
+                    <Form method="get">
+                      <input type="hidden" name="name" value={item} />
+                      <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
+                        {item}
+                      </Button>
+                    </Form>
+                  </Card>
                 </div>
               ))}
             </div>
@@ -108,15 +121,23 @@ export default function CafeRoyOrder() {
             <input type="hidden" value={name} name="name" />
             <input type="hidden" value={iced} name="iced" />
             <p>Select Size for {name}</p>
-            {availableSizePriceArr.map((item: any) => (
-              <div>
-                <input type="radio" name="size" value={item.size} />
-                <label>
-                  {item.size} {item.price}
-                </label>
-              </div>
-            ))}
-            <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">Place Order</Button>
+            <div className="flex">
+              {availableSizePriceArr.map((item: any) => (
+                <div className="flex w-full items-center justify-center hover:bg-slate-200">
+                  <input type="radio" name="size" value={item.size}/>
+                  <label className="mx-4">
+                    <p className="font-bold">
+                      {item.size === "M" ? "Medium" : "Large"} - ${item.price}
+                    </p>
+                    <p className="font-medium">{item.size === "M" ? "12 fl oz" : "16 fl oz"}</p>
+                  </label>
+                </div>
+              ))}
+            </div>
+
+            <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
+              Place Order
+            </Button>
           </Form>
         </>
       ) : (

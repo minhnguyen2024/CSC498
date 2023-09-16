@@ -80,11 +80,6 @@ export default function DashboardIndex() {
                     Check Resvervation Status
                   </Link>
                 </li>
-                {/* <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
-                  <Link to="cafeRoy" className="">
-                    Cafe Roy
-                  </Link>
-                </li> */}
                 <li>
                   <NavigationMenu className="bg-yellow-500 rounded">
                     <NavigationMenuList>
@@ -124,7 +119,7 @@ export default function DashboardIndex() {
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link
-                    to="/dashboard/cafeRoyAdmin/manageInventory"
+                    to="/dashboard/cafeRoyAdmin/manageInventory/view"
                     className=""
                   >
                     Manage Inventory
@@ -160,7 +155,7 @@ export default function DashboardIndex() {
   );
 }
 
-const ListItem = React.forwardRef<
+export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
