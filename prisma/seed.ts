@@ -42,6 +42,18 @@ async function seedFeature(){
   console.log(`Feature table has been seeded. 🌱`);
 }
 
+async function seedInventory(numReps: number){
+  for(let i = 0; i < inventory.length; i++){
+    for (let j = 0; j < numReps; j++){
+      await prisma.$executeRaw`
+      INSERT INTO Inventory (id, name, iced, size, image, price) 
+      VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced}, ${inventory[i].size}, ${inventory[i].image}, ${inventory[i].price})`
+    }
+  }
+  console.log(`Inventory table has been seeded. 🌱`);
+}
+
+
 async function seedInventoryAndOrder() {
   for(let i = 0; i < inventory.length; i++){
     await prisma.$executeRaw`INSERT INTO Inventory (id, name, iced) VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced})`
@@ -54,10 +66,12 @@ async function seedInventoryAndOrder() {
   console.log(`CafeOrder table has been seeded. 🌱`);
 }
 
+
 seedUser()
 seedBlock()
 seedRoom()
 seedFeature()
+seedInventory(5)
 // seedInventoryAndOrder()
 
 

@@ -43,7 +43,7 @@ model CafeOrder{
   id String @id @default(uuid())
   userId Int
   invId String
-  createdAt Int
+  createdAt BigInt
   orderStatus String
   cafeRoyEmpId Int
 }
@@ -53,5 +53,6 @@ model Inventory{
   name String
   iced Int
   size String
-  price Float
+  image String
+  price Decimal
 }

@@ -29,7 +29,6 @@ export const action = async ({ request }: ActionArgs) => {
   const orderId = body.get("orderId") as string;
 
   if (orderStatus === "preparing") {
-    // console.log({ orderStatus, orderId })
     const result = await updateOrderStatus({ orderStatus, orderId });
   } else if (orderStatus === "ready") {
     const result = await updateOrderStatus({ orderStatus, orderId });
