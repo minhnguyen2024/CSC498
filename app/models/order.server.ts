@@ -22,7 +22,7 @@ export type CafeOrder = {
 }
 
 
-export async function selectOrderByUserId({ userId }: { userId: string }) {
+export async function selectOrderByUserId({ userId }: { userId: string }): Promise<any[]> {
   return await prisma.$queryRaw`
     SELECT CafeOrder.id AS ordId,
     User.username AS customerName,

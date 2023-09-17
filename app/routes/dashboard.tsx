@@ -2,67 +2,71 @@ import { type LoaderArgs, json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getAllUsers, getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
+import { ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const allUsers = await getAllUsers();
   const user: any = await getUserById(userId);
-  // console.log(new Date().toUTCString())
-  // console.log(new Date().toISOString())
-  // console.log(Date.now())
   return { user: user[0] };
 }
 
 export default function DashboardIndex() {
   const { user } = useLoaderData<typeof loader>();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
     <>
       <div className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50">
-          <p>Welcome, {user.username}</p>
-
+        <div
+          className={`h-full border-r bg-gray-50 ${
+            sidebarOpen ? `w-80` : `w-0`
+          }`}
+        >
           <ul className="p-3 h-full">
+            <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
+              <p>Welcome, {user.username}</p>
+            </div>
             {user.admin == 1 ? (
               <>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="reserve" className="">
                     Reserve a Study Room
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/reservationStatus" className="">
                     Check Resvervation Status
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="" className="">
                     Order at Cafe Roy
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/admin/manageStudentUsers" className="">
                     Manage Student Users
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/admin/manageFeatures" className="">
                     Manage Features
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="manageRooms" className="">
                     Manage Rooms
                   </Link>
@@ -70,54 +74,62 @@ export default function DashboardIndex() {
               </>
             ) : user.admin == 0 ? (
               <>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="reserve" className="">
                     Reserve a Study Room
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/reservationStatus" className="">
                     Check Resvervation Status
                   </Link>
                 </li>
                 <li>
-                  <NavigationMenu className="bg-yellow-500 rounded">
-                    <NavigationMenuList>
-                      <NavigationMenuItem className="flex items-center justify-center">
-                        <NavigationMenuTrigger className="justify-center font-medium text-white">Cafe Roy</NavigationMenuTrigger>
-                        <NavigationMenuContent className="flex-box">
-                          <NavigationMenuLink>
-                            <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
-                              <li className="my-2">
-                                <ListItem
-                                  href="/dashboard/cafeRoy/order"
-                                  title="Order"
-                                  className="bg-green-500 hover:bg-green-300 rounded"
-                                />
-                              </li>
-                              <li className="my-2">
-                                <ListItem
-                                  href="/dashboard/cafeRoy/viewOrder"
-                                  className="bg-green-500 hover:bg-green-300 rounded"
-                                  title="View Order Status"
-                                />
-                              </li>
-                            </ul>
-                          </NavigationMenuLink>
-                        </NavigationMenuContent>
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenu>
+                  {sidebarOpen ? (
+                    <>
+                      <NavigationMenu className="bg-yellow-500 rounded">
+                        <NavigationMenuList>
+                          <NavigationMenuItem className="flex items-center justify-center">
+                            <NavigationMenuTrigger className="justify-center font-medium text-white">
+                              Cafe Roy
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent className="flex-box">
+                              <NavigationMenuLink>
+                                <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
+                                  <li className="my-2">
+                                    <ListItem
+                                      href="/dashboard/cafeRoy/order"
+                                      title="Order"
+                                      className="bg-green-500 hover:bg-green-300 rounded"
+                                    />
+                                  </li>
+                                  <li className="my-2">
+                                    <ListItem
+                                      href="/dashboard/cafeRoy/viewOrder"
+                                      className="bg-green-500 hover:bg-green-300 rounded"
+                                      title="View Order Status"
+                                    />
+                                  </li>
+                                </ul>
+                              </NavigationMenuLink>
+                            </NavigationMenuContent>
+                          </NavigationMenuItem>
+                        </NavigationMenuList>
+                      </NavigationMenu>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </li>
               </>
             ) : (
               <>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/cafeRoyAdmin/viewOrders" className="">
                     View Orders
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link
                     to="/dashboard/cafeRoyAdmin/manageInventory/view"
                     className=""
@@ -128,7 +140,7 @@ export default function DashboardIndex() {
               </>
             )}
             <div className="mt-[500px]">
-              <li className="my-2 mt-auto flex items-center justify-center rounded bg-red-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
+              <li className="my-2 mt-auto flex items-center justify-center rounded bg-red-500 py-3 font-medium text-white hover:bg-yellow-600">
                 <div>
                   {user ? (
                     <div className="user-info">
@@ -146,6 +158,25 @@ export default function DashboardIndex() {
             </div>
           </ul>
         </div>
+        {sidebarOpen ? (
+          <>
+            <button
+              // className="bg-green-500 hover:bg-green-300"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <ChevronLeft />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              // className="bg-green-500 hover:bg-green-300"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <ChevronRight />
+            </button>
+          </>
+        )}
 
         <div className="flex-1 p-6">
           <Outlet />
@@ -154,7 +185,7 @@ export default function DashboardIndex() {
     </>
   );
 }
-
+// className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
 export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
