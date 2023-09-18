@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -139,15 +140,15 @@ export default function DashboardIndex() {
                 </li>
               </>
             )}
-            <div className="mt-[500px]">
-              <li className="my-2 mt-auto flex items-center justify-center rounded bg-red-500 py-3 font-medium text-white hover:bg-yellow-600">
+            <div className="mt-[525px]">
+              <li className="bottom-0 my-2 mt-auto flex items-center justify-center rounded bg-red-500 py-3 font-medium text-white hover:bg-red-600">
                 <div>
                   {user ? (
                     <div className="user-info">
                       <form action="/logout" method="post">
-                        <button type="submit" className="button">
+                        <Button type="submit" className="">
                           Logout
-                        </button>
+                        </Button>
                       </form>
                     </div>
                   ) : (

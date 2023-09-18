@@ -25,7 +25,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );
-  console.log(activeOrder);
   if (activeOrder === undefined) {
     return { activeOrder };
   } else if (activeOrder.length > 1) {
@@ -59,6 +58,7 @@ export default function CafeRoyViewOrder() {
                   {activeOrder.orderName}
                 </h1>
               </div>
+
               <div className="text-white font-extrabold flex items-center justify-center text-2xl">
                 {activeOrder.orderStatus === "notPrepared" ? (
                   <>
@@ -75,6 +75,11 @@ export default function CafeRoyViewOrder() {
                 ) : (
                   <></>
                 )}
+              </div>
+              <div className="flex items-center justify-center">
+                <h1 className="text-white text-2xl font-extrabold">
+                  {activeOrder.orderId}
+                </h1>
               </div>
             </div>
           </>

@@ -23,18 +23,18 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
+  const userId: number = await requireUserId(request) as number;
   //SQL models to handle
-  let orderStatus = body.get("orderStatus") as string;
-  const orderId = body.get("orderId") as string;
+  let orderStatus: string = body.get("orderStatus") as string;
+  const orderId: string = body.get("orderId") as string;
 
   if (orderStatus === "preparing") {
-    const result = await updateOrderStatus({ orderStatus, orderId });
+    const result = await updateOrderStatus({ orderStatus, orderId, userId });
   } else if (orderStatus === "ready") {
-    const result = await updateOrderStatus({ orderStatus, orderId });
+    const result = await updateOrderStatus({ orderStatus, orderId, userId });
   } else {
     const invId = body.get("invId") as string
-    await updateOrderStatus({ orderStatus, orderId });
+    await updateOrderStatus({ orderStatus, orderId, userId });
     await updateOrderAndInventory({ invId, sold: 1 })
   }
   return redirect("");
@@ -70,7 +70,6 @@ export default function DashboardReserveUserId() {
                     </TableCell>
                     <TableCell>{item.customerName}</TableCell>
                     <TableCell>{item.orderStatus}</TableCell>
-                    {/* <TableCell>{item.orderStatus}</TableCell> */}
                     {item.orderStatus === "notPrepared" ? (
                       <TableCell>
                         <Form method="post">

@@ -24,9 +24,10 @@ export type CafeOrder = {
 
 export async function selectOrderByUserId({ userId }: { userId: string }): Promise<any[]> {
   return await prisma.$queryRaw`
-    SELECT CafeOrder.id AS ordId,
+    SELECT CafeOrder.id AS orderId,
     User.username AS customerName,
     CafeOrder.orderStatus AS orderStatus,
+    CafeOrder.cafeRoyEmpId,
     Inventory.name AS orderName,
     Inventory.price AS price,
     Inventory.size AS size,
@@ -119,13 +120,15 @@ export async function updateOrderAndInventory({ invId, sold }: { invId: string, 
 export async function updateOrderStatus({
   orderStatus,
   orderId,
+  userId
 }: {
   orderStatus: string;
   orderId: string;
+  userId: number
 }) {
   return await prisma.$executeRaw`
   UPDATE CafeOrder 
-  SET orderStatus=${orderStatus}
+  SET orderStatus=${orderStatus}, cafeRoyEmpId=${userId}
   WHERE id=${orderId}`;
 }
 
