@@ -12,7 +12,7 @@ function seedUser() {
 
 async function seedRoom(){
   for (let numRoom = 1; numRoom < 11; numRoom++){
-    await prisma.$executeRaw`INSERT INTO Room VALUES (${numRoom}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1}, ${1})`
+    await prisma.$executeRaw`INSERT INTO Room VALUES (${numRoom}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)}, ${getRandomInteger(0,1)})`
   }
   console.log(`Room table has been seeded. 🌱`);
 }

@@ -1,7 +1,14 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-export async function getAllBlocks() {
+export type Block = {
+  id: number
+  room_id: number
+  time: number
+  booked_user_id: number
+}
+
+export async function getAllBlocks(): Promise<Block[]> {
   return await prisma.$queryRaw`SELECT * FROM Block ORDER BY time ASC`;
 }
 
