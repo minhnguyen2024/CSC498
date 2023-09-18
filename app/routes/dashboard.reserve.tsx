@@ -7,6 +7,7 @@ import { requireUserId } from "~/session.server";
 import { type Feature } from "~/models/manage.server";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -53,9 +54,8 @@ export default function DashboardReserve() {
       });
       cardItems.push(
         <div key={i}>
-          <Card className="my-2 h-20 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600">
-            <CardContent>
-              <p>{availableRoomIdArr.length} open rooms</p>
+          <Card className="my-2 flex items-center justify-center rounded bg-yellow-500 font-medium text-white hover:bg-yellow-600">
+            <CardContent className="">
               <form method="post">
                 <input
                   type="hidden"
@@ -63,9 +63,10 @@ export default function DashboardReserve() {
                   value={JSON.stringify(roomsByBlock[i])}
                 />
                 <input type="hidden" name="time" value={i} />
-                <button className="bg-green-500 px-1 rounded text-white">
+                <Button className="bg-green-500 px-1 rounded text-white h-full w-full">
+                  <p>{availableRoomIdArr.length} open rooms</p>
                   Reserve
-                </button>
+                </Button>
               </form>
             </CardContent>
           </Card>
