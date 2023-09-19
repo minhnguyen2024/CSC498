@@ -8,6 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
@@ -17,7 +27,8 @@ import {
   selectAllInventory,
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
-import { Filter, PlusSquare } from 'lucide-react';
+import { Filter, PlusSquare } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 /**
  * admin insert iced or hot, name, number of inventory
@@ -76,49 +87,93 @@ export default function CafeRoyManageInventoryView() {
   return (
     <div>
       <div>
-        <div>
+        <div className="bg-slate-200 px-3 flex">
           <Form>
-            <label></label>
             <input type="hidden" name="query" value={1} />
-            <div className="grid grid-cols-2">
-              <div>
-                <div>
-                  <label>Inventory #</label>
-                  <input type="text" name="invId" className="my-2 border" />
-                </div>
-                <div>
-                  <label>Name</label>
-                  <input type="text" name="name" className="my-2 border" />
-                </div>
-                <div>
-                  <label>Size</label>
-                  <select id="size" name="size">
-                    <option value="">None</option>
-                    <option value="M">Medium</option>
-                    <option value="L">Large</option>
-                  </select>
-                </div>
+            <div className="flex">
+              <div className="hover:bg-slate-300 mx-2">
+                <label>Inventory #</label>
+                <input
+                  type="text"
+                  name="invId"
+                  className="my-2 border-2 h-10 border-black rounded w-64 px-2 py-1"
+                />
               </div>
-              <div>
+              <div className="hover:bg-slate-300 mx-2">
+                <label>Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="my-2 border-2 h-10 border-black rounded w-48 px-2 py-1"
+                />
+              </div>
+              <div className="p-2 flex hover:bg-slate-300 mx-2">
+                <Select name="size">
+                  <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
+                    <SelectValue placeholder="Size" />
+                  </SelectTrigger>
+                  <SelectContent className="w-[100px] bg-slate-100">
+                    <SelectGroup>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="">None</SelectItem>
+                      </div>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="M">Medium</SelectItem>
+                      </div>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="L" className="hover:bg-slate-300">
+                          Large
+                        </SelectItem>
+                      </div>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="hover:bg-slate-300 mx-2">
+                <label>Price</label>
+                <input
+                  type="text"
+                  name="price"
+                  className="my-2 border-2 h-10 border-black rounded w-14 px-2 py-1"
+                />
+              </div>
+              <div className="p-2 flex hover:bg-slate-300 mx-2">
+                <Select name="sold">
+                  <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
+                    <SelectValue placeholder="Sold" />
+                  </SelectTrigger>
+                  <SelectContent className="w-[100px] bg-slate-100">
+                    <SelectGroup>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="-1">None</SelectItem>
+                      </div>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="1">Yes</SelectItem>
+                      </div>
+                      <div className="hover:bg-slate-300 p-2">
+                        <SelectItem value="0" className="hover:bg-slate-300">
+                          No
+                        </SelectItem>
+                      </div>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex">
                 <div>
-                  <label>Price</label>
-                  <input type="text" name="price" className="my-2 border" />
+                  <Button className="bg-green-500 hover:bg-green-400 text-white my-2 rounded">
+                    <Filter />
+                  </Button>
                 </div>
-                <div>
-                  <label>Sold</label>
-                  <input type="text" name="sold" className="my-2 border" />
+                <div className="my-2 mx-2 rounded bg-green-500 hover:bg-green-400 px-4 py-2 font-medium text-white">
+                  <Link to="/dashboard/cafeRoyAdmin/manageInventory/add">
+                    <PlusSquare />
+                  </Link>
                 </div>
               </div>
             </div>
-            <Button className="bg-green-500 hover:bg-green-400 text-white">
-              <Filter/>
-            </Button>
           </Form>
-        </div>
-        <div className="my-2 flex items-center justify-center rounded bg-green-500 hover:bg-green-400 px-4 py-3 font-medium text-white">
-          <Link to="/dashboard/cafeRoyAdmin/manageInventory/add">
-            <PlusSquare/>
-          </Link>
         </div>
         <Table>
           <TableCaption>Available Inventory</TableCaption>
