@@ -7,22 +7,26 @@ export type Inventory = {
   id?: string;
   name: string;
   iced: number;
-  size?: string,
-  image: string,
-  price?: number
+  size?: string;
+  image: string;
+  price?: number;
+  sold?: number;
 };
 
 export type CafeOrder = {
-  id: string,
-  userId: number,
-  invId: string,
-  createdAt: number,
-  orderStatus: string,
-  cafeRoyEmpId: number
-}
+  id: string;
+  userId: number;
+  invId: string;
+  createdAt: number;
+  orderStatus: string;
+  cafeRoyEmpId: number;
+};
 
-
-export async function selectOrderByUserId({ userId }: { userId: string }): Promise<any[]> {
+export async function selectOrderByUserId({
+  userId,
+}: {
+  userId: string;
+}): Promise<any[]> {
   return await prisma.$queryRaw`
     SELECT CafeOrder.id AS orderId,
     User.username AS customerName,
@@ -37,7 +41,7 @@ export async function selectOrderByUserId({ userId }: { userId: string }): Promi
     WHERE CafeOrder.invId = Inventory.id
     AND User.id = CafeOrder.userId
     AND CafeOrder.userId = ${userId}
-  `
+  `;
 }
 
 export async function selectOrders() {
@@ -108,23 +112,28 @@ export async function createOrder({
 }
 
 //One order can contains many inventory
-export async function updateOrderAndInventory({ invId, sold }: { invId: string, sold: number }) {
+export async function updateOrderAndInventory({
+  invId,
+  sold,
+}: {
+  invId: string;
+  sold: number;
+}) {
   //delete from CafeOrder first because it is referencing Inventory
   // await prisma.$executeRaw`DELETE FROM CafeOrder WHERE invId = ${invId}`;
   // await prisma.$executeRaw`DELETE FROM Inventory WHERE id = ${invId}`;
-  await prisma.$executeRaw`UPDATE Inventory SET sold = ${sold} WHERE id = ${invId}`
-
+  await prisma.$executeRaw`UPDATE Inventory SET sold = ${sold} WHERE id = ${invId}`;
 }
 
 //function to update prepare status
 export async function updateOrderStatus({
   orderStatus,
   orderId,
-  userId
+  userId,
 }: {
   orderStatus: string;
   orderId: string;
-  userId: number
+  userId: number;
 }) {
   return await prisma.$executeRaw`
   UPDATE CafeOrder 
@@ -155,4 +164,36 @@ export async function createInventory({
 
 export async function selectAllInventory() {
   return await prisma.$queryRaw`SELECT * FROM Inventory`;
+}
+
+export async function SelectInventoryBySearchQuery({
+  invId,
+  name,
+  size,
+  price,
+  iced,
+  sold,
+}: {
+  invId?: string;
+  name?: string;
+  size?: string;
+  price?: number;
+  iced?: number;
+  sold?: number;
+}) {
+  const invQuery: string = `%${invId}%`;
+  const nameQuery: string = `%${name}%`;
+  console.log({ invId, name, size, price, iced, sold });
+
+  const queryResult = await prisma.$queryRaw`
+  SELECT * FROM Inventory 
+  WHERE 1 = 1
+  ${invId == "" ? Prisma.empty : Prisma.sql`AND id LIKE ${invQuery}`}
+  ${name == "" ? Prisma.empty : Prisma.sql`AND name LIKE ${nameQuery}`}
+  ${size == "" ? Prisma.empty : Prisma.sql`AND size = ${size}`}
+  ${price == 0 ? Prisma.empty : Prisma.sql`AND price = ${price}`}
+  ${iced == -1 ? Prisma.empty : Prisma.sql`AND iced = ${iced}`}
+  ${sold == -1 ? Prisma.empty : Prisma.sql`AND sold = ${sold}`}
+  `;
+  return queryResult;
 }
