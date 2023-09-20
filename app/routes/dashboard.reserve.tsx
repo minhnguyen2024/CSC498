@@ -1,13 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { type LoaderArgs, ActionArgs, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getFeatureByName } from "~/models/manage.server";
+import { getFeatureByName, type Feature } from "~/models/manage.server";
 import { Block, getAllBlocks } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
-import { type Feature } from "~/models/manage.server";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import FeatureDisabled from "./error.featureDisabled";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -159,11 +159,7 @@ export default function DashboardReserve() {
           </div>
         </>
       ) : (
-        <div>
-          <p>
-            Reserve Study Rooms is under maintainance. Please try again later
-          </p>
-        </div>
+        <FeatureDisabled featureName="Reservation"/>
       )}
 
       <div className="flex-1 p-6">

@@ -6,19 +6,19 @@ import FeatureDisabled from "./error.featureDisabled";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const featureFlag: Feature[] = await getFeatureByName("orderCafeRoy");
+  const featureFlag: Feature[] = await getFeatureByName("adminCafeRoy");
 
   return { featureFlag: featureFlag[0] };
 }
 
-export default function CafeRoy() {
+export default function CafeRoyAdmin() {
   const { featureFlag } = useLoaderData<typeof loader>();
   return (
     <>
       {featureFlag.enabled == 1 ? (
         <Outlet />
       ) : (
-        <FeatureDisabled featureName="Cafe Roy" />
+        <FeatureDisabled featureName="Cafe Roy Admin" />
       )}
     </>
   );

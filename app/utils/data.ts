@@ -158,6 +158,11 @@ export const features = [
     featureName: "orderCafeRoy",
     enabled: 1,
   },
+  {
+    id: 3,
+    featureName: "adminCafeRoy",
+    enabled: 1,
+  },
 ];
 
 export const orders = [
