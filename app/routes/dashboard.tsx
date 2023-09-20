@@ -52,13 +52,39 @@ export default function DashboardIndex() {
                     Check Resvervation Status
                   </Link>
                 </li>
-                <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
-                  <Link to="" className="">
-                    Order at Cafe Roy
-                  </Link>
+                <li >
+                  <NavigationMenu className="bg-yellow-500 rounded">
+                    <NavigationMenuList>
+                      <NavigationMenuItem className="flex items-center justify-center">
+                        <NavigationMenuTrigger className="justify-center font-medium text-white">
+                          Cafe Roy
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent className="flex-box">
+                          <NavigationMenuLink>
+                            <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
+                              <li className="my-2">
+                                <ListItem
+                                  href="/dashboard/cafeRoy/order"
+                                  title="Order"
+                                  className="bg-green-500 hover:bg-green-300 rounded"
+                                />
+                              </li>
+                              <li className="my-2">
+                                <ListItem
+                                  href="/dashboard/cafeRoy/viewOrder"
+                                  className="bg-green-500 hover:bg-green-300 rounded"
+                                  title="View Order Status"
+                                />
+                              </li>
+                            </ul>
+                          </NavigationMenuLink>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    </NavigationMenuList>
+                  </NavigationMenu>
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
-                  <Link to="/dashboard/admin/manageStudentUsers" className="">
+                  <Link to="/dashboard/admin/manageUsers/view" className="">
                     Manage Student Users
                   </Link>
                 </li>

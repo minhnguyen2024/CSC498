@@ -91,7 +91,7 @@ export default function CafeRoyManageInventoryView() {
           <Form>
             <input type="hidden" name="query" value={1} />
             <div className="flex">
-              <div className="hover:bg-slate-300 mx-2">
+              <div className="flex-box hover:bg-slate-300 mx-2">
                 <label>Inventory #</label>
                 <input
                   type="text"

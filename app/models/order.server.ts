@@ -183,7 +183,6 @@ export async function SelectInventoryBySearchQuery({
 }) {
   const invQuery: string = `%${invId}%`;
   const nameQuery: string = `%${name}%`;
-  console.log({ invId, name, size, price, iced, sold });
 
   const queryResult = await prisma.$queryRaw`
   SELECT * FROM Inventory 
