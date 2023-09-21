@@ -79,3 +79,7 @@ export async function selectRoomById({
 }): Promise<Room[]> {
   return await prisma.$queryRaw`SELECT * From Room WHERE id = ${roomId}`;
 }
+
+export async function getNumberOfRooms():Promise<any> {
+  return await prisma.$queryRaw`SELECT COUNT(*) FROM Room`
+}

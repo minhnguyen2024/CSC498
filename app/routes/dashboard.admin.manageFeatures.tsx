@@ -83,7 +83,7 @@ export default function ManageFeatures() {
                   {feature.featureName === "reserveStudyRoom" &&
                   feature.enabled == 0 ? (
                     <Link
-                      to="/dashboard/admin/manageStudyRooms"
+                      to="/dashboard/admin/manageStudyRooms/view"
                       className="bg-green-500 rounded hover:bg-green-300 p-3"
                     >
                       Manage Reserve Study Room

@@ -7,7 +7,6 @@ export async function loader({ request }: LoaderArgs) {
 export default function AdminManageUsers() {
   return (
     <div>
-  
       <Outlet />
     </div>
   );

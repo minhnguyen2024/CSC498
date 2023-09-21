@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ActionArgs, LoaderArgs, redirect } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
-import { selectAllRooms } from "~/models/room.server"
+import { Link, useLoaderData } from "@remix-run/react"
+import { deleteRoombyId, selectAllRooms } from "~/models/room.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
     const rooms = await selectAllRooms()
@@ -12,7 +12,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData()
   const roomId: number = parseInt(body.get("roomId") as string);
-  return redirect(`/dashboard/admin/manageStudyRooms/update/${roomId}`)
+  //SQL delete study room
+  await deleteRoombyId({roomId})
+  return null;
 }
 
 
@@ -52,8 +54,11 @@ export default function ViewRooms(){
                       value={JSON.stringify(item)}
                       name="room"
                     />
-                    <Button className="border rounded bg-blue-500 text-white">Update</Button>
+                    <Button className="border rounded bg-red-500 text-white">Delete</Button>
                   </form>
+                </TableCell>
+                <TableCell>
+                  <Link to={`/dashboard/admin/manageStudyRooms/update/${item.id}`}>Update</Link>
                 </TableCell>
               </TableRow>
             ))}

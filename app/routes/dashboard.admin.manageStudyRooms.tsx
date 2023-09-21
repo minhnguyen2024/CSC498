@@ -1,6 +1,6 @@
 import { Feature, toggleFeature } from "~/models/manage.server";
 import { redirect, type LoaderArgs } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -30,7 +30,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function SelectFeature() {
   return (
     <div>
-      <form method="get">
+      {/* <form method="get">
         <div className="items-top flex-box">
           <div className="items-top flex space-x-2">
             <input type="checkbox" name="view-rooms" id="view-rooms" />
@@ -78,7 +78,9 @@ export default function SelectFeature() {
           </div>
           <Button type="submit">Select</Button>
         </div>
-      </form>
+      </form> */}
+      <div>
+      </div>
         <Outlet />
     </div>
   );

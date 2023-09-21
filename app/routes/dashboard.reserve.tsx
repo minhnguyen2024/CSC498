@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import FeatureDisabled from "./error.featureDisabled";
+import { getNumberOfRooms } from "~/models/room.server";
 
 function partitionArrayByChunk(arr: any, chunk: number) {
   const result = [];
@@ -22,10 +23,12 @@ export async function loader({ request }: LoaderArgs) {
   //return array of all blocks (490) orded by Block.time
   //Example: 10 entries of time 1, 10 entries of time 2,...
   const blocks: Block[] = await getAllBlocks();
+  const result: any[] = await getNumberOfRooms()
+  const numRooms:number = Number(result[0]["COUNT(*)"])
 
   //return array of length = 49 (partitioned by 490 / 10 = 49)
   //each element is an array of 10 time blocks
-  const partitionedBy10 = partitionArrayByChunk(blocks, 10);
+  const partitionedBy10 = partitionArrayByChunk(blocks, numRooms);
   const partitionedBy10By7 = partitionArrayByChunk(partitionedBy10, 7);
   const featureFlag: Feature[] = await getFeatureByName("reserveStudyRoom");
   return { partitionedBy10By7, featureFlag: featureFlag[0] };

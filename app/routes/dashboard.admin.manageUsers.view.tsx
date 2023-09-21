@@ -22,7 +22,7 @@ import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
 import { requireUserId } from "~/session.server";
-import { Filter, PlusSquare } from "lucide-react";
+import { Filter, PlusSquare, XSquare } from "lucide-react";
 import {
   User,
   deleteUser,
@@ -64,8 +64,8 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   const userId = (await requireUserId(request)).toString();
-  const id = body.get("id")
-  console.log(id)
+  const id = body.get("id");
+  console.log(id);
   // await deleteUser({id})
   return null;
 };
@@ -73,7 +73,7 @@ export const action = async ({ request }: ActionArgs) => {
 export default function AdminManageUsers() {
   const { users } = useLoaderData<typeof loader>();
   const [checked, setChecked] = useState(false);
-    return (
+  return (
     <div>
       <div>
         <div className="bg-slate-200 px-3 flex">
@@ -127,20 +127,7 @@ export default function AdminManageUsers() {
               </div>
             </div>
           </Form>
-          {checked ? (
-            <>
-              <Button
-                type="submit"
-                form="userAction"
-                // disabled={!checked}
-                className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
-              >
-                Delete
-              </Button>
-            </>
-          ) : (
-            <></>
-          )}
+          {checked ? <></> : <></>}
         </div>
         <Table>
           <TableCaption>Available Inventory</TableCaption>
@@ -165,15 +152,14 @@ export default function AdminManageUsers() {
                     : "Cafe Roy Employee"}
                 </TableCell>
                 <TableCell>
-                  <form id="userAction" method="post">
-                    <input value={item.id} type="hidden" name="id"/>
-                    <input
-                      type="checkbox"
-                      name="user"
-                      onChange={() => setChecked(!checked)}
-                      value={item.id}
-                    />
-                    <label>{item.id}</label>
+                  <form method="post">
+                    <input type="hidden" name="id" value={item.id}/>
+                    <Button
+                      type="submit"
+                      className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
+                    >
+                      <XSquare/>
+                    </Button>
                   </form>
                 </TableCell>
               </TableRow>
