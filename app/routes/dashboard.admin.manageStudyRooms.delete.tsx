@@ -21,8 +21,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   invariant(body.get("roomId"), "")
-  const roomId = body.get("roomId") as string
-  const deleteQuery = await deleteRoombyId({ roomId: parseInt(roomId) })
+  const roomId = parseInt(body.get("roomId") as string)
+  await deleteRoombyId({ roomId })
   return redirect("/dashboard/admin/manageStudyRooms/delete")
 };
 

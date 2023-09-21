@@ -14,27 +14,25 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import {
-  Inventory,
-  SelectInventoryBySearchQuery,
-  selectAllInventory,
-} from "~/models/order.server";
+
 import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { User, getAllUsers, selectUsersBySearchQuery } from "~/models/user.server";
-
+import {
+  User,
+  deleteUser,
+  getAllUsers,
+  selectUsersBySearchQuery,
+} from "~/models/user.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
-  const users: User[] = await getAllUsers()
+  const users: User[] = await getAllUsers();
 
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
@@ -44,18 +42,21 @@ export const loader = async ({ params, request }: LoaderArgs) => {
     let userId: number = parseInt(search.get("userId") as string);
     let username: string = search.get("username") as string;
     let permission: number = parseInt(search.get("permission") as string);
-    if(Number.isNaN(permission)){
-      permission = -1
+    if (Number.isNaN(permission)) {
+      permission = -1;
     }
-    if(Number.isNaN(userId)){
-      userId = 0
+    if (Number.isNaN(userId)) {
+      userId = 0;
     }
-    
-    const users: User[] = await selectUsersBySearchQuery({userId, username, permission})
-    console.log(users)
+
+    const users: User[] = await selectUsersBySearchQuery({
+      userId,
+      username,
+      permission,
+    });
+    console.log(users);
     return { users };
   }
-  
 
   return { users };
 };
@@ -63,13 +64,16 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   const userId = (await requireUserId(request)).toString();
-
+  const id = body.get("id")
+  console.log(id)
+  // await deleteUser({id})
   return null;
 };
 
 export default function AdminManageUsers() {
   const { users } = useLoaderData<typeof loader>();
-  return (
+  const [checked, setChecked] = useState(false);
+    return (
     <div>
       <div>
         <div className="bg-slate-200 px-3 flex">
@@ -99,7 +103,6 @@ export default function AdminManageUsers() {
                   </SelectTrigger>
                   <SelectContent className="w-[100px] bg-slate-100">
                     <SelectGroup>
-                    
                       <div className="hover:bg-slate-300 p-2">
                         <SelectItem value="0">Student</SelectItem>
                       </div>
@@ -117,13 +120,27 @@ export default function AdminManageUsers() {
                   </Button>
                 </div>
                 <div className="my-2 mx-2 rounded bg-green-500 hover:bg-green-400 px-4 py-2 font-medium text-white">
-                  <Link to="./add">
+                  <Link to="/dashboard/admin/manageUsers/add">
                     <PlusSquare />
                   </Link>
                 </div>
               </div>
             </div>
           </Form>
+          {checked ? (
+            <>
+              <Button
+                type="submit"
+                form="userAction"
+                // disabled={!checked}
+                className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
+              >
+                Delete
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <Table>
           <TableCaption>Available Inventory</TableCaption>
@@ -132,6 +149,7 @@ export default function AdminManageUsers() {
               <TableHead className="text-left">User ID</TableHead>
               <TableHead className="text-left">Username</TableHead>
               <TableHead className="text-left">Permission</TableHead>
+              <TableHead className="text-left">Select</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -140,7 +158,23 @@ export default function AdminManageUsers() {
                 <TableCell className="p-3">{item.id}</TableCell>
                 <TableCell className="p-3">{item.username}</TableCell>
                 <TableCell className="p-3">
-                  {item.admin === 0 ? "Student" : item.admin === 1 ? "Admin" : "Cafe Roy Employee"}
+                  {item.admin === 0
+                    ? "Student"
+                    : item.admin === 1
+                    ? "Admin"
+                    : "Cafe Roy Employee"}
+                </TableCell>
+                <TableCell>
+                  <form id="userAction" method="post">
+                    <input value={item.id} type="hidden" name="id"/>
+                    <input
+                      type="checkbox"
+                      name="user"
+                      onChange={() => setChecked(!checked)}
+                      value={item.id}
+                    />
+                    <label>{item.id}</label>
+                  </form>
                 </TableCell>
               </TableRow>
             ))}

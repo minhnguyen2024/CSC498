@@ -29,56 +29,57 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function SelectFeature() {
   return (
-    <form method="get">
-      <div className="items-top flex-box">
-        <div className="items-top flex space-x-2">
-          <input type="checkbox" name="view-rooms" id="view-rooms" />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              View All Rooms
-            </label>
+    <div>
+      <form method="get">
+        <div className="items-top flex-box">
+          <div className="items-top flex space-x-2">
+            <input type="checkbox" name="view-rooms" id="view-rooms" />
+            <div className="grid gap-1.5 leading-none">
+              <label
+                htmlFor="terms1"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                View All Rooms
+              </label>
+            </div>
           </div>
-        </div>
-        <div className="items-top flex space-x-2">
-          <input type="checkbox" name="add-room" id="add-room" />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Add a Study Room
-            </label>
+          <div className="items-top flex space-x-2">
+            <input type="checkbox" name="add-room" id="add-room" />
+            <div className="grid gap-1.5 leading-none">
+              <label
+                htmlFor="terms1"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Add a Study Room
+              </label>
+            </div>
           </div>
-        </div>
-        <div className="items-top flex space-x-2">
-          <input type="checkbox" name="update-room" id="update-room" />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Update a Current Study Room
-            </label>
+          <div className="items-top flex space-x-2">
+            <input type="checkbox" name="update-room" id="update-room" />
+            <div className="grid gap-1.5 leading-none">
+              <label
+                htmlFor="terms1"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Update a Current Study Room
+              </label>
+            </div>
           </div>
-        </div>
-        <div className="items-top flex space-x-2">
-          <input type="checkbox" name="delete-room" id="delete-room" />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Delete a Room
-            </label>
+          <div className="items-top flex space-x-2">
+            <input type="checkbox" name="delete-room" id="delete-room" />
+            <div className="grid gap-1.5 leading-none">
+              <label
+                htmlFor="terms1"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Delete a Room
+              </label>
+            </div>
           </div>
+          <Button type="submit">Select</Button>
         </div>
-
-        <Button type="submit">Select</Button>
-      </div>
-      <Outlet />
-    </form>
+      </form>
+        <Outlet />
+    </div>
   );
 }

@@ -46,3 +46,7 @@ export async function createUser({ username, password, permission} : { username:
   INSERT INTO User(username, password, admin) 
   VALUES (${username}, ${password}, ${permission})`
 }
+
+export async function deleteUser({ id }:{ id: number }) {
+  return await prisma.$executeRaw`DELETE FROM User WHERE id = ${id}`
+}
