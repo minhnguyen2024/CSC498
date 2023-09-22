@@ -23,8 +23,8 @@ export async function loader({ request }: LoaderArgs) {
   //return array of all blocks (490) orded by Block.time
   //Example: 10 entries of time 1, 10 entries of time 2,...
   const blocks: Block[] = await getAllBlocks();
-  const result: any[] = await getNumberOfRooms()
-  const numRooms:number = Number(result[0]["COUNT(*)"])
+  const result: any[] = await getNumberOfRooms();
+  const numRooms: number = Number(result[0]["COUNT(*)"]);
 
   //return array of length = 49 (partitioned by 490 / 10 = 49)
   //each element is an array of 10 time blocks
@@ -51,14 +51,15 @@ export default function DashboardReserve() {
     for (let i = 0; i < roomsByBlock.length; i++) {
       const availableRoomIdArr: object[] = [];
       roomsByBlock[i].map((item: any) => {
-        if(item.booked_user_id === 0){
+        if (item.booked_user_id === 0) {
           availableRoomIdArr.push({ id: item.id, time: item.time });
         }
       });
       cardItems.push(
         <div key={i}>
-          <Card className="my-2 flex items-center justify-center rounded bg-yellow-500 font-medium text-white hover:bg-yellow-600">
-            <CardContent className="">
+          <Card className="my-2 h-20 w-full flex items-center justify-center rounded font-medium text-white hover:bg-yellow-600">
+            <CardContent className="w-full h-full">
+              {/* <p>{availableRoomIdArr.length} open rooms</p> */}
               <form method="post">
                 <input
                   type="hidden"
@@ -66,9 +67,9 @@ export default function DashboardReserve() {
                   value={JSON.stringify(roomsByBlock[i])}
                 />
                 <input type="hidden" name="time" value={i} />
-                <Button className="bg-green-500 px-1 rounded text-white h-full w-full">
-                  <p>{availableRoomIdArr.length} open rooms</p>
-                  Reserve
+                <Button className={`${availableRoomIdArr.length < 5 ? "bg-green-500" : availableRoomIdArr.length == 1 ? "bg-red-500" : availableRoomIdArr.length > 5 && availableRoomIdArr.length < 1 ? "bg-yellow-300" : "bg-slate-200"} px-1 rounded text-white w-full h-20`}>
+                  <p>{availableRoomIdArr.length} rooms</p> 
+                  <p>Available</p>
                 </Button>
               </form>
             </CardContent>
@@ -94,40 +95,9 @@ export default function DashboardReserve() {
               <p className="pt-2 pb-14">8:PM</p>
               <p className="">10:PM</p>
             </div>
-            {/* <div>
-              <div className="h-full w-40" key={0}>
-                <p>Monday</p>
-                {renderCardsInColumn(partitionedBy10By7[0], 0)}
-              </div>
-              <div className="h-full w-40" key={1}>
-                <p>Tuesday</p>
-                {renderCardsInColumn(partitionedBy10By7[1], 1)}
-              </div>
-              <div className="h-full w-40" key={2}>
-                <p>Wednesday</p>
-                {renderCardsInColumn(partitionedBy10By7[2], 2)}
-              </div>
-              <div className="h-full w-40" key={3}>
-                <p>Thursday</p>
-                {renderCardsInColumn(partitionedBy10By7[3], 3)}
-              </div>
-              <div className="h-full w-40" key={4}>
-                <p>Friday</p>
-                {renderCardsInColumn(partitionedBy10By7[4], 4)}
-              </div>
-              <div className="h-full w-40" key={5}>
-                <p>Saturday</p>
-                {renderCardsInColumn(partitionedBy10By7[5], 5)}
-              </div>
-              <div className="h-full w-40" key={6}>
-                <p>Sunday</p>
-                {renderCardsInColumn(partitionedBy10By7[6], 6)}
-              </div>
-            </div> */}
             <div>
-              {/* UI refactoring */}
               <>
-                <div className="grid grid-cols-7 gap-4">
+                <div className="grid grid-cols-7 gap-4 py-4">
                   <div className="h-full w-40" key={0}>
                     <p>Monday</p>
                     {renderCardsInColumn(partitionedBy10By7[0], 0)}
@@ -162,7 +132,7 @@ export default function DashboardReserve() {
           </div>
         </>
       ) : (
-        <FeatureDisabled featureName="Reservation"/>
+        <FeatureDisabled featureName="Reservation" />
       )}
 
       <div className="flex-1 p-6">

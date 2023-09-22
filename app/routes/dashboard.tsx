@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Logout from "~/components/Logout";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -30,7 +31,7 @@ export default function DashboardIndex() {
 
   return (
     <>
-      <div className="flex h-full bg-white">
+      <div className="flex h-full bg-white relative">
         <div
           className={`h-full border-r bg-gray-50 ${
             sidebarOpen ? `w-80` : `w-0`
@@ -52,7 +53,7 @@ export default function DashboardIndex() {
                     Check Resvervation Status
                   </Link>
                 </li>
-                <li >
+                <li>
                   <NavigationMenu className="bg-yellow-500 rounded">
                     <NavigationMenuList>
                       <NavigationMenuItem className="flex items-center justify-center">
@@ -186,14 +187,14 @@ export default function DashboardIndex() {
           </ul>
         </div>
         {sidebarOpen ? (
-          <>
+          <div className="items-center justify-center flex-box">
             <button
               // className="bg-green-500 hover:bg-green-300"
               onClick={() => setSidebarOpen(!sidebarOpen)}
             >
               <ChevronLeft />
             </button>
-          </>
+          </div>
         ) : (
           <>
             <button
@@ -204,10 +205,9 @@ export default function DashboardIndex() {
             </button>
           </>
         )}
-
-        <div className="flex-1 p-6">
-          <Outlet />
-        </div>
+      <div className="flex-1 p-6">
+        <Outlet />
+      </div>
       </div>
     </>
   );

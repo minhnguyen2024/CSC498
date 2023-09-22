@@ -85,6 +85,8 @@ export const action = async ({ request }: ActionArgs) => {
 export default function CafeRoyOrder() {
   const { availableInventoryCondensed, iced, availableSizePriceArr, name } =
     useLoaderData<typeof loader>();
+
+    console.log(availableInventoryCondensed)
   return (
     <div>
       <div className="flex-box">
@@ -92,7 +94,7 @@ export default function CafeRoyOrder() {
           <>
             <div className="grid grid-cols-4 gap-4">
               {availableInventoryCondensed.map((item: Inventory, index: number) => (
-                <div key={item.id}>
+                <div key={item.image}>
                   <Card className="rounded">
                     <img
                       className="h-full w-full object-cover"
