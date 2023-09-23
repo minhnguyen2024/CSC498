@@ -68,7 +68,6 @@ export const action = async ({ request }: ActionArgs) => {
   const name: string = body.get("name") as string;
   const size: string = body.get("size") as string;
   const iced: number = parseInt(body.get("iced") as string);
-  console.log({ userId, name, size, iced });
   const result: any = await selectInventoryByNameConditionSize({
     name,
     iced,
