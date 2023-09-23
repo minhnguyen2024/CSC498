@@ -108,21 +108,13 @@ export default function DashboardIndex() {
                   </Link>
                 </li>
                 <li>
-                  {/* <NavLink
-                    to="reserve"
-                    className={({ isActive, isPending }) =>
-                      isPending ? "pending " : isActive ? "active bg-slate-400 w-full" : ""
-                    }
-                  >
-                    Messages
-                  </NavLink> */}
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/reservationStatus" className="">
                     Check Resvervation Status
                   </Link>
                 </li>
-                <li>
+                {/* <li> */}
                   {sidebarOpen ? (
                     <>
                       <NavigationMenu className="bg-yellow-500 rounded">
@@ -158,7 +150,7 @@ export default function DashboardIndex() {
                   ) : (
                     <></>
                   )}
-                </li>
+                {/* </li> */}
               </>
             ) : (
               <>
@@ -201,7 +193,6 @@ export default function DashboardIndex() {
             <div className="flex justify-center items-center h-screen">
               <button
                 className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
-                // className="bg-green-500 hover:bg-green-300"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
                 <ChevronLeft />
@@ -213,7 +204,6 @@ export default function DashboardIndex() {
             <div className="flex justify-center items-center h-screen">
               <button
                 className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
-                // className="bg-green-500 hover:bg-green-300"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
                 <ChevronRight />
@@ -226,7 +216,7 @@ export default function DashboardIndex() {
     </>
   );
 }
-// className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+
 export const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">

@@ -17,7 +17,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function CafeRoyOrder() {
   return (
-    <div>
+    <div className="w-full">
       <div className="flex-box">
         <Form method="post">
           <div className="flex">
@@ -31,7 +31,7 @@ export default function CafeRoyOrder() {
             <Button
               name="condition"
               value="hot"
-              className="border w-full  rounded bg-blue-500 hover:bg-blue-300 text-white"
+              className="border w-full rounded bg-blue-500 hover:bg-blue-300 text-white"
             >
               Hot
             </Button>
