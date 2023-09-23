@@ -84,8 +84,6 @@ export const action = async ({ request }: ActionArgs) => {
 export default function CafeRoyOrder() {
   const { availableInventoryCondensed, iced, availableSizePriceArr, name } =
     useLoaderData<typeof loader>();
-
-    console.log(availableInventoryCondensed)
   return (
     <div>
       <div className="flex-box">
