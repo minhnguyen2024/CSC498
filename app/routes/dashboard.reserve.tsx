@@ -67,8 +67,19 @@ export default function DashboardReserve() {
                   value={JSON.stringify(roomsByBlock[i])}
                 />
                 <input type="hidden" name="time" value={i} />
-                <Button className={`${availableRoomIdArr.length < 5 ? "bg-green-500" : availableRoomIdArr.length == 1 ? "bg-red-500" : availableRoomIdArr.length > 5 && availableRoomIdArr.length < 1 ? "bg-yellow-300" : "bg-slate-200"} px-1 rounded text-white w-full h-20`}>
-                  <p>{availableRoomIdArr.length} rooms</p> 
+                <Button
+                  className={`${
+                    availableRoomIdArr.length > 5
+                      ? "bg-green-500"
+                      : availableRoomIdArr.length == 1
+                      ? "bg-red-500"
+                      : availableRoomIdArr.length < 5 &&
+                        availableRoomIdArr.length < 1
+                      ? "bg-yellow-300"
+                      : "bg-slate-200"
+                  } px-1 rounded text-white w-full h-20`}
+                >
+                  <p>{availableRoomIdArr.length} rooms</p>
                   <p>Available</p>
                 </Button>
               </form>
@@ -135,9 +146,7 @@ export default function DashboardReserve() {
         <FeatureDisabled featureName="Reservation" />
       )}
 
-      <div className="flex-1 p-6">
-        <Outlet />
-      </div>
+      <Outlet />
     </div>
   );
 }

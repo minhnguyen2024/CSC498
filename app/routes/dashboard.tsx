@@ -32,11 +32,7 @@ export default function DashboardIndex() {
   return (
     <>
       <div className="flex h-full bg-white relative">
-        <div
-          className={`h-full border-r bg-gray-50 ${
-            sidebarOpen ? `w-80` : `w-0`
-          }`}
-        >
+        <div className={`h-full bg-slate-200 ${sidebarOpen ? `w-80` : `w-0`}`}>
           <ul className="p-3 h-full">
             <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
               <p>Welcome, {user.username}</p>
@@ -54,35 +50,39 @@ export default function DashboardIndex() {
                   </Link>
                 </li>
                 <li>
-                  <NavigationMenu className="bg-yellow-500 rounded">
-                    <NavigationMenuList>
-                      <NavigationMenuItem className="flex items-center justify-center">
-                        <NavigationMenuTrigger className="justify-center font-medium text-white">
-                          Cafe Roy
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent className="flex-box">
-                          <NavigationMenuLink>
-                            <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
-                              <li className="my-2">
-                                <ListItem
-                                  href="/dashboard/cafeRoy/order"
-                                  title="Order"
-                                  className="bg-green-500 hover:bg-green-300 rounded"
-                                />
-                              </li>
-                              <li className="my-2">
-                                <ListItem
-                                  href="/dashboard/cafeRoy/viewOrder"
-                                  className="bg-green-500 hover:bg-green-300 rounded"
-                                  title="View Order Status"
-                                />
-                              </li>
-                            </ul>
-                          </NavigationMenuLink>
-                        </NavigationMenuContent>
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenu>
+                  {sidebarOpen ? (
+                    <NavigationMenu className="bg-yellow-500 rounded">
+                      <NavigationMenuList>
+                        <NavigationMenuItem className="flex items-center justify-center">
+                          <NavigationMenuTrigger className="justify-center font-medium text-white">
+                            Cafe Roy
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent className="flex-box">
+                            <NavigationMenuLink>
+                              <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
+                                <li className="my-2">
+                                  <ListItem
+                                    href="/dashboard/cafeRoy/order"
+                                    title="Order"
+                                    className="bg-green-500 hover:bg-green-300 rounded"
+                                  />
+                                </li>
+                                <li className="my-2">
+                                  <ListItem
+                                    href="/dashboard/cafeRoy/viewOrder"
+                                    className="bg-green-500 hover:bg-green-300 rounded"
+                                    title="View Order Status"
+                                  />
+                                </li>
+                              </ul>
+                            </NavigationMenuLink>
+                          </NavigationMenuContent>
+                        </NavigationMenuItem>
+                      </NavigationMenuList>
+                    </NavigationMenu>
+                  ) : (
+                    <></>
+                  )}
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/admin/manageUsers/view" className="">
@@ -106,6 +106,16 @@ export default function DashboardIndex() {
                   <Link to="reserve" className="">
                     Reserve a Study Room
                   </Link>
+                </li>
+                <li>
+                  {/* <NavLink
+                    to="reserve"
+                    className={({ isActive, isPending }) =>
+                      isPending ? "pending " : isActive ? "active bg-slate-400 w-full" : ""
+                    }
+                  >
+                    Messages
+                  </NavLink> */}
                 </li>
                 <li className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
                   <Link to="/dashboard/reservationStatus" className="">
@@ -167,7 +177,7 @@ export default function DashboardIndex() {
                 </li>
               </>
             )}
-            <div className="mt-[525px]">
+            <div className=" mt-2">
               <li className="bottom-0 my-2 mt-auto flex items-center justify-center rounded bg-red-500 py-3 font-medium text-white hover:bg-red-600">
                 <div>
                   {user ? (
@@ -187,27 +197,31 @@ export default function DashboardIndex() {
           </ul>
         </div>
         {sidebarOpen ? (
-          <div className="items-center justify-center flex-box">
-            <button
-              // className="bg-green-500 hover:bg-green-300"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              <ChevronLeft />
-            </button>
-          </div>
+          <>
+            <div className="flex justify-center items-center h-screen">
+              <button
+                className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
+                // className="bg-green-500 hover:bg-green-300"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                <ChevronLeft />
+              </button>
+            </div>
+          </>
         ) : (
           <>
-            <button
-              // className="bg-green-500 hover:bg-green-300"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              <ChevronRight />
-            </button>
+            <div className="flex justify-center items-center h-screen">
+              <button
+                className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
+                // className="bg-green-500 hover:bg-green-300"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                <ChevronRight />
+              </button>
+            </div>
           </>
         )}
-      <div className="flex-1 p-6">
         <Outlet />
-      </div>
       </div>
     </>
   );
