@@ -2,11 +2,12 @@ import { PrismaClient } from "@prisma/client";
 const { v4: uuidv4 } = require('uuid');
 import { getRandomInteger } from "~/utils/helpers";
 import { users, rooms, blocks, features, orders, inventory} from "~/utils/data"
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 function seedUser() {
-  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User VALUES (${item.id}, ${item.username}, ${item.password}, ${item.admin})`)
+  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User (id, username, password, admin) VALUES (${item.id}, ${item.username}, ${await bcrypt.hash(item.password, 10)}, ${item.admin})`)
   console.log(`User table has been seeded. 🌱`);
 }
 

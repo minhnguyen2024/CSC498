@@ -22,11 +22,10 @@ export async function verifyLogin(
   if(!existingUser[0]){
     return -1
   }
-  
-  if (existingUser[0].password == password){
+  const isCorrectPassword = await bcrypt.compare(password, existingUser[0].password)
+  if (isCorrectPassword){
     return existingUser[0];
   }
-  return null
 }
 
 export async function getAllUsers():Promise<User[]>{
@@ -46,9 +45,10 @@ export async function selectUsersBySearchQuery({ userId, username, permission} :
 }
 
 export async function createUser({ username, password, permission} : { username: string, password: string, permission: number}) {
+  const hashedPassword = await bcrypt.hash(password, 10)
   return await prisma.$executeRaw`
   INSERT INTO User(username, password, admin) 
-  VALUES (${username}, ${password}, ${permission})`
+  VALUES (${username}, ${hashedPassword}, ${permission})`
 }
 
 export async function deleteUser({ id }:{ id: number }) {

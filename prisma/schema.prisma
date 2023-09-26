@@ -26,12 +26,14 @@ model Block {
   booked_user_id Int 
 } 
 
+
 model User {
   id Int @id @default(autoincrement())
   username String @unique
   password String
   admin Int
 }
+
 
 model Feature{
   id Int @id @default(autoincrement())
