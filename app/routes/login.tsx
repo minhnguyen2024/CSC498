@@ -47,6 +47,12 @@ export const action = async ({ request }: ActionArgs) => {
 
   const user = await verifyLogin(username, password);
 
+  if(user == -1){
+    return json(
+      { errors: { email: "Invalid email or password", password: "Invalid email or password" } },
+      { status: 400 },
+    );
+  }
   if (!user) {
     return json(
       { errors: { email: "Invalid email or password", password: "Invalid email or password" } },

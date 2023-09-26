@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Logout from "~/components/Logout";
+// import Logout from "~/components/Logout";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -163,19 +163,30 @@ export default function DashboardIndex() {
               </>
             ) : (
               <>
-                <li className={listStyle("cafeRoyAdmin/viewOrders")}>
-                  <Link to="/dashboard/cafeRoyAdmin/viewOrders" className="">
-                    View Orders
-                  </Link>
-                </li>
-                <li className={listStyle("cafeRoyAdmin/manageInventory/view")}>
-                  <Link
-                    to="/dashboard/cafeRoyAdmin/manageInventory/view"
-                    className=""
-                  >
-                    Manage Inventory
-                  </Link>
-                </li>
+                {sidebarOpen ? (
+                  <>
+                    <li className={listStyle("cafeRoyAdmin/viewOrders")}>
+                      <Link
+                        to="/dashboard/cafeRoyAdmin/viewOrders"
+                        className=""
+                      >
+                        View Orders
+                      </Link>
+                    </li>
+                    <li
+                      className={listStyle("cafeRoyAdmin/manageInventory/view")}
+                    >
+                      <Link
+                        to="/dashboard/cafeRoyAdmin/manageInventory/view"
+                        className=""
+                      >
+                        Manage Inventory
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <></>
+                )}
               </>
             )}
             <div className=" mt-2">

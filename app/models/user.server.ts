@@ -19,6 +19,10 @@ export async function verifyLogin(
   password: string,
 ) {
   const existingUser: any = await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`
+  if(!existingUser[0]){
+    return -1
+  }
+  
   if (existingUser[0].password == password){
     return existingUser[0];
   }
