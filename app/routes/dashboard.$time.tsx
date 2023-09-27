@@ -8,8 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import {
+  redirect,
+  type ActionArgs,
+  type LoaderArgs,
+  json,
+} from "@remix-run/node";
+import { Outlet, useActionData, useLoaderData } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 import {
   confirmRoomBookingWithUserId,
@@ -86,19 +92,33 @@ export const action = async ({ request }: ActionArgs) => {
   const userId = (await requireUserId(request)).toString();
   const time = body.get("time");
   const room = body.get("room");
-  invariant(room, "room not found");
+  if (!room) {
+    return json(
+      { errors: { message: "Please select a room" } },
+      { status: 400 },
+    );
+  }
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserReserved = userReservation.length === 1 ? true : false;
   if (isUserReserved) {
     return redirect("/error/reservationDenied");
   }
 
-  const confirmResult = await updateBlockWithUserId({ userId, room });
+  await updateBlockWithUserId({ userId, room });
   return redirect(`/confirm/${time}/${room}`);
 };
 
 export default function DashboardReserveUserId() {
   const { time, serializedArray } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  const confirmRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (actionData?.errors?.message) {
+      confirmRef.current?.focus();
+    }
+  }, [actionData]);
+
   const deserializedRooms = JSON.parse(decodeURIComponent(serializedArray));
   return (
     <div>
@@ -219,6 +239,7 @@ export default function DashboardReserveUserId() {
               </TableRow>
             </TableHeader>
             <TableBody>
+            
               {deserializedRooms.map((item: any) => (
                 <TableRow
                   className="border rounded hover:bg-slate-200"
@@ -237,7 +258,7 @@ export default function DashboardReserveUserId() {
                   </TableCell>
                   <TableCell>
                     <input
-                      type="checkbox"
+                      type="radio"
                       value={JSON.stringify(item)}
                       name="room"
                     />
@@ -246,9 +267,16 @@ export default function DashboardReserveUserId() {
               ))}
             </TableBody>
           </Table>
-          <Button className="border rounded hover:bg-green-300 bg-green-500 text-white">
-            Confirm
-          </Button>
+          <div ref={confirmRef}>
+            <Button className="border rounded hover:bg-green-300 bg-green-500 text-white">
+              Confirm
+            </Button>
+          </div>
+          {actionData?.errors?.message ? (
+            <div className="pt-1 text-red-700" id="password-error">
+              {actionData.errors.message}
+            </div>
+          ) : null}
         </form>
       </div>
       <Outlet />
