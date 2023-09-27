@@ -10,9 +10,9 @@ import { safeRedirect, validateEmail } from "~/utils";
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   if (userId) {
-    return redirect("/dashboard")
-  } else{
-    logout(request)
+    return redirect("/dashboard");
+  } else {
+    logout(request);
   }
   return json({});
 };
@@ -47,15 +47,30 @@ export const action = async ({ request }: ActionArgs) => {
 
   const user = await verifyLogin(username, password);
 
-  if(user == -1){
+  if (
+    user.id == 0 ||
+    user.username == "" ||
+    user.password == "" ||
+    user.admin == -1
+  ) {
     return json(
-      { errors: { email: "Invalid email or password", password: "Invalid email or password" } },
+      {
+        errors: {
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        },
+      },
       { status: 400 },
     );
   }
   if (!user) {
     return json(
-      { errors: { email: "Invalid email or password", password: "Invalid email or password" } },
+      {
+        errors: {
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        },
+      },
       { status: 400 },
     );
   }
@@ -69,7 +84,6 @@ export const action = async ({ request }: ActionArgs) => {
     userId: user.id.toString(),
   });
 };
-
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
@@ -88,6 +102,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-col justify-center">
+      <title>Authentication</title>
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
