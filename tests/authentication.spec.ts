@@ -7,15 +7,16 @@ test.describe('authentication', () =>{
     
     test('login page', async ({ page }) => {
         await expect(page).toHaveTitle(/Authentication/);
+        await expect(page).toHaveURL("http://localhost:3000/login?redirectTo=%2F")
       });
     
-    test('auth happy path', async ({ page }) => {
-    await page.getByLabel('Username').click();
-    await page.getByLabel('Username').fill('minhnguyen_2024');
-    await page.getByLabel('Password').click();
-    await page.getByLabel('Password').fill('pass');
-    await page.getByRole('button', { name: 'Log in' }).click();
-    await expect(page).toHaveURL('http://localhost:3000/dashboard')
+    test('auth normal path', async ({ page }) => {
+        await page.getByLabel('Username').click();
+        await page.getByLabel('Username').fill('minhnguyen_2024');
+        await page.getByLabel('Password').click();
+        await page.getByLabel('Password').fill('pass');
+        await page.getByRole('button', { name: 'Log in' }).click();
+        await expect(page).toHaveURL('http://localhost:3000/dashboard')
     });
 
     test('auth correct username wrong password', async ({ page }) => {
@@ -45,9 +46,14 @@ test.describe('authentication', () =>{
         await expect(page).toHaveURL('http://localhost:3000/login?redirectTo=%2F')
     });
 
-    test('accessing routes without auth', async ({ page }) => {
+    test('accessing /dashboard without cookie', async ({ page }) => {
         await page.goto('http://localhost:3000/dashboard');
         await expect(page).toHaveURL('http://localhost:3000/login?redirectTo=%2Fdashboard')
+    });
+
+    test('accessing /dashboard/reserve without cookie', async ({ page }) => {
+        await page.goto('http://localhost:3000/dashboard/reserve');
+        await expect(page).toHaveURL('http://localhost:3000/login?redirectTo=%2Fdashboard%2Freserve')
     });
 
 })

@@ -40,8 +40,8 @@ export default function DashboardIndex() {
   };
   return (
     <>
-      <div className="flex h-full bg-white">
-        <div className={`h-full bg-slate-200 ${sidebarOpen ? `w-80` : `w-0`}`}>
+      <div className="flex h-screen">
+        <div className={`h-screen bg-slate-200 ${sidebarOpen ? ` w-1/5` : `w-0`}`}>
           <ul className="p-3 h-full">
             <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
               <p>Welcome, {user.username}</p>

@@ -59,7 +59,6 @@ export default function DashboardReserve() {
         <div key={i}>
           <Card className="my-2 h-20 w-full flex items-center justify-center rounded font-medium text-white hover:bg-yellow-600">
             <CardContent className="w-full h-full">
-              {/* <p>{availableRoomIdArr.length} open rooms</p> */}
               <form method="post">
                 <input
                   type="hidden"
@@ -70,13 +69,13 @@ export default function DashboardReserve() {
                 <Button
                   className={`${
                     availableRoomIdArr.length > 5
-                      ? "bg-green-500"
+                      ? "transition ease-in-out delay-150 bg-blue-500  hover:scale-110 hover:bg-indigo-500 duration-300"
                       : availableRoomIdArr.length == 1
-                      ? "bg-red-500"
+                      ? "transition ease-in-out delay-150 bg-red-500  hover:scale-110 hover:bg-red-400 duration-300"
                       : availableRoomIdArr.length < 5 &&
                         availableRoomIdArr.length < 1
-                      ? "bg-yellow-300"
-                      : "bg-slate-200"
+                      ? "transition ease-in-out delay-150 bg-yellow-500  hover:scale-110 hover:bg-yellow-400 duration-300"
+                      : "bg-slate-200 disabled:cursor-not-allowed"
                   } px-1 rounded text-white w-full h-20`}
                 >
                   <p>{availableRoomIdArr.length} rooms</p>

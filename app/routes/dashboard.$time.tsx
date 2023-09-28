@@ -232,21 +232,22 @@ export default function DashboardReserveUserId() {
 
           <Table>
             <TableCaption>Available Study Rooms</TableCaption>
-            <TableHeader>
+            <TableHeader className="items-start justify-start bg-slate-300">
               <TableRow>
                 <TableHead className="">Room #</TableHead>
                 <TableHead>Amenities</TableHead>
+                <TableHead>Select</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
             
               {deserializedRooms.map((item: any) => (
                 <TableRow
-                  className="border rounded hover:bg-slate-200"
+                className="border-b hover:bg-slate-400"
                   key={item.roomId}
                 >
-                  <TableCell>{item.roomId}</TableCell>
-                  <TableCell>
+                  <TableCell className="p-3">{item.roomId}</TableCell>
+                  <TableCell className="p-3">
                     {item.accessible == 1 ? "Accessible, " : " "}
                     {item.power == 1 ? "Power, " : " "}
                     {item.reservable == 1 ? "Reservable, " : " "}
@@ -256,7 +257,7 @@ export default function DashboardReserveUserId() {
                     {item.whiteboard == 1 ? "Whiteboard, " : " "}
                     {item.window == 1 ? "Window, " : " "}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="p-3">
                     <input
                       type="radio"
                       value={JSON.stringify(item)}

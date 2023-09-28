@@ -130,7 +130,7 @@ export default function AdminManageUsers() {
           {checked ? <></> : <></>}
         </div>
         <Table>
-          <TableCaption>Available Inventory</TableCaption>
+          <TableCaption>Users</TableCaption>
           <TableHeader className="items-start justify-start bg-slate-300">
             <TableRow>
               <TableHead className="text-left">User ID</TableHead>
