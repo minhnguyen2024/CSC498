@@ -24,27 +24,28 @@ export const action = async ({ request }: ActionArgs) => {
   return null;
 };
 
-
 export default function CafeRoyViewOrder() {
   const { activeOrder } = useLoaderData<typeof loader>();
   console.log(activeOrder);
   return (
-    <div className="w-screen">
+    <div>
       <div>
         {activeOrder !== undefined ? (
           <>
-            <div className="flex-box w-[1200px] bg-[#1e3932] justify-center h-screen">
-              <img
-                className=" object-scale-down mx-auto"
-                src={activeOrder.image}
-              />
+            <div className="flex flex-col bg-[#1e3932] justify-center h-screen">
+              <div className="h-4/5">
+                <img
+                  className="object-scale-down mx-auto"
+                  src={activeOrder.image}
+                />
+              </div>
               <div className="flex items-center justify-center">
-                <h1 className="text-white text-5xl font-extrabold">
+                <h1 className="text-white text-3xl font-extrabold">
                   {activeOrder.orderName}
                 </h1>
               </div>
 
-              <div className="text-white font-extrabold flex items-center justify-center text-2xl">
+              <div className="text-white flex flex-1 font-extrabold items-center justify-center text-2xl">
                 {activeOrder.orderStatus === "notPrepared" ? (
                   <>
                     <h2>Your order has been received</h2>

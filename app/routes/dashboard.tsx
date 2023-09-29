@@ -38,8 +38,8 @@ export default function DashboardIndex() {
   };
   return (
     <>
-      <div className="flex flex-row h-screen">
-        <div className={`h-screen bg-slate-200 transition-all duration-300 ease-in-out ${sidebarOpen ? `w-screen` : `w-0`}`}>
+      <div className="flex h-screen">
+        <div className={`${sidebarOpen ? `w-80` : `w-0`} h-screen bg-slate-200 transition-all duration-300 ease-in-out`}>
           <ul className="p-3 h-screen">
             <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
               <p>Welcome, {user.username}</p>
@@ -209,7 +209,7 @@ export default function DashboardIndex() {
         </div>
         {sidebarOpen ? (
           <>
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex justify-center items-center h-screen w-auto">
               <button
                 className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
                 onClick={() => setSidebarOpen(!sidebarOpen)}

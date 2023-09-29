@@ -196,3 +196,8 @@ export async function SelectInventoryBySearchQuery({
   `;
   return queryResult;
 }
+
+//Get order history by user
+export async function getGetCafeOrderHistoryByUserId({ userId }: { userId: number}) {
+  
+}

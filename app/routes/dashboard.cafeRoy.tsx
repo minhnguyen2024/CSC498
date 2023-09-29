@@ -14,12 +14,12 @@ export async function loader({ request }: LoaderArgs) {
 export default function CafeRoy() {
   const { featureFlag } = useLoaderData<typeof loader>();
   return (
-    <>
+    <div className="h-screen w-screen">
       {featureFlag.enabled == 1 ? (
         <Outlet />
       ) : (
         <FeatureDisabled featureName="Cafe Roy" />
       )}
-    </>
+    </div>
   );
 }
