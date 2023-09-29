@@ -1,11 +1,13 @@
 import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { selectOrderByUserId } from "~/models/order.server";
+import { getGetCafeOrderHistoryByUserId, selectOrderByUserId } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   const orders: any = await selectOrderByUserId({ userId });
+  const orderHistory = await getGetCafeOrderHistoryByUserId({userId: parseInt(userId)})
+  console.log(orderHistory)
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );
@@ -26,7 +28,6 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function CafeRoyViewOrder() {
   const { activeOrder } = useLoaderData<typeof loader>();
-  console.log(activeOrder);
   return (
     <div>
       <div>

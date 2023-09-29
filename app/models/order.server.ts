@@ -199,5 +199,25 @@ export async function SelectInventoryBySearchQuery({
 
 //Get order history by user
 export async function getGetCafeOrderHistoryByUserId({ userId }: { userId: number}) {
-  
+  const orderListByUserId: CafeOrder[] = await prisma.$queryRaw`
+  SELECT 
+  Inventory.name AS name, 
+  Inventory.iced AS iced,
+  Inventory.size AS size,
+  Inventory.price AS price,
+  CafeOrder.createdAt AS time
+  FROM CafeOrder, Inventory, User
+  WHERE CafeOrder.invId = Inventory.id
+  AND User.id = CafeOrder.userId
+  AND orderStatus = "finished" 
+  AND CafeOrder.userId = ${userId}
+  `
+  return orderListByUserId
 }
+/**
+ * 
+ * minhnguyen_2024's order history
+ * Name Ordered At Price
+ * 
+ * Total
+ */
