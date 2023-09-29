@@ -9,14 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import FeatureDisabled from "./error.featureDisabled";
 import { getNumberOfRooms } from "~/models/room.server";
+import { partitionArrayByChunk } from "~/utils/helpers";
 
-function partitionArrayByChunk(arr: any, chunk: number) {
-  const result = [];
-  for (let i = 0; i < arr.length; i += chunk) {
-    result.push(arr.slice(i, i + chunk));
-  }
-  return result;
-}
+
 
 export async function loader({ request }: LoaderArgs) {
   const userId: number = await requireUserId(request);

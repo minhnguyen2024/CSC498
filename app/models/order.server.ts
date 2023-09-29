@@ -180,11 +180,11 @@ export async function SelectInventoryBySearchQuery({
   price?: number;
   iced?: number;
   sold?: number;
-}) {
+}): Promise<Inventory[]> {
   const invQuery: string = `%${invId}%`;
   const nameQuery: string = `%${name}%`;
 
-  const queryResult = await prisma.$queryRaw`
+  const queryResult: Inventory[] = await prisma.$queryRaw`
   SELECT * FROM Inventory 
   WHERE 1 = 1
   ${invId == "" ? Prisma.empty : Prisma.sql`AND id LIKE ${invQuery}`}

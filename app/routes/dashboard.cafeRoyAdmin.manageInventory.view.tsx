@@ -14,26 +14,20 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import {type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 import {
-  Inventory,
   SelectInventoryBySearchQuery,
   selectAllInventory,
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import Pagination from "~/components/Pagination";
+import { useMemo, useState } from "react";
 
-/**
- * admin insert iced or hot, name, number of inventory
- *
- */
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
@@ -49,8 +43,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
     let price: number = parseFloat(search.get("price") as string);
     let iced: number = parseInt(search.get("iced") as string);
     let sold: number = parseInt(search.get("sold") as string);
-    console.log("sold: ", sold);
-    console.log("price: ", price);
     if (Number.isNaN(price)) {
       price = 0;
     }
@@ -76,14 +68,20 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
-
   return null;
 };
 
 export default function CafeRoyManageInventoryView() {
   const { inventory } = useLoaderData<typeof loader>();
+  let pageSize = 10
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * pageSize;
+    const lastPageIndex = firstPageIndex + pageSize;
+    return inventory.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage]);
   return (
     <div>
       <div>
@@ -187,7 +185,7 @@ export default function CafeRoyManageInventoryView() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {inventory.map((item: any) => (
+            {currentTableData.map((item: any) => (
               <TableRow className="border-b hover:bg-slate-400" key={item.id}>
                 <TableCell className="p-3">{item.id}</TableCell>
                 <TableCell className="p-3">{item.name}</TableCell>
@@ -200,6 +198,12 @@ export default function CafeRoyManageInventoryView() {
             ))}
           </TableBody>
         </Table>
+        <Pagination
+        currentPage={currentPage}
+        totalCount={inventory.length}
+        pageSize={pageSize}
+        onPageChange={(page: any) => setCurrentPage(page)}
+        />
       </div>
       <Outlet />
     </div>

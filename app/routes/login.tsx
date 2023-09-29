@@ -56,8 +56,8 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          email: "Invalid email or password",
-          password: "Invalid email or password",
+          email: "Invalid username or password",
+          password: "Invalid username or password",
         },
       },
       { status: 400 },
@@ -67,8 +67,8 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          email: "Invalid email or password",
-          password: "Invalid email or password",
+          email: "Invalid username or password",
+          password: "Invalid username or password",
         },
       },
       { status: 400 },
