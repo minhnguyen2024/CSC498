@@ -28,19 +28,18 @@ export default function DashboardIndex() {
   const { user } = useLoaderData<typeof loader>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
-  console.log(location.pathname);
 
   const listStyle = (childRoute: any) => {
     return `w-full ${
       location.pathname.includes(childRoute)
         ? "bg-slate-400 hover:bg-slate-300 rounded"
         : "bg-slate-200 hover:bg-slate-300"
-    } my-2 flex items-center justify-center  py-3 font-medium text-grey-100`;
+    } my-2 flex items-center justify-center py-3 font-medium text-grey-100`;
   };
   return (
     <>
-      <div className="flex h-screen">
-        <div className={`h-screen bg-slate-200 ${sidebarOpen ? ` w-1/5` : `w-0`}`}>
+      <div className="flex flex-row h-screen">
+        <div className={`h-screen bg-slate-200 transition-all duration-300 ease-in-out ${sidebarOpen ? `w-screen` : `w-0`}`}>
           <ul className="p-3 h-screen">
             <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
               <p>Welcome, {user.username}</p>
@@ -188,6 +187,7 @@ export default function DashboardIndex() {
                 )}
               </>
             )}
+            {/** Logout Button div */}
             <div className=" mt-2">
               <li className="bottom-0 my-2 mt-auto flex items-center justify-center rounded bg-red-500 py-3 font-medium text-white hover:bg-red-600">
                 <div>

@@ -43,10 +43,10 @@ export const action = async ({ request }: ActionArgs) => {
 export default function DashboardReserveUserId() {
   const { orders } = useLoaderData<typeof loader>();
   return (
-    <div>
+    <div className="">
       <div>
         <Table>
-          <TableCaption>Available Study Rooms</TableCaption>
+          <TableCaption>Orders</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Order #</TableHead>

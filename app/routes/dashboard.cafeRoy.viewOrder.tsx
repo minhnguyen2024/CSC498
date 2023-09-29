@@ -1,23 +1,7 @@
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet, useLoaderData } from "@remix-run/react";
-import { selectAllInventory, selectOrderByUserId } from "~/models/order.server";
+import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { selectOrderByUserId } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
-
-/**
- * admin insert iced or hot, name, number of inventory
- *
- */
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
@@ -39,13 +23,14 @@ export const action = async ({ request }: ActionArgs) => {
 
   return null;
 };
-//TODO: No display order when status is finshed
+
+
 export default function CafeRoyViewOrder() {
   const { activeOrder } = useLoaderData<typeof loader>();
   console.log(activeOrder);
   return (
-    <div>
-      <div className="w-full">
+    <div className="w-screen">
+      <div>
         {activeOrder !== undefined ? (
           <>
             <div className="flex-box w-[1200px] bg-[#1e3932] justify-center h-screen">

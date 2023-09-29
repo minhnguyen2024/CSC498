@@ -1,3 +1,4 @@
+//https://www.freecodecamp.org/news/build-a-custom-pagination-component-in-react/
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePagination, DOTS } from "../hooks/usePagination";
 const Pagination = (props: any) => {
@@ -17,7 +18,7 @@ const Pagination = (props: any) => {
       siblingCount,
       pageSize,
     }) || [];
-  console.log(`currentPage: ${currentPage}`);
+//   console.log(`currentPage: ${currentPage}`);
   // If there are less than 2 times in pagination range we shall not render the component
   if (currentPage === 0 || paginationRange.length < 2) {
     return null;

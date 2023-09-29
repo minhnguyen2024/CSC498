@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import {
   SelectInventoryBySearchQuery,
@@ -27,7 +27,6 @@ import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
 import Pagination from "~/components/Pagination";
 import { useMemo, useState } from "react";
-
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
@@ -73,7 +72,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function CafeRoyManageInventoryView() {
   const { inventory } = useLoaderData<typeof loader>();
-  let pageSize = 10
+  let pageSize = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -173,37 +172,39 @@ export default function CafeRoyManageInventoryView() {
             </div>
           </Form>
         </div>
-        <Table>
-          <TableCaption>Available Inventory</TableCaption>
-          <TableHeader className="items-start justify-start bg-slate-300">
-            <TableRow>
-              <TableHead className="text-left">Inventory #</TableHead>
-              <TableHead className="text-left">Name</TableHead>
-              <TableHead className="text-left">Iced</TableHead>
-              <TableHead className="text-left">Size</TableHead>
-              <TableHead className="text-left">Price</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentTableData.map((item: any) => (
-              <TableRow className="border-b hover:bg-slate-400" key={item.id}>
-                <TableCell className="p-3">{item.id}</TableCell>
-                <TableCell className="p-3">{item.name}</TableCell>
-                <TableCell className="p-3">
-                  {item.iced === 1 ? "Iced" : "Hot"}
-                </TableCell>
-                <TableCell className="p-3">{item.size}</TableCell>
-                <TableCell className="p-3">${item.price}</TableCell>
+        <div className="w-screen">
+          <Table>
+            <TableCaption>Available Inventory</TableCaption>
+            <TableHeader className="items-start justify-start bg-slate-300">
+              <TableRow>
+                <TableHead className="text-left">Inventory #</TableHead>
+                <TableHead className="text-left">Name</TableHead>
+                <TableHead className="text-left">Iced</TableHead>
+                <TableHead className="text-left">Size</TableHead>
+                <TableHead className="text-left">Price</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination
-        currentPage={currentPage}
-        totalCount={inventory.length}
-        pageSize={pageSize}
-        onPageChange={(page: any) => setCurrentPage(page)}
-        />
+            </TableHeader>
+            <TableBody>
+              {currentTableData.map((item: any) => (
+                <TableRow className="border-b hover:bg-slate-400" key={item.id}>
+                  <TableCell className="p-3">{item.id}</TableCell>
+                  <TableCell className="p-3">{item.name}</TableCell>
+                  <TableCell className="p-3">
+                    {item.iced === 1 ? "Iced" : "Hot"}
+                  </TableCell>
+                  <TableCell className="p-3">{item.size}</TableCell>
+                  <TableCell className="p-3">${item.price}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={inventory.length}
+            pageSize={pageSize}
+            onPageChange={(page: any) => setCurrentPage(page)}
+          />
+        </div>
       </div>
       <Outlet />
     </div>
