@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
+import { getUserAccountBalanceByUserId, getUserById } from "./user.server";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -91,7 +92,7 @@ export async function selectInventoryByNameConditionSize({
   size: string;
 }): Promise<Inventory[]> {
   return await prisma.$queryRaw`
-  SELECT id AS invId FROM Inventory 
+  SELECT id AS invId, price FROM Inventory
   WHERE iced = ${iced}
   AND name = ${name}
   AND size = ${size}`;
@@ -101,14 +102,26 @@ export async function createOrder({
   invId,
   userId,
   createdAt,
+  price
 }: {
   invId: string;
   userId: number;
   createdAt: number;
+  price: number
 }) {
-  return await prisma.$executeRaw`
+  await prisma.$executeRaw`
   INSERT INTO CafeOrder (id, userId, invId, createdAt, orderStatus, cafeRoyEmpId) 
   VALUES (${uuidv4()},${userId}, ${invId}, ${createdAt}, "notPrepared", 0)`;
+
+  // const currentUserAccountBalance:number = await getUserAccountBalanceByUserId({ userId })
+  const users = await getUserById(userId)
+  const user = users[0]
+  const currentUserAccountBalance: number = user.accountBalance
+  const newUserAccountBalance = currentUserAccountBalance - price
+
+  await prisma.$executeRaw`
+  UPDATE User SET accountBalance = ${newUserAccountBalance} WHERE id = ${userId}
+  `
 }
 
 //One order can contains many inventory
@@ -119,9 +132,6 @@ export async function updateOrderAndInventory({
   invId: string;
   sold: number;
 }) {
-  //delete from CafeOrder first because it is referencing Inventory
-  // await prisma.$executeRaw`DELETE FROM CafeOrder WHERE invId = ${invId}`;
-  // await prisma.$executeRaw`DELETE FROM Inventory WHERE id = ${invId}`;
   await prisma.$executeRaw`UPDATE Inventory SET sold = ${sold} WHERE id = ${invId}`;
 }
 
@@ -214,10 +224,13 @@ export async function getGetCafeOrderHistoryByUserId({ userId }: { userId: numbe
   `
   return orderListByUserId
 }
-/**
- * 
- * minhnguyen_2024's order history
- * Name Ordered At Price
- * 
- * Total
- */
+
+export async function validateCafeOrderLimitByUserId({ userId }: {userId: number}): Promise<boolean>{
+  const unfinishedOrders: CafeOrder[] = await prisma.$queryRaw`
+  SELECT * FROM CafeOrder WHERE userId = ${userId} AND orderStatus != "finished"
+  `
+  if(unfinishedOrders.length != 1){
+    return false
+  }
+  return true
+}

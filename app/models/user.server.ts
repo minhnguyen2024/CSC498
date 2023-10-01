@@ -3,10 +3,11 @@ import bcrypt from "bcryptjs";
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
+import { Decimal } from "@prisma/client/runtime";
 
 export type { User } from "@prisma/client";
 
-export async function getUserById(id: User["id"]) {
+export async function getUserById(id: User["id"]):Promise<User[]> {
   return prisma.$queryRaw`SELECT * FROM User WHERE id = ${id}`;
 }
 
@@ -22,6 +23,7 @@ export async function verifyLogin(username: string, password: string): Promise<U
       id: 0,
       username: "",
       password: "",
+      accountBalance: 0.0,
       admin: -1
     };
   }
@@ -36,12 +38,19 @@ export async function verifyLogin(username: string, password: string): Promise<U
     id: 0,
     username: "",
     password: "",
+    accountBalance: 0.0,
     admin: -1
   };
 }
 
 export async function getAllUsers(): Promise<User[]> {
   return await prisma.$queryRaw`SELECT * FROM User`;
+}
+
+export async function getUserAccountBalanceByUserId({ userId }: { userId: number}): Promise<number>{
+  return await prisma.$queryRaw`
+  SELECT accountBalance FROM User WHERE id = ${userId}
+  `
 }
 
 export async function selectUsersBySearchQuery({

@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 function seedUser() {
-  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User (id, username, password, admin) VALUES (${item.id}, ${item.username}, ${await bcrypt.hash(item.password, 10)}, ${item.admin})`)
+  users.forEach(async (item) => await prisma.$executeRaw`INSERT INTO User (id, username, password, accountBalance, admin) VALUES (${item.id}, ${item.username}, ${await bcrypt.hash(item.password, 10)}, 50.00, ${item.admin})`)
   console.log(`User table has been seeded. 🌱`);
 }
 

@@ -1,24 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import {
+  redirect,
+  type ActionArgs,
+  type LoaderArgs,
+  json,
+} from "@remix-run/node";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 import {
   Inventory,
   createOrder,
   selectAllInventoryByCondition,
   selectInventoryByNameCondition,
   selectInventoryByNameConditionSize,
+  validateCafeOrderLimitByUserId,
 } from "~/models/order.server";
+import { getUserAccountBalanceByUserId } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
-import { getRandomImageURL } from "~/utils/helpers";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
   const iced: number = parseInt(params.iced as string);
-  const availableInventory: Inventory[] = await selectAllInventoryByCondition({ iced });
+  const availableInventory: Inventory[] = await selectAllInventoryByCondition({
+    iced,
+  });
   const name = search.get("name") as string;
 
   const availableInventoryCondensedMap = new Map();
@@ -27,12 +34,19 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   for (let i = 0; i < availableInventory.length; i++) {
     if (
-      !Array.from(availableInventoryCondensedMap.values()).includes(JSON.stringify(availableInventory[i]))
+      !Array.from(availableInventoryCondensedMap.values()).includes(
+        JSON.stringify(availableInventory[i]),
+      )
     ) {
-      availableInventoryCondensedMap.set(i, JSON.stringify(availableInventory[i]));
+      availableInventoryCondensedMap.set(
+        i,
+        JSON.stringify(availableInventory[i]),
+      );
     }
   }
-  Array.from(availableInventoryCondensedMap.values()).forEach((item: string) => availableInventoryCondensed.push(JSON.parse(item)))
+  Array.from(availableInventoryCondensedMap.values()).forEach((item: string) =>
+    availableInventoryCondensed.push(JSON.parse(item)),
+  );
   if (name) {
     const availableSizePrice: any[] = await selectInventoryByNameCondition({
       name,
@@ -73,39 +87,80 @@ export const action = async ({ request }: ActionArgs) => {
     iced,
     size,
   });
-  console.log(result);
   //error check if result = []
-  const invId: any = result[0].invId;
+
+  const invId: string = result[0].invId;
+  const price: number = result[0].price;
+
+  //check order limit
+  const isUserAllowedToPlaceOrder: boolean = await validateCafeOrderLimitByUserId({ userId })
+  console.log(isUserAllowedToPlaceOrder)
+  if(isUserAllowedToPlaceOrder === false){
+    return json(
+      {
+        errors: {
+          message: "Reached limit of 1 order per person",
+        },
+      },
+      { status: 400 },
+    );
+  }
+  //check sufficient fund
+  const currentUserAccountBalance = await getUserAccountBalanceByUserId({
+    userId,
+  });
+  //return error
+  if (currentUserAccountBalance < price) {
+    return json(
+      {
+        errors: {
+          message: "Insufficient funds",
+        },
+      },
+      { status: 400 },
+    );
+  }
   const createdAt: number = Date.now();
-  await createOrder({ invId, userId, createdAt });
+  await createOrder({ invId, userId, createdAt, price });
   return redirect("/dashboard/cafeRoy/viewOrder");
 };
 
 export default function CafeRoyOrder() {
   const { availableInventoryCondensed, iced, availableSizePriceArr, name } =
     useLoaderData<typeof loader>();
+
+  const actionData = useActionData<typeof action>();
+  const messageRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (actionData?.errors?.message) {
+      messageRef.current?.focus();
+    }
+  }, [actionData]);
   return (
     <div>
       <div className="flex-box">
         {availableInventoryCondensed.length !== 0 ? (
           <>
             <div className="grid grid-cols-4 gap-4">
-              {availableInventoryCondensed.map((item: Inventory, index: number) => (
-                <div key={item.image}>
-                  <Card className="rounded">
-                    <img
-                      className="h-full w-full object-cover"
-                      src={item.image}
-                    />
-                    <Form method="get">
-                      <input type="hidden" name="name" value={item.name} />
-                      <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
-                        {item.name}
-                      </Button>
-                    </Form>
-                  </Card>
-                </div>
-              ))}
+              {availableInventoryCondensed.map(
+                (item: Inventory, index: number) => (
+                  <div key={item.image}>
+                    <Card className="rounded">
+                      <img
+                        className="h-full w-full object-cover"
+                        src={item.image}
+                      />
+                      <Form method="get">
+                        <input type="hidden" name="name" value={item.name} />
+                        <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
+                          {item.name}
+                        </Button>
+                      </Form>
+                    </Card>
+                  </div>
+                ),
+              )}
             </div>
           </>
         ) : (
@@ -123,12 +178,14 @@ export default function CafeRoyOrder() {
             <div className="flex">
               {availableSizePriceArr.map((item: any) => (
                 <div className="flex w-full items-center justify-center hover:bg-slate-200">
-                  <input type="radio" name="size" value={item.size}/>
+                  <input type="radio" name="size" value={item.size} />
                   <label className="mx-4">
                     <p className="font-bold">
                       {item.size === "M" ? "Medium" : "Large"} - ${item.price}
                     </p>
-                    <p className="font-medium">{item.size === "M" ? "12 fl oz" : "16 fl oz"}</p>
+                    <p className="font-medium">
+                      {item.size === "M" ? "12 fl oz" : "16 fl oz"}
+                    </p>
                   </label>
                 </div>
               ))}
@@ -137,6 +194,11 @@ export default function CafeRoyOrder() {
             <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
               Place Order
             </Button>
+            {actionData?.errors?.message ? (
+              <div className="pt-1 text-red-700" id="password-error">
+                {actionData.errors.message}
+              </div>
+            ) : null}
           </Form>
         </>
       ) : (
@@ -145,14 +207,3 @@ export default function CafeRoyOrder() {
     </div>
   );
 }
-
-// <div>
-//     <input type="hidden" value={name}/>
-//     <p>Select Size for {name}</p>
-//     {availableSizePriceArr.map((item: any) => ( */}
-//         <div>
-//           <input type="radio" name="size" value={item.size} />
-//           <label>{item.size}  {item.price}</label>
-//         </div>
-//     ))}
-//   <div/>) : (<></>)
