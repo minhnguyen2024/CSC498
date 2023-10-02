@@ -6,7 +6,7 @@ import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
 
-export async function getUserById(id: User["id"]):Promise<User[]> {
+export async function getUserById(id: number):Promise<User[]> {
   return prisma.$queryRaw`SELECT * FROM User WHERE id = ${id}`;
 }
 
@@ -95,6 +95,7 @@ export async function deleteUser({ id }: { id: number }) {
 }
 
 export async function addFundToUserByUserId({ userId, amount}: { userId: number, amount: number}) {
-  const currentBalance: number = await getUserAccountBalanceByUserId({ userId })
-  return prisma.$executeRaw`UPDATE User SET accountBalance = ${currentBalance + amount} WHERE id = ${userId}`
+  const currentBalance: any = await getUserAccountBalanceByUserId({ userId })
+  console.log({ currentBalance, amount})
+  return prisma.$executeRaw`UPDATE User SET accountBalance = ${currentBalance[0].accountBalance + amount} WHERE id = ${userId}`
 }

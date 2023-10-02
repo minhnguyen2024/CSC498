@@ -61,16 +61,15 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
+  await requireUserId(request)
   const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
   const id = body.get("id");
   if(id == null){
     throw new Error(("id does not exist"))
   }
+  //redirect to manageUsers.$userId instead
 
-
-  await deleteUser({ id: parseInt(id.toString())})
-  return null;
+  return redirect(`/dashboard/admin/manageUsers/${id}`);
 };
 
 export default function AdminManageUsers() {
@@ -161,7 +160,7 @@ export default function AdminManageUsers() {
                       type="submit"
                       className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
                     >
-                      <XSquare/>
+                      Details
                     </Button>
                   </form>
                 </TableCell>
