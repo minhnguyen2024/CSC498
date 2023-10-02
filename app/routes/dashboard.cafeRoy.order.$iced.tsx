@@ -93,9 +93,10 @@ export const action = async ({ request }: ActionArgs) => {
   const price: number = result[0].price;
 
   //check order limit
-  const isUserAllowedToPlaceOrder: boolean = await validateCafeOrderLimitByUserId({ userId })
-  console.log(isUserAllowedToPlaceOrder)
-  if(isUserAllowedToPlaceOrder === false){
+  const isUserAllowedToPlaceOrder: boolean =
+    await validateCafeOrderLimitByUserId({ userId });
+  console.log(isUserAllowedToPlaceOrder);
+  if (isUserAllowedToPlaceOrder === false) {
     return json(
       {
         errors: {
@@ -190,10 +191,12 @@ export default function CafeRoyOrder() {
                 </div>
               ))}
             </div>
+            <div ref={messageRef}>
+              <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
+                Place Order
+              </Button>
+            </div>
 
-            <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
-              Place Order
-            </Button>
             {actionData?.errors?.message ? (
               <div className="pt-1 text-red-700" id="password-error">
                 {actionData.errors.message}

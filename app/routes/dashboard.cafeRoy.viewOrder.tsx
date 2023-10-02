@@ -7,7 +7,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   const orders: any = await selectOrderByUserId({ userId });
   const orderHistory = await getGetCafeOrderHistoryByUserId({userId: parseInt(userId)})
-  console.log(orderHistory)
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );

@@ -77,7 +77,7 @@ export default function AdminManageUsers() {
   const [checked, setChecked] = useState(false);
   return (
     <div>
-      <div>
+      <div className="h-screen w-screen">
         <div className="bg-slate-200 px-3 flex">
           <Form>
             <input type="hidden" name="query" value={1} />

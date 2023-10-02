@@ -91,17 +91,17 @@ export default function DashboardIndex() {
                     </li>
                     <li className={listStyle("admin/manageUsers/view")}>
                       <Link to="/dashboard/admin/manageUsers/view" className="">
-                        Manage Users
+                        Users
                       </Link>
                     </li>
                     <li className={listStyle("dashboard/admin/manageFeatures")}>
                       <Link to="/dashboard/admin/manageFeatures" className="">
-                        Manage Features
+                        Application Features
                       </Link>
                     </li>
                     <li className={listStyle("manageRooms")}>
                       <Link to="manageRooms" className="">
-                        Manage Rooms
+                        Study Rooms
                       </Link>
                     </li>
                   </>
