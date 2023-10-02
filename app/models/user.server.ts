@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { Decimal } from "@prisma/client/runtime";
 
 export type { User } from "@prisma/client";
 
@@ -93,4 +92,9 @@ export async function createUser({
 
 export async function deleteUser({ id }: { id: number }) {
   return await prisma.$executeRaw`DELETE FROM User WHERE id = ${id}`;
+}
+
+export async function addFundToUserByUserId({ userId, amount}: { userId: number, amount: number}) {
+  const currentBalance: number = await getUserAccountBalanceByUserId({ userId })
+  return prisma.$executeRaw`UPDATE User SET accountBalance = ${currentBalance + amount} WHERE id = ${userId}`
 }

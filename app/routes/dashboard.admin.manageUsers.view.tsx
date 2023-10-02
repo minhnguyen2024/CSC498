@@ -54,7 +54,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
       username,
       permission,
     });
-    console.log(users);
     return { users };
   }
 
@@ -65,8 +64,12 @@ export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   const userId = (await requireUserId(request)).toString();
   const id = body.get("id");
-  console.log(id);
-  // await deleteUser({id})
+  if(id == null){
+    throw new Error(("id does not exist"))
+  }
+
+
+  await deleteUser({ id: parseInt(id.toString())})
   return null;
 };
 
