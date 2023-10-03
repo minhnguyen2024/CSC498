@@ -22,7 +22,7 @@ import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
 import { requireUserId } from "~/session.server";
-import { Filter, PlusSquare, XSquare } from "lucide-react";
+import { Filter, PlusSquare } from "lucide-react";
 import {
   User,
   deleteUser,
@@ -76,8 +76,8 @@ export default function AdminManageUsers() {
   const { users } = useLoaderData<typeof loader>();
   const [checked, setChecked] = useState(false);
   return (
-    <div>
-      <div className="h-screen w-screen">
+    <div className="h-screen">
+      <div >
         <div className="bg-slate-200 px-3 flex">
           <Form>
             <input type="hidden" name="query" value={1} />
@@ -129,7 +129,6 @@ export default function AdminManageUsers() {
               </div>
             </div>
           </Form>
-          {checked ? <></> : <></>}
         </div>
         <Table>
           <TableCaption>Users</TableCaption>

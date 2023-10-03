@@ -4,8 +4,6 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { getFeatureByName, type Feature } from "~/models/manage.server";
 import { Block, getAllBlocks } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import FeatureDisabled from "./error.featureDisabled";
 import { getNumberOfRooms } from "~/models/room.server";

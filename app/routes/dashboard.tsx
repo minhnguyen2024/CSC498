@@ -209,7 +209,7 @@ export default function DashboardIndex() {
         </div>
         {sidebarOpen ? (
           <>
-            <div className="flex justify-center items-center h-screen w-auto">
+            <div className="flex justify-center items-center h-screen w-6">
               <button
                 className="text-center bg-slate-300 h-16 rounded-tr-xl rounded-br-xl"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -230,7 +230,9 @@ export default function DashboardIndex() {
             </div>
           </>
         )}
-        <Outlet />
+        <div className={`${sidebarOpen === false? "w-screen" : ""}`}>
+          <Outlet/>
+        </div>
       </div>
     </>
   );
