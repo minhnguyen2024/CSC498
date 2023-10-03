@@ -109,9 +109,10 @@ export async function createOrder({
   createdAt: number;
   price: number
 }) {
+  const orderId = uuidv4()
   await prisma.$executeRaw`
   INSERT INTO CafeOrder (id, userId, invId, createdAt, orderStatus, cafeRoyEmpId) 
-  VALUES (${uuidv4()},${userId}, ${invId}, ${createdAt}, "notPrepared", 0)`;
+  VALUES (${orderId},${userId}, ${invId}, ${createdAt}, "notPrepared", 0)`;
 
   // const currentUserAccountBalance:number = await getUserAccountBalanceByUserId({ userId })
   const users = await getUserById(userId)
@@ -122,6 +123,7 @@ export async function createOrder({
   await prisma.$executeRaw`
   UPDATE User SET accountBalance = ${newUserAccountBalance} WHERE id = ${userId}
   `
+  return orderId
 }
 
 //One order can contains many inventory

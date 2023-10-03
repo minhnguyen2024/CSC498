@@ -31,13 +31,13 @@ export const users = [
   },
   {
     id: 4,
-    username: "baker_2025",
+    username: "bamlak_2024",
     password: "password",
     admin: 0,
   },
   {
     id: 5,
-    username: "cole_2023",
+    username: "clg_2025",
     password: "password",
     admin: 0,
   },
@@ -58,6 +58,54 @@ export const users = [
     username: "cafe_roy_2",
     password: "password",
     admin: 2,
+  },
+  {
+    id: 9,
+    username: "ben_2025",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 10,
+    username: "hoang_2024",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 11,
+    username: "max_2024",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 12,
+    username: "cole_2025",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 13,
+    username: "erik_2024",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 14,
+    username: "raj_2026",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 15,
+    username: "anton_2026",
+    password: "password",
+    admin: 0,
+  },
+  {
+    id: 16,
+    username: "david_2025",
+    password: "password",
+    admin: 0,
   },
 ];
 

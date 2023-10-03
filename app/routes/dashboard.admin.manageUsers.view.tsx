@@ -1,4 +1,6 @@
+
 import { Button } from "@/components/ui/button";
+
 import {
   Table,
   TableBody,
@@ -25,13 +27,13 @@ import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
 import {
   User,
-  deleteUser,
   getAllUsers,
   selectUsersBySearchQuery,
 } from "~/models/user.server";
+import { MyDoughnutChart } from "~/components/MyDoughnutChart";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   const users: User[] = await getAllUsers();
 
   const url = new URL(request.url);
@@ -67,7 +69,6 @@ export const action = async ({ request }: ActionArgs) => {
   if(id == null){
     throw new Error(("id does not exist"))
   }
-  //redirect to manageUsers.$userId instead
 
   return redirect(`/dashboard/admin/manageUsers/${id}`);
 };
@@ -168,6 +169,10 @@ export default function AdminManageUsers() {
           </TableBody>
         </Table>
       </div>
+      <div>
+        <MyDoughnutChart/>
+      </div>
+      
       <Outlet />
     </div>
   );
