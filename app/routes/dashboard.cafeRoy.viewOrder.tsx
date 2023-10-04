@@ -1,12 +1,12 @@
 import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getGetCafeOrderHistoryByUserId, selectOrderByUserId } from "~/models/order.server";
+import { getCafeOrderHistoryByUserId, selectOrderByUserId } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   const orders: any = await selectOrderByUserId({ userId });
-  const orderHistory = await getGetCafeOrderHistoryByUserId({userId: parseInt(userId)})
+  const orderHistory = await getCafeOrderHistoryByUserId({userId: parseInt(userId)})
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );

@@ -170,7 +170,7 @@ export default function AdminManageUsers() {
         </Table>
       </div>
       <div>
-        <MyDoughnutChart/>
+        {/* <MyDoughnutChart/> */}
       </div>
       
       <Outlet />

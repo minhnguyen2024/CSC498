@@ -103,6 +103,7 @@
     "node": ">=14.0.0"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
+    "seedRand": "ts-node --require tsconfig-paths/register prisma/seedRandomData.ts"
   }
 }

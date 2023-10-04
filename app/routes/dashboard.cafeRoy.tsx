@@ -5,7 +5,7 @@ import { requireUserId } from "~/session.server";
 import FeatureDisabled from "./error.featureDisabled";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = await requireUserId(request);
+  await requireUserId(request);
   const featureFlag: Feature[] = await getFeatureByName("orderCafeRoy");
 
   return { featureFlag: featureFlag[0] };
@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function CafeRoy() {
   const { featureFlag } = useLoaderData<typeof loader>();
   return (
-    <div className="h-screen w-screen">
+    <div className="">
       {featureFlag.enabled == 1 ? (
         <Outlet />
       ) : (

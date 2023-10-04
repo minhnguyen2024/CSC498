@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { CafeOrder, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { getUserAccountBalanceByUserId, getUserById } from "./user.server";
 
@@ -12,15 +12,6 @@ export type Inventory = {
   image: string;
   price?: number;
   sold?: number;
-};
-
-export type CafeOrder = {
-  id: string;
-  userId: number;
-  invId: string;
-  createdAt: number;
-  orderStatus: string;
-  cafeRoyEmpId: number;
 };
 
 export async function selectOrderByUserId({
@@ -210,14 +201,16 @@ export async function SelectInventoryBySearchQuery({
 }
 
 //Get order history by user
-export async function getGetCafeOrderHistoryByUserId({ userId }: { userId: number}) {
-  const orderListByUserId: CafeOrder[] = await prisma.$queryRaw`
+export async function getCafeOrderHistoryByUserId({ userId }: { userId: number}): Promise<any[]> {
+  const orderListByUserId: any[] = await prisma.$queryRaw`
   SELECT 
+  CafeOrder.userId AS userId,
+  CafeOrder.invId AS invId,
+  CafeOrder.id AS orderId,
   Inventory.name AS name, 
   Inventory.iced AS iced,
   Inventory.size AS size,
-  Inventory.price AS price,
-  CafeOrder.createdAt AS time
+  Inventory.price AS price
   FROM CafeOrder, Inventory, User
   WHERE CafeOrder.invId = Inventory.id
   AND User.id = CafeOrder.userId
@@ -231,7 +224,7 @@ export async function validateCafeOrderLimitByUserId({ userId }: {userId: number
   const unfinishedOrders: CafeOrder[] = await prisma.$queryRaw`
   SELECT * FROM CafeOrder WHERE userId = ${userId} AND orderStatus != "finished"
   `
-  if(unfinishedOrders.length != 1){
+  if(unfinishedOrders.length > 1){
     return false
   }
   return true

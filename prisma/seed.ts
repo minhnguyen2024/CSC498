@@ -7,11 +7,7 @@ import {
   inventory,
 } from "~/utils/data";
 import bcrypt from "bcryptjs";
-import {
-  createOrder,
-  updateOrderAndInventory,
-  updateOrderStatus,
-} from "~/models/order.server";
+
 
 const prisma = new PrismaClient();
 

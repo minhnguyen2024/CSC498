@@ -136,7 +136,7 @@ export default function DashboardIndex() {
                                   <li className="my-2">
                                     <ListItem
                                       href="/dashboard/cafeRoy/order"
-                                      title="Order"
+                                      title="Make an Order"
                                       className="bg-green-500 hover:bg-green-300 rounded"
                                     />
                                   </li>
@@ -144,7 +144,14 @@ export default function DashboardIndex() {
                                     <ListItem
                                       href="/dashboard/cafeRoy/viewOrder"
                                       className="bg-green-500 hover:bg-green-300 rounded"
-                                      title="View Order Status"
+                                      title="Order Status"
+                                    />
+                                  </li>
+                                  <li className="my-2">
+                                    <ListItem
+                                      href="/dashboard/cafeRoy/orderHistory"
+                                      className="bg-green-500 hover:bg-green-300 rounded"
+                                      title="Order History"
                                     />
                                   </li>
                                 </ul>
