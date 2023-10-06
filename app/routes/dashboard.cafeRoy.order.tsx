@@ -17,7 +17,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function CafeRoyOrder() {
   return (
-    <div className="w-full">
+    <div className="">
       <div className="flex-box">
         <Form method="post">
           <div className="flex">

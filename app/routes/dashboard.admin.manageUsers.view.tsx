@@ -169,10 +169,6 @@ export default function AdminManageUsers() {
           </TableBody>
         </Table>
       </div>
-      <div>
-        {/* <MyDoughnutChart/> */}
-      </div>
-      
       <Outlet />
     </div>
   );

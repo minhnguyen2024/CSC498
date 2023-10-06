@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -43,7 +41,7 @@ export default function ManageFeatures() {
   const features: Feature[] = useLoaderData<typeof loader>();
 
   return (
-    <div>
+    <div className="">
       <p>Feature Flags</p>
       <Table>
         <TableBody>
@@ -54,7 +52,7 @@ export default function ManageFeatures() {
           </TableRow>
           {features.map((feature: Feature) => (
          
-              <TableRow key={feature.id} className="h-[50px] border">
+              <TableRow key={feature.id} className="border-b hover:bg-slate-400">
                 <TableCell>{feature.featureName}</TableCell>
                 <TableCell>
                   <Form method="post">

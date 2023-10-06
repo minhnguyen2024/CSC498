@@ -93,28 +93,28 @@ export async function createOrder({
   invId,
   userId,
   createdAt,
-  price
+  price,
 }: {
   invId: string;
   userId: number;
   createdAt: number;
-  price: number
+  price: number;
 }) {
-  const orderId = uuidv4()
+  const orderId = uuidv4();
   await prisma.$executeRaw`
   INSERT INTO CafeOrder (id, userId, invId, createdAt, orderStatus, cafeRoyEmpId) 
   VALUES (${orderId},${userId}, ${invId}, ${createdAt}, "notPrepared", 0)`;
 
   // const currentUserAccountBalance:number = await getUserAccountBalanceByUserId({ userId })
-  const users = await getUserById(userId)
-  const user = users[0]
-  const currentUserAccountBalance: number = user.accountBalance
-  const newUserAccountBalance = currentUserAccountBalance - price
+  const users = await getUserById(userId);
+  const user = users[0];
+  const currentUserAccountBalance: number = user.accountBalance;
+  const newUserAccountBalance = currentUserAccountBalance - price;
 
   await prisma.$executeRaw`
   UPDATE User SET accountBalance = ${newUserAccountBalance} WHERE id = ${userId}
-  `
-  return orderId
+  `;
+  return orderId;
 }
 
 //One order can contains many inventory
@@ -201,31 +201,42 @@ export async function SelectInventoryBySearchQuery({
 }
 
 //Get order history by user
-export async function getCafeOrderHistoryByUserId({ userId }: { userId: number}): Promise<any[]> {
+export async function getCafeOrderHistoryByUserId({
+  userId,
+  period,
+}: {
+  userId: number;
+  period: number;
+}): Promise<any[]> {
   const orderListByUserId: any[] = await prisma.$queryRaw`
-  SELECT 
-  CafeOrder.userId AS userId,
-  CafeOrder.invId AS invId,
-  CafeOrder.id AS orderId,
-  Inventory.name AS name, 
-  Inventory.iced AS iced,
-  Inventory.size AS size,
-  Inventory.price AS price
-  FROM CafeOrder, Inventory, User
-  WHERE CafeOrder.invId = Inventory.id
-  AND User.id = CafeOrder.userId
-  AND orderStatus = "finished" 
-  AND CafeOrder.userId = ${userId}
-  `
-  return orderListByUserId
+    SELECT 
+    CafeOrder.userId AS userId,
+    CafeOrder.invId AS invId,
+    CafeOrder.id AS orderId,
+    Inventory.name AS name, 
+    Inventory.iced AS iced,
+    Inventory.size AS size,
+    Inventory.price AS price
+    FROM CafeOrder, Inventory, User
+    WHERE CafeOrder.invId = Inventory.id
+    AND User.id = CafeOrder.userId
+    AND orderStatus = "finished" 
+    AND CafeOrder.userId = ${userId}
+    AND CafeOrder.createdAt > ${Date.now() - period}
+    `;
+  return orderListByUserId;
 }
 
-export async function validateCafeOrderLimitByUserId({ userId }: {userId: number}): Promise<boolean>{
+export async function validateCafeOrderLimitByUserId({
+  userId,
+}: {
+  userId: number;
+}): Promise<boolean> {
   const unfinishedOrders: CafeOrder[] = await prisma.$queryRaw`
   SELECT * FROM CafeOrder WHERE userId = ${userId} AND orderStatus != "finished"
-  `
-  if(unfinishedOrders.length > 1){
-    return false
+  `;
+  if (unfinishedOrders.length > 1) {
+    return false;
   }
-  return true
+  return true;
 }

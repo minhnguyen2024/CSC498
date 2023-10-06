@@ -95,7 +95,6 @@ export const action = async ({ request }: ActionArgs) => {
   //check order limit
   const isUserAllowedToPlaceOrder: boolean =
     await validateCafeOrderLimitByUserId({ userId });
-  console.log(isUserAllowedToPlaceOrder);
   if (isUserAllowedToPlaceOrder === false) {
     return json(
       {

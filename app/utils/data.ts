@@ -1,3 +1,7 @@
+export const MONTH_IN_MILISECONDS: number = 2592000000
+export const WEEK_IN_MILISECONDS: number = 604800000
+export const DAY_IN_MILISECONDS: number = 86400000
+
 export const imageURLs = [
   "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20211210_MochaCookieCrumbleFrapp.jpg?impolicy=1by1_tight_288",
   "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20210903_AppleCrispFrapp.jpg?impolicy=1by1_wide_topcrop_630",

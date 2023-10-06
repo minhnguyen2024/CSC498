@@ -9,8 +9,6 @@ import FeatureDisabled from "./error.featureDisabled";
 import { getNumberOfRooms } from "~/models/room.server";
 import { partitionArrayByChunk } from "~/utils/helpers";
 
-
-
 export async function loader({ request }: LoaderArgs) {
   const userId: number = await requireUserId(request);
   //return array of all blocks (490) orded by Block.time
@@ -86,54 +84,52 @@ export default function DashboardReserve() {
   return (
     <div>
       {featureFlag.enabled === 1 ? (
-        <>
-          <div className="flex h-full">
-            <div className="h-full w-15 mb-8 px-2 border-r">
-              <p className="pt-7 pb-14">8:AM</p>
-              <p className="pt-2 pb-14">10:AM</p>
-              <p className="pt-2 pb-14">12:PM</p>
-              <p className="pt-2 pb-14">2:PM</p>
-              <p className="pt-2 pb-14">4:PM</p>
-              <p className="pt-2 pb-14">6:PM</p>
-              <p className="pt-2 pb-14">8:PM</p>
-              <p className="">10:PM</p>
-            </div>
-            <div>
-              <>
-                <div className="grid grid-cols-7 gap-4 py-4">
-                  <div className="h-full w-40" key={0}>
-                    <p>Monday</p>
-                    {renderCardsInColumn(partitionedBy10By7[0], 0)}
-                  </div>
-                  <div className="h-full w-40" key={1}>
-                    <p>Tuesday</p>
-                    {renderCardsInColumn(partitionedBy10By7[1], 1)}
-                  </div>
-                  <div className="h-full w-40" key={2}>
-                    <p>Wednesday</p>
-                    {renderCardsInColumn(partitionedBy10By7[2], 2)}
-                  </div>
-                  <div className="h-full w-40" key={3}>
-                    <p>Thursday</p>
-                    {renderCardsInColumn(partitionedBy10By7[3], 3)}
-                  </div>
-                  <div className="h-full w-40" key={4}>
-                    <p>Friday</p>
-                    {renderCardsInColumn(partitionedBy10By7[4], 4)}
-                  </div>
-                  <div className="h-full w-40" key={5}>
-                    <p>Saturday</p>
-                    {renderCardsInColumn(partitionedBy10By7[5], 5)}
-                  </div>
-                  <div className="h-full w-40" key={6}>
-                    <p>Sunday</p>
-                    {renderCardsInColumn(partitionedBy10By7[6], 6)}
-                  </div>
-                </div>
-              </>
-            </div>
+        <div className="h-screen flex">
+          <div className="h-full w-15 mb-8 px-2 border-r">
+            <p className="pt-7 pb-14">8:AM</p>
+            <p className="pt-2 pb-14">10:AM</p>
+            <p className="pt-2 pb-14">12:PM</p>
+            <p className="pt-2 pb-14">2:PM</p>
+            <p className="pt-2 pb-14">4:PM</p>
+            <p className="pt-2 pb-14">6:PM</p>
+            <p className="pt-2 pb-14">8:PM</p>
+            <p className="">10:PM</p>
           </div>
-        </>
+          <div>
+            <>
+              <div className="grid grid-cols-7 gap-4 py-4">
+                <div className="h-full w-40" key={0}>
+                  <p>Monday</p>
+                  {renderCardsInColumn(partitionedBy10By7[0], 0)}
+                </div>
+                <div className="h-full w-40" key={1}>
+                  <p>Tuesday</p>
+                  {renderCardsInColumn(partitionedBy10By7[1], 1)}
+                </div>
+                <div className="h-full w-40" key={2}>
+                  <p>Wednesday</p>
+                  {renderCardsInColumn(partitionedBy10By7[2], 2)}
+                </div>
+                <div className="h-full w-40" key={3}>
+                  <p>Thursday</p>
+                  {renderCardsInColumn(partitionedBy10By7[3], 3)}
+                </div>
+                <div className="h-full w-40" key={4}>
+                  <p>Friday</p>
+                  {renderCardsInColumn(partitionedBy10By7[4], 4)}
+                </div>
+                <div className="h-full w-40" key={5}>
+                  <p>Saturday</p>
+                  {renderCardsInColumn(partitionedBy10By7[5], 5)}
+                </div>
+                <div className="h-full w-40" key={6}>
+                  <p>Sunday</p>
+                  {renderCardsInColumn(partitionedBy10By7[6], 6)}
+                </div>
+              </div>
+            </>
+          </div>
+        </div>
       ) : (
         <FeatureDisabled featureName="Reservation" />
       )}
