@@ -46,7 +46,7 @@ export async function getAllUsers(): Promise<User[]> {
   return await prisma.$queryRaw`SELECT * FROM User`;
 }
 
-export async function getUserAccountBalanceByUserId({ userId }: { userId: number}): Promise<number>{
+export async function getUserAccountBalanceByUserId({ userId }: { userId: number}): Promise<object>{
   return await prisma.$queryRaw`
   SELECT accountBalance FROM User WHERE id = ${userId}
   `

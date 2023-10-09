@@ -1,6 +1,6 @@
 import { CafeOrder, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { getUserAccountBalanceByUserId, getUserById } from "./user.server";
+import { getUserById } from "./user.server";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -169,7 +169,7 @@ export async function selectAllInventory() {
   return await prisma.$queryRaw`SELECT * FROM Inventory`;
 }
 
-export async function SelectInventoryBySearchQuery({
+export async function selectInventoryBySearchQuery({
   invId,
   name,
   size,
@@ -227,7 +227,7 @@ export async function getCafeOrderHistoryByUserId({
   return orderListByUserId;
 }
 
-export async function validateCafeOrderLimitByUserId({
+export async function isUserAllowedToPlaceOrder({
   userId,
 }: {
   userId: number;
@@ -235,8 +235,9 @@ export async function validateCafeOrderLimitByUserId({
   const unfinishedOrders: CafeOrder[] = await prisma.$queryRaw`
   SELECT * FROM CafeOrder WHERE userId = ${userId} AND orderStatus != "finished"
   `;
-  if (unfinishedOrders.length > 1) {
-    return false;
+  console.log(unfinishedOrders)
+  if (unfinishedOrders.length === 0) {
+    return true;
   }
-  return true;
+  return false;
 }

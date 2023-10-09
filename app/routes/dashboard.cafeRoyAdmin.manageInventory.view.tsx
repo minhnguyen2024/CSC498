@@ -20,7 +20,7 @@ import {
 import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import {
-  SelectInventoryBySearchQuery,
+  selectInventoryBySearchQuery,
   selectAllInventory,
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
@@ -52,7 +52,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
       sold = -1;
     }
 
-    let inventory = await SelectInventoryBySearchQuery({
+    let inventory = await selectInventoryBySearchQuery({
       invId,
       name,
       size,

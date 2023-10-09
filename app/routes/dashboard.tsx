@@ -38,7 +38,7 @@ export default function DashboardIndex() {
   };
   return (
     <>
-      <div className="flex h-screen">
+      <div className="flex flex-row h-screen">
         <div className={`${sidebarOpen ? `w-80` : `w-0`} h-screen bg-slate-200 transition-all duration-300 ease-in-out`}>
           <ul className="p-3 h-screen">
             <div className="my-2 flex items-center justify-center rounded bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600">
@@ -237,7 +237,7 @@ export default function DashboardIndex() {
             </div>
           </>
         )}
-        <div className={`${sidebarOpen === false? "w-screen" : ""}`}>
+        <div className={`${sidebarOpen === false? "w-screen" : "w-[1000px]"}`}>
           <Outlet/>
         </div>
       </div>

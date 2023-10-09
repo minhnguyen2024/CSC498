@@ -14,12 +14,13 @@ import {
   selectAllInventoryByCondition,
   selectInventoryByNameCondition,
   selectInventoryByNameConditionSize,
-  validateCafeOrderLimitByUserId,
+  isUserAllowedToPlaceOrder,
 } from "~/models/order.server";
 import { getUserAccountBalanceByUserId } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
+  const userId = parseInt((await requireUserId(request)).toString());
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
   const iced: number = parseInt(params.iced as string);
@@ -31,6 +32,10 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const availableInventoryCondensedMap = new Map();
   let availableInventoryCondensed: Inventory[] = [];
   let availableSizePriceArr: object[] = [];
+
+  const userAllowedToPlaceOrder: boolean = await isUserAllowedToPlaceOrder({
+    userId,
+  });
 
   for (let i = 0; i < availableInventory.length; i++) {
     if (
@@ -71,9 +76,19 @@ export const loader = async ({ params, request }: LoaderArgs) => {
     result.forEach((item: string) =>
       availableSizePriceArr.push(JSON.parse(item)),
     );
-    return { availableInventoryCondensed, iced, availableSizePriceArr, name };
+    return {
+      availableInventoryCondensed,
+      iced,
+      availableSizePriceArr,
+      name,
+    };
   }
-  return { availableInventoryCondensed, iced, availableSizePriceArr, name };
+  return {
+    availableInventoryCondensed,
+    iced,
+    availableSizePriceArr,
+    name,
+  };
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -93,9 +108,10 @@ export const action = async ({ request }: ActionArgs) => {
   const price: number = result[0].price;
 
   //check order limit
-  const isUserAllowedToPlaceOrder: boolean =
-    await validateCafeOrderLimitByUserId({ userId });
-  if (isUserAllowedToPlaceOrder === false) {
+  const userAllowedToPlaceOrder: boolean = await isUserAllowedToPlaceOrder({
+    userId,
+  });
+  if (userAllowedToPlaceOrder === false) {
     return json(
       {
         errors: {
@@ -106,11 +122,11 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
   //check sufficient fund
-  const currentUserAccountBalance = await getUserAccountBalanceByUserId({
+  const currentUserAccountBalance: any = await getUserAccountBalanceByUserId({
     userId,
   });
   //return error
-  if (currentUserAccountBalance < price) {
+  if (currentUserAccountBalance[0].accountBalance < price) {
     return json(
       {
         errors: {
@@ -139,73 +155,74 @@ export default function CafeRoyOrder() {
   }, [actionData]);
   return (
     <div>
-      <div className="flex-box">
-        {availableInventoryCondensed.length !== 0 ? (
+      <div>
+        <div className="flex-box">
+          {availableInventoryCondensed.length !== 0 ? (
+            <>
+              <div className="grid grid-cols-4 gap-4">
+                {availableInventoryCondensed.map(
+                  (item: Inventory, index: number) => (
+                    <div key={item.image}>
+                      <Card className="rounded">
+                        <img
+                          className="h-full w-full object-cover"
+                          src={item.image}
+                        />
+                        <Form method="get">
+                          <input type="hidden" name="name" value={item.name} />
+                          <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
+                            {item.name}
+                          </Button>
+                        </Form>
+                      </Card>
+                    </div>
+                  ),
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <p>Not available</p>
+            </>
+          )}
+        </div>
+        {availableSizePriceArr.length !== 0 && name !== null ? (
           <>
-            <div className="grid grid-cols-4 gap-4">
-              {availableInventoryCondensed.map(
-                (item: Inventory, index: number) => (
-                  <div key={item.image}>
-                    <Card className="rounded">
-                      <img
-                        className="h-full w-full object-cover"
-                        src={item.image}
-                      />
-                      <Form method="get">
-                        <input type="hidden" name="name" value={item.name} />
-                        <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
-                          {item.name}
-                        </Button>
-                      </Form>
-                    </Card>
+            <Form method="post">
+              <input type="hidden" value={name} name="name" />
+              <input type="hidden" value={iced} name="iced" />
+              <p>Select Size for {name}</p>
+              <div className="flex">
+                {availableSizePriceArr.map((item: any) => (
+                  <div className="flex w-full items-center justify-center hover:bg-slate-200">
+                    <input type="radio" name="size" value={item.size} />
+                    <label className="mx-4">
+                      <p className="font-bold">
+                        {item.size === "M" ? "Medium" : "Large"} - ${item.price}
+                      </p>
+                      <p className="font-medium">
+                        {item.size === "M" ? "12 fl oz" : "16 fl oz"}
+                      </p>
+                    </label>
                   </div>
-                ),
-              )}
-            </div>
+                ))}
+              </div>
+              <div ref={messageRef}>
+                {actionData?.errors?.message ? (
+                  <div className="pt-1 text-red-700" id="password-error">
+                    {actionData.errors.message}
+                  </div>
+                ) : null}
+                <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
+                  Place Order
+                </Button>
+              </div>
+            </Form>
           </>
         ) : (
-          <>
-            <p>Not available</p>
-          </>
+          <></>
         )}
       </div>
-      {availableSizePriceArr.length !== 0 && name !== null ? (
-        <>
-          <Form method="post">
-            <input type="hidden" value={name} name="name" />
-            <input type="hidden" value={iced} name="iced" />
-            <p>Select Size for {name}</p>
-            <div className="flex">
-              {availableSizePriceArr.map((item: any) => (
-                <div className="flex w-full items-center justify-center hover:bg-slate-200">
-                  <input type="radio" name="size" value={item.size} />
-                  <label className="mx-4">
-                    <p className="font-bold">
-                      {item.size === "M" ? "Medium" : "Large"} - ${item.price}
-                    </p>
-                    <p className="font-medium">
-                      {item.size === "M" ? "12 fl oz" : "16 fl oz"}
-                    </p>
-                  </label>
-                </div>
-              ))}
-            </div>
-            <div ref={messageRef}>
-              <Button className="w-full border rounded bg-green-500 hover:bg-green-300 text-white">
-                Place Order
-              </Button>
-            </div>
-
-            {actionData?.errors?.message ? (
-              <div className="pt-1 text-red-700" id="password-error">
-                {actionData.errors.message}
-              </div>
-            ) : null}
-          </Form>
-        </>
-      ) : (
-        <></>
-      )}
     </div>
   );
 }
