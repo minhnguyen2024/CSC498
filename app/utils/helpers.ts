@@ -16,3 +16,7 @@ export function partitionArrayByChunk(arr: any[], chunk: number) {
   }
   return result;
 }
+
+export function sum(a: number, b: number) {
+  return a + b;
+}

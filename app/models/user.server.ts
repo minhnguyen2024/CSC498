@@ -10,7 +10,7 @@ export async function getUserById(id: number):Promise<User[]> {
   return prisma.$queryRaw`SELECT * FROM User WHERE id = ${id}`;
 }
 
-export async function getUserByEmail(username: string) {
+export async function getUserByUsername(username: string) {
   return prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
 }
 

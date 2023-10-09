@@ -235,7 +235,6 @@ export async function isUserAllowedToPlaceOrder({
   const unfinishedOrders: CafeOrder[] = await prisma.$queryRaw`
   SELECT * FROM CafeOrder WHERE userId = ${userId} AND orderStatus != "finished"
   `;
-  console.log(unfinishedOrders)
   if (unfinishedOrders.length === 0) {
     return true;
   }
