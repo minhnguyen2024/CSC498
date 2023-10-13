@@ -26,30 +26,34 @@ export default function ConfirmReservation() {
 
   return (
     <div>
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-[380px] border rounded">
-          <CardHeader>
-            <CardTitle>Your Reservation Has Been Confirmed!</CardTitle>
-            <CardDescription>See below for details</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Room Number: {data.roomId}</p>
-            {data.accessible === 1 ? <p>✅ Accessible</p> : <></>}
-            {data.power === 1 ? <p>✅ Power </p> : <></>}
-            {data.reservable === 1 ? <p>✅ Reservable</p> : <></>}
-            {data.softSeating === 1 ? <p>✅ Soft Seating</p> : <></>}
-            {data.tableChairs === 1 ? <p>✅ Table and Chairs</p> : <></>}
-            {data.monitor === 1 ? <p>✅ Monitor</p> : <></>}
-            {data.whiteboard === 1 ? <p>✅ Whiteboard</p> : <></>}
-            {data.window === 1 ? <p>✅ Window</p> : <></>}
-          </CardContent>
-        </Card>
-        <Link
-          className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
-          to="/dashboard/reservationStatus"
-        >
-          Check Reservation Status
-        </Link>
+      <div className="min-h-screen flex items-center justify-center flex-col">
+        <div>
+          <Card className="w-[380px] border rounded">
+            <CardHeader>
+              <CardTitle>Your Reservation Has Been Confirmed!</CardTitle>
+              <CardDescription>See below for details</CardDescription>
+            </CardHeader>
+            <CardContent className="p-3">
+              <p>Room Number: {data.roomId}</p>
+              {data.accessible === 1 ? <p>✅ Accessible</p> : <></>}
+              {data.power === 1 ? <p>✅ Power </p> : <></>}
+              {data.reservable === 1 ? <p>✅ Reservable</p> : <></>}
+              {data.softSeating === 1 ? <p>✅ Soft Seating</p> : <></>}
+              {data.tableChairs === 1 ? <p>✅ Table and Chairs</p> : <></>}
+              {data.monitor === 1 ? <p>✅ Monitor</p> : <></>}
+              {data.whiteboard === 1 ? <p>✅ Whiteboard</p> : <></>}
+              {data.window === 1 ? <p>✅ Window</p> : <></>}
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Link
+            className="my-2 flex items-center justify-center rounded bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
+            to="/dashboard/reservationStatus"
+          >
+            Check Reservation Status
+          </Link>
+        </div>
       </div>
     </div>
   );
