@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import {
@@ -11,12 +9,11 @@ import {
 } from "@remix-run/node";
 import {
   Form,
-  Link,
   Outlet,
   useActionData,
   useLoaderData,
 } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { requireUserId } from "~/session.server";
 import { Plus, X } from "lucide-react";
@@ -24,7 +21,7 @@ import { User, addFundToUserByUserId, deleteUser, getUserById } from "~/models/u
 import invariant from "tiny-invariant";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = await requireUserId(request);
+  await requireUserId(request);
   invariant(params.userId, "userId not found");
   const users = await getUserById(parseInt(params.userId));
   const user: User = users[0];

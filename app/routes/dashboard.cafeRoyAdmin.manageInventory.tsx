@@ -1,18 +1,17 @@
 import { type LoaderArgs} from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import { getAllUsers, getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const allUsers = await getAllUsers();
+  await getAllUsers();
   const user: any = await getUserById(userId);
   return { user: user[0] };
 }
 
 export default function DashboardIndex() {
-  const { user } = useLoaderData<typeof loader>();
   return (
     <>
       <Outlet />

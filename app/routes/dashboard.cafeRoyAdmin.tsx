@@ -5,7 +5,7 @@ import { requireUserId } from "~/session.server";
 import FeatureDisabled from "./error.featureDisabled";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = await requireUserId(request);
+  await requireUserId(request);
   const featureFlag: Feature[] = await getFeatureByName("adminCafeRoy");
 
   return { featureFlag: featureFlag[0] };

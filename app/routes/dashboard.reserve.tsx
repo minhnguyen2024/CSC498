@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { type LoaderArgs, ActionArgs, redirect } from "@remix-run/node";
+import { type LoaderArgs, type ActionArgs, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getFeatureByName, type Feature } from "~/models/manage.server";
 import { Block, getAllBlocks } from "~/models/reserve.server";
@@ -10,7 +10,7 @@ import { getNumberOfRooms } from "~/models/room.server";
 import { partitionArrayByChunk } from "~/utils/helpers";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId: number = await requireUserId(request);
+  await requireUserId(request);
   //return array of all blocks (490) orded by Block.time
   //Example: 10 entries of time 1, 10 entries of time 2,...
   const blocks: Block[] = await getAllBlocks();

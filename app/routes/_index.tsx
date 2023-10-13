@@ -1,7 +1,6 @@
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { getUserById } from "~/models/user.server";
-import { logout, requireUserId } from "~/session.server";
+import { requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);

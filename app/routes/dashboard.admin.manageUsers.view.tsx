@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 
 import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
@@ -30,7 +29,6 @@ import {
   getAllUsers,
   selectUsersBySearchQuery,
 } from "~/models/user.server";
-import { MyDoughnutChart } from "~/components/MyDoughnutChart";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   await requireUserId(request)
@@ -75,7 +73,6 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function AdminManageUsers() {
   const { users } = useLoaderData<typeof loader>();
-  const [checked, setChecked] = useState(false);
   return (
     <div className="h-screen">
       <div >

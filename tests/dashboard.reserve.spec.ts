@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { getUserByUsername } from '~/models/user.server';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:3000/login');

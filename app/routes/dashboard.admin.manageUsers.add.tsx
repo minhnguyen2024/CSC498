@@ -15,13 +15,13 @@ import { createUser } from "~/models/user.server";
 
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   return null;
 };
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   const username: string = body.get("username") as string;
   const password: string = body.get("password") as string;
   const permission: number = parseInt(body.get("permission") as string);

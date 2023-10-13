@@ -3,7 +3,6 @@ import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { Form, Outlet, useLoaderData } from "@remix-run/react";
 import {
   isUserAllowedToPlaceOrder,
-  selectAllInventoryByCondition,
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
@@ -14,7 +13,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
+  new URLSearchParams(url.search);
   return { userAllowedToPlaceOrder };
 };
 

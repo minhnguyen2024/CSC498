@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { createRoom, type Room } from "~/models/room.server";
-import { Form } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import { createRoom } from "~/models/room.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   return null;
@@ -20,7 +18,7 @@ export const action = async ({ request }: ActionArgs) => {
   const whiteboard: number = body.get("whiteboard") === "on" ? 1 : 0;
   const window: number = body.get("window") === "on" ? 1 : 0;
 
-  const insertResult = await createRoom({
+  await createRoom({
     accessible,
     power,
     reservable,

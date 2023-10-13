@@ -2,11 +2,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LoaderArgs, json } from "@remix-run/node";
+import { type LoaderArgs, json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { confirmRoomBookingWithUserId } from "~/models/confirm.server";
@@ -16,7 +15,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = await requireUserId(request);
   invariant(params.time, "time not found");
   invariant(params.room, "room not found");
-  const isConfirmed = await confirmRoomBookingWithUserId(userId.toString());
+  await confirmRoomBookingWithUserId(userId.toString());
   const room = JSON.parse(decodeURIComponent(params.room));
   return json(room);
 };

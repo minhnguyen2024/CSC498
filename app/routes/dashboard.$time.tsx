@@ -24,13 +24,13 @@ import {
 import { getAllAvailableRoomsByBlockAndAmenities } from "~/models/reserve.server";
 import { requireUserId } from "~/session.server";
 
-function getAvailableRoomsByBlock(arr: any) {
-  const result = [];
-  for (let i = 0; i < arr.length; i++) {
-    result.push(arr[i].id);
-  }
-  return result;
-}
+// function getAvailableRoomsByBlock(arr: any) {
+//   const result = [];
+//   for (let i = 0; i < arr.length; i++) {
+//     result.push(arr[i].id);
+//   }
+//   return result;
+// }
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();

@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import {
   selectInventoryBySearchQuery,
@@ -29,7 +29,7 @@ import Pagination from "~/components/Pagination";
 import { useMemo, useState } from "react";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   let inventory: any = await selectAllInventory();
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
@@ -64,10 +64,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   }
 
   return { inventory };
-};
-
-export const action = async ({ request }: ActionArgs) => {
-  return null;
 };
 
 export default function CafeRoyManageInventoryView() {

@@ -6,7 +6,7 @@ import { requireUserId } from "~/session.server";
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   const orders: any = await selectOrderByUserId({ userId });
-  const orderHistory = await getCafeOrderHistoryByUserId({userId: parseInt(userId)})
+  await getCafeOrderHistoryByUserId({userId: parseInt(userId), period: Date.now()})
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );
@@ -18,12 +18,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   return { activeOrder };
 };
 
-export const action = async ({ request }: ActionArgs) => {
-  const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
-
-  return null;
-};
 
 export default function CafeRoyViewOrder() {
   const { activeOrder } = useLoaderData<typeof loader>();

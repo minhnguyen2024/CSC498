@@ -15,7 +15,7 @@ import { toggleFeature, updateFeatureByName } from "~/models/manage.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await requireUserId(request);
+  await requireUserId(request);
   const features = await toggleFeature();
   return features;
 };
@@ -26,7 +26,7 @@ export const action = async ({ request }: ActionArgs) => {
   const featureName = body.get("featureName")?.toString();
   invariant(featureName, "featureName not found");
   invariant(featureStatus, "featureStatus not found");
-  const updatedFeatureStatus = await updateFeatureByName({
+  await updateFeatureByName({
     featureName,
     featureStatus,
   });

@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet, useLoaderData } from "@remix-run/react";
+import { Form, Outlet } from "@remix-run/react";
 import { createInventory } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
@@ -11,13 +10,13 @@ import { requireUserId } from "~/session.server";
  */
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   return null
 };
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   const iced: number = body.get("condition") === "iced" ? 1 : 0;
   const name: string = body.get("name") as string
   const quantity: number = parseInt(body.get("quantity") as string)

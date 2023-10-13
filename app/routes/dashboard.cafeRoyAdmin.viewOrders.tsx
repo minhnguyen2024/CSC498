@@ -15,7 +15,7 @@ import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   //userId will be a admin = 2 id
-  const userId = (await requireUserId(request)).toString();
+  await requireUserId(request)
   //SQL model to fetch all orders and their status
   const orders: any = await selectOrders();
   return { orders };
@@ -29,9 +29,9 @@ export const action = async ({ request }: ActionArgs) => {
   const orderId: string = body.get("orderId") as string;
 
   if (orderStatus === "preparing") {
-    const result = await updateOrderStatus({ orderStatus, orderId, userId });
+    await updateOrderStatus({ orderStatus, orderId, userId });
   } else if (orderStatus === "ready") {
-    const result = await updateOrderStatus({ orderStatus, orderId, userId });
+    await updateOrderStatus({ orderStatus, orderId, userId });
   } else {
     const invId = body.get("invId") as string
     await updateOrderStatus({ orderStatus, orderId, userId });

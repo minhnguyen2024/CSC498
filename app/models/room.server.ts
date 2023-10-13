@@ -1,5 +1,3 @@
-import { Prisma } from "@prisma/client";
-import { as } from "vitest/dist/reporters-2ff87305";
 import { prisma } from "~/db.server";
 export type Room = {
   id?: number;
@@ -27,8 +25,7 @@ export async function createRoom({
   const result: any[] = await prisma.$queryRaw`SELECT last_insert_rowid()`;
   const newRoomId: number = Number(result[0]["last_insert_rowid()"]);
   for (let i = 1; i < 50; i++) {
-    const block =
-      await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${newRoomId}, ${i}, ${0})`;
+    await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${newRoomId}, ${i}, ${0})`;
   }
 }
 

@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ActionArgs, redirect, type LoaderArgs } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
   confirmRoomBookingWithUserId,
@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function ManageRoomsConsole() {
-  const { reservedRooms, user } = useLoaderData<typeof loader>();
+  const { reservedRooms } = useLoaderData<typeof loader>();
   return (
     <div>
       <div>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ActionArgs, LoaderArgs, redirect } from "@remix-run/node"
+import { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { deleteRoombyId, selectAllRooms } from "~/models/room.server"
 

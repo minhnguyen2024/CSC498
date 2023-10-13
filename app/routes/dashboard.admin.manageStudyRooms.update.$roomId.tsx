@@ -8,16 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Room, selectRoomById, updateRoom } from "~/models/room.server";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form";
 
-/**
- *
- * display form at render
- * user input
- */
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const roomId = parseInt(params.roomId as string);

@@ -33,7 +33,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   let availableInventoryCondensed: Inventory[] = [];
   let availableSizePriceArr: object[] = [];
 
-  const userAllowedToPlaceOrder: boolean = await isUserAllowedToPlaceOrder({
+  await isUserAllowedToPlaceOrder({
     userId,
   });
 
@@ -166,6 +166,7 @@ export default function CafeRoyOrder() {
                       <Card className="rounded">
                         <img
                           className="h-full w-full object-cover"
+                          alt="image"
                           src={item.image}
                         />
                         <Form method="get">
@@ -194,7 +195,7 @@ export default function CafeRoyOrder() {
               <p>Select Size for {name}</p>
               <div className="flex">
                 {availableSizePriceArr.map((item: any) => (
-                  <div className="flex w-full items-center justify-center hover:bg-slate-200">
+                  <div key={item} className="flex w-full items-center justify-center hover:bg-slate-200">
                     <input type="radio" name="size" value={item.size} />
                     <label className="mx-4">
                       <p className="font-bold">

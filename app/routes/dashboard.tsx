@@ -2,8 +2,7 @@ import { type LoaderArgs } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useLocation } from "@remix-run/react";
 import { getAllUsers, getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
-import { ChevronLeft } from "lucide-react";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -19,7 +18,7 @@ import { ListItem } from "~/components/ListItem";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const allUsers = await getAllUsers();
+  await getAllUsers();
   const user: any = await getUserById(userId);
   return { user: user[0] };
 }

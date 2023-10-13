@@ -1,5 +1,4 @@
-import { Inventory, PrismaClient, User } from "@prisma/client";
-const { v4: uuidv4 } = require("uuid");
+import { PrismaClient } from "@prisma/client";
 import { getRandomInteger } from "~/utils/helpers";
 import {
   users,
@@ -8,6 +7,7 @@ import {
 } from "~/utils/data";
 import bcrypt from "bcryptjs";
 
+const { v4: uuidv4 } = require("uuid");
 
 const prisma = new PrismaClient();
 
@@ -69,40 +69,38 @@ async function seedInventory(numReps: number) {
 }
 
 
+// async function seedInventoryAndOrder() {
+//   for (let i = 0; i < inventory.length; i++) {
+//     await prisma.$executeRaw`INSERT INTO Inventory (id, name, iced) VALUES (${uuidv4()}, ${
+//       inventory[i].name
+//     }, ${inventory[i].iced})`;
+//   }
+//   console.log(`Inventory table has been seeded. 🌱`);
+//   const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`;
+//   for (let i = 0; i < result.length; i++) {
+//     await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId, orderStatus, cafeRoyEmpId) VALUES (${uuidv4()}, ${getRandomInteger(
+//       1,
+//       4,
+//     )}, ${result[i].id}, "notPrepared", 0)`;
+//   }
+//   console.log(`CafeOrder table has been seeded. 🌱`);
+// }
 
+// async function selectExample(username: string) {
+//   const result =
+//     await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
+//   return result;
+// }
 
-async function seedInventoryAndOrder() {
-  for (let i = 0; i < inventory.length; i++) {
-    await prisma.$executeRaw`INSERT INTO Inventory (id, name, iced) VALUES (${uuidv4()}, ${
-      inventory[i].name
-    }, ${inventory[i].iced})`;
-  }
-  console.log(`Inventory table has been seeded. 🌱`);
-  const result: any[] = await prisma.$queryRaw`SELECT * FROM Inventory`;
-  for (let i = 0; i < result.length; i++) {
-    await prisma.$executeRaw`INSERT INTO CafeOrder (id, userId, invId, orderStatus, cafeRoyEmpId) VALUES (${uuidv4()}, ${getRandomInteger(
-      1,
-      4,
-    )}, ${result[i].id}, "notPrepared", 0)`;
-  }
-  console.log(`CafeOrder table has been seeded. 🌱`);
-}
-
-async function selectExample(username: string) {
-  const result =
-    await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
-  return result;
-}
-
-async function seedSingleUser({
-  username,
-  password,
-}: {
-  username: string;
-  password: string;
-}) {
-  await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`;
-}
+// async function seedSingleUser({
+//   username,
+//   password,
+// }: {
+//   username: string;
+//   password: string;
+// }) {
+//   await prisma.$executeRaw`INSERT INTO User (username, password) VALUES (${username}, ${password})`;
+// }
 
 seedUser();
 seedBlock();

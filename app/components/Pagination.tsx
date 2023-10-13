@@ -8,7 +8,7 @@ const Pagination = (props: any) => {
     siblingCount = 1,
     currentPage,
     pageSize,
-    className,
+    // className,
   } = props;
 
   const paginationRange =
@@ -32,7 +32,7 @@ const Pagination = (props: any) => {
     onPageChange(currentPage - 1);
   };
 
-  let lastPage = paginationRange[paginationRange.length - 1];
+  // let lastPage = paginationRange[paginationRange.length - 1];
   return (
     <ul className="flex">
       {/* Left navigation arrow */}
