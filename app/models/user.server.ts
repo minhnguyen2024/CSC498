@@ -85,9 +85,12 @@ export async function createUser({
   permission: number;
 }): Promise<number> {
   const hashedPassword: string = await bcrypt.hash(password, 10);
-  return await prisma.$executeRaw`
+  await prisma.$executeRaw`
   INSERT INTO User(username, password, admin) 
   VALUES (${username}, ${hashedPassword}, ${permission})`;
+  const users: User[] = await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`
+  const user: User = users[0]
+  return user.id
 }
 
 export async function deleteUser({ id }: { id: number }) {
