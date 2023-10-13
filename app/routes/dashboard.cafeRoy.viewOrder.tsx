@@ -1,4 +1,4 @@
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getCafeOrderHistoryByUserId, selectOrderByUserId } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
