@@ -104,6 +104,6 @@
   },
   "prisma": {
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts",
-    "seedRand": "ts-node --require tsconfig-paths/register prisma/seedRandomData.ts"
+    "seed-random-data": "ts-node --require tsconfig-paths/register prisma/seedRandomData.ts"
   }
 }
