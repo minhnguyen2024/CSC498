@@ -122,11 +122,12 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
   //check sufficient fund
-  const currentUserAccountBalance: any = await getUserAccountBalanceByUserId({
+  let currentUserAccountBalance: any = await getUserAccountBalanceByUserId({
     userId,
   });
+  currentUserAccountBalance = currentUserAccountBalance[0].accountBalance
   //return error
-  if (currentUserAccountBalance[0].accountBalance < price) {
+  if (currentUserAccountBalance < price) {
     return json(
       {
         errors: {

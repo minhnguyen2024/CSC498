@@ -236,7 +236,7 @@ export default function DashboardIndex() {
             </div>
           </>
         )}
-        <div className={`${sidebarOpen === false? "w-screen" : "w-[1000px]"}`}>
+        <div className={`${sidebarOpen === false? "w-screen" : "w-[700px]"}`}>
           <Outlet/>
         </div>
       </div>

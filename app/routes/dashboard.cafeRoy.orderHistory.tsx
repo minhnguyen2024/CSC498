@@ -158,23 +158,23 @@ export default function CafeRoy() {
       <div>
         <Table>
           <TableCaption>Orders</TableCaption>
-          <TableHeader>
+          <TableHeader className="items-start justify-start bg-slate-300">
             <TableRow>
-              <TableHead>Order #</TableHead>
-              <TableHead>Item</TableHead>
-              <TableHead>Price</TableHead>
+              <TableHead className="text-left">Order #</TableHead>
+              <TableHead className="text-left">Item</TableHead>
+              <TableHead className="text-left">Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {orders.map((item: any) => {
               return (
                 <>
-                  <TableRow className="border rounded" key={item.orderId}>
-                    <TableCell>{item.orderId}</TableCell>
-                    <TableCell>{`${item.name} (${
+                  <TableRow className="border-b hover:bg-slate-400" key={item.orderId}>
+                    <TableCell className="p-3">{item.orderId}</TableCell>
+                    <TableCell className="p-3">{`${item.name} (${
                       item.iced == 1 ? "Iced" : "Hot"
                     }, ${item.size})`}</TableCell>
-                    <TableCell>${item.price}</TableCell>
+                    <TableCell className="p-3">${item.price}</TableCell>
                   </TableRow>
                 </>
               );

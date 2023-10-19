@@ -19,7 +19,8 @@ export default function CafeRoy() {
         <Outlet />
       ) : (
         <FeatureDisabled featureName="Cafe Roy" />
-      )}
+    )}
     </div>
   );
 }
+

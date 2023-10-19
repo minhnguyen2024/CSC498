@@ -58,9 +58,7 @@ export default function DashboardReserveUserId() {
           </TableHeader>
           <TableBody>
             {orders.map((item: any) => {
-              if (item.orderStatus === "finished") {
-                return <></>;
-              } else {
+              if (item.orderStatus !== "finished") {
                 return (
                   <TableRow className="border rounded" key={item.ordId}>
                     <TableCell>{item.ordId}</TableCell>

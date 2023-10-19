@@ -78,7 +78,7 @@ export default function CafeRoyManageInventoryView() {
     return inventory.slice(firstPageIndex, lastPageIndex);
   }, [currentPage]);
   return (
-    <div className="w-auto">
+    <div>
       <div>
         <div className="bg-slate-200 px-3 flex">
           <Form>
