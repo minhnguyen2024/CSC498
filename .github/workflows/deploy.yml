@@ -97,7 +97,7 @@ jobs:
         run: npm install
 
       - name: 🛠 Setup Database
-        run: npx prisma db push && npx prisma db seed
+        run: npx prisma migrate reset --force
 
       - name: ⚙️ Build
         run: npm run build
