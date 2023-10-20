@@ -23,9 +23,9 @@ function seedUser() {
   console.log(`User table has been seeded. 🌱`);
 }
 
-function seedRoom() {
+async function seedRoom() {
   for (let numRoom = 1; numRoom < 11; numRoom++) {
-    prisma.$executeRaw`
+    await prisma.$executeRaw`
     INSERT INTO Room (accessible, power, reservable,softSeating,tableChairs,monitor,whiteboard, window) VALUES (${getRandomInteger(
       0,
       1
@@ -37,27 +37,27 @@ function seedRoom() {
   console.log(`Room table has been seeded. 🌱`);
 }
 
-function seedBlock() {
+async function seedBlock() {
   for (let numRoom = 1; numRoom < 11; numRoom++) {
     for (let numBlock = 1; numBlock < 50; numBlock++) {
-      prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${numRoom}, ${numBlock}, ${0})`;
+      await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${numRoom}, ${numBlock}, ${0})`;
     }
   }
   console.log(`Block table has been seeded. 🌱`);
 }
 
 
-function seedFeature() {
+async function seedFeature() {
   for (let i = 0; i < features.length; i++) {
-    prisma.$executeRaw`INSERT INTO Feature (id, featureName, enabled) VALUES (${features[i].id}, ${features[i].featureName}, ${features[i].enabled})`;
+    await prisma.$executeRaw`INSERT INTO Feature (id, featureName, enabled) VALUES (${features[i].id}, ${features[i].featureName}, ${features[i].enabled})`;
   }
   console.log(`Feature table has been seeded. 🌱`);
 }
 
-function seedInventory(numReps: number) {
+async function seedInventory(numReps: number) {
   for (let i = 0; i < inventory.length; i++) {
     for (let j = 0; j < numReps; j++) {
-      prisma.$executeRaw`
+      await prisma.$executeRaw`
       INSERT INTO Inventory (id, name, iced, size, image, price, sold) 
       VALUES (${uuidv4()}, ${inventory[i].name}, ${inventory[i].iced}, ${
         inventory[i].size
