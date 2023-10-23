@@ -47,47 +47,6 @@ export default function DashboardIndex() {
               <>
                 {sidebarOpen ? (
                   <>
-                    <li className={listStyle("reserve")}>
-                      <Link to="reserve" className="">
-                        Reserve a Study Room
-                      </Link>
-                    </li>
-                    <li className={listStyle("reservationStatus")}>
-                      <Link to="/dashboard/reservationStatus" className="">
-                        Check Resvervation Status
-                      </Link>
-                    </li>
-                    <li>
-                      <NavigationMenu className="bg-yellow-500 rounded">
-                        <NavigationMenuList>
-                          <NavigationMenuItem className="flex items-center justify-center">
-                            <NavigationMenuTrigger className="justify-center font-medium text-white">
-                              Cafe Roy
-                            </NavigationMenuTrigger>
-                            <NavigationMenuContent className="flex-box">
-                              <NavigationMenuLink>
-                                <ul className="flex-box gap-3 p-6 lg:grid-cols-[.75fr_1fr] bg-slate-300">
-                                  <li className="my-2">
-                                    <ListItem
-                                      href="/dashboard/cafeRoy/order"
-                                      title="Order"
-                                      className="bg-green-500 hover:bg-green-300 rounded"
-                                    />
-                                  </li>
-                                  <li className="my-2">
-                                    <ListItem
-                                      href="/dashboard/cafeRoy/viewOrder"
-                                      className="bg-green-500 hover:bg-green-300 rounded"
-                                      title="View Order Status"
-                                    />
-                                  </li>
-                                </ul>
-                              </NavigationMenuLink>
-                            </NavigationMenuContent>
-                          </NavigationMenuItem>
-                        </NavigationMenuList>
-                      </NavigationMenu>
-                    </li>
                     <li className={listStyle("admin/manageUsers/view")}>
                       <Link to="/dashboard/admin/manageUsers/view" className="">
                         Users
@@ -236,7 +195,7 @@ export default function DashboardIndex() {
             </div>
           </>
         )}
-        <div className={`${sidebarOpen === false? "w-screen" : "w-[700px]"}`}>
+        <div className={`${sidebarOpen === false? "w-screen" : "w-[950px]"}`}>
           <Outlet/>
         </div>
       </div>

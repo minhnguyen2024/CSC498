@@ -1,10 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -31,7 +29,7 @@ import {
 } from "~/models/user.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  await requireUserId(request)
+  await requireUserId(request);
   const users: User[] = await getAllUsers();
 
   const url = new URL(request.url);
@@ -61,11 +59,11 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  await requireUserId(request)
+  await requireUserId(request);
   const body = await request.formData();
   const id = body.get("id");
-  if(id == null){
-    throw new Error(("id does not exist"))
+  if (id == null) {
+    throw new Error("id does not exist");
   }
 
   return redirect(`/dashboard/admin/manageUsers/${id}`);
@@ -73,9 +71,10 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function AdminManageUsers() {
   const { users } = useLoaderData<typeof loader>();
+
   return (
     <div className="h-screen">
-      <div >
+      <div>
         <div className="bg-slate-200 px-3 flex">
           <Form>
             <input type="hidden" name="query" value={1} />
@@ -128,43 +127,44 @@ export default function AdminManageUsers() {
             </div>
           </Form>
         </div>
-        <Table>
-          <TableCaption>Users</TableCaption>
-          <TableHeader className="items-start justify-start bg-slate-300">
-            <TableRow>
-              <TableHead className="text-left">User ID</TableHead>
-              <TableHead className="text-left">Username</TableHead>
-              <TableHead className="text-left">Permission</TableHead>
-              <TableHead className="text-left">Select</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((item: any) => (
-              <TableRow className="border-b hover:bg-slate-400" key={item.id}>
-                <TableCell className="p-3">{item.id}</TableCell>
-                <TableCell className="p-3">{item.username}</TableCell>
-                <TableCell className="p-3">
-                  {item.admin === 0
-                    ? "Student"
-                    : item.admin === 1
-                    ? "Admin"
-                    : "Cafe Roy Employee"}
-                </TableCell>
-                <TableCell>
-                  <form method="post">
-                    <input type="hidden" name="id" value={item.id}/>
-                    <Button
-                      type="submit"
-                      className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
-                    >
-                      Details
-                    </Button>
-                  </form>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <TableHeader className="items-start justify-start bg-slate-300">
+          <TableRow className="px-3">
+            <TableHead className="text-left">User ID</TableHead>
+            <TableHead className="text-left">Username</TableHead>
+            <TableHead className="text-left">Permission</TableHead>
+            <TableHead className="text-left">Select</TableHead>
+          </TableRow>
+        </TableHeader>
+        <div className="max-h-[600px] overflow-y-auto">
+          <Table>
+            <TableBody>
+              {users.map((item: any) => (
+                <TableRow className="border-b hover:bg-slate-400" key={item.id}>
+                  <TableCell className="p-3">{item.id}</TableCell>
+                  <TableCell className="p-3">{item.username}</TableCell>
+                  <TableCell className="p-3">
+                    {item.admin === 0
+                      ? "Student"
+                      : item.admin === 1
+                      ? "Admin"
+                      : "Cafe Roy Employee"}
+                  </TableCell>
+                  <TableCell>
+                    <form method="post">
+                      <input type="hidden" name="id" value={item.id} />
+                      <Button
+                        type="submit"
+                        className={`my-2 mx-2 rounded bg-red-500 hover:bg-red-400 px-4 py-2 font-medium text-white`}
+                      >
+                        Details
+                      </Button>
+                    </form>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
       <Outlet />
     </div>

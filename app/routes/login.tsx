@@ -101,7 +101,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-col justify-center">
-      <title>Authentication</title>
+      <title data-testid="auth-title">Authentication</title>
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>

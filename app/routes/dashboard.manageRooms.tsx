@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import * as Dialog from "@radix-ui/react-dialog";
 import {
   Table,
   TableBody,
@@ -9,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ActionArgs, redirect, type LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
   confirmRoomBookingWithUserId,
@@ -18,6 +19,7 @@ import {
 import { selectAllReserved } from "~/models/manage.server";
 import { getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
+import { X } from "lucide-react";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
@@ -39,7 +41,7 @@ export const action = async ({ request }: ActionArgs) => {
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
   if (isUserCancelled) {
-    return redirect("/dashboard/admin/manageRooms");
+    return redirect("/dashboard/manageRooms");
   }
 };
 
@@ -66,7 +68,7 @@ export default function ManageRoomsConsole() {
                 <TableCell>{item.username}</TableCell>
                 <TableCell>{item.time}</TableCell>
                 <TableCell>
-                  <form method="post">
+                  {/* <Form method="post">
                     <input
                       type="hidden"
                       value={item.userId}
@@ -81,7 +83,50 @@ export default function ManageRoomsConsole() {
                     <Button className="border rounded bg-red-500 text-white">
                       Remove
                     </Button>
-                  </form>
+                  </Form> */}
+                  <Dialog.Root>
+                    <Dialog.Trigger className="rounded p-2 hover:bg-green-400 bg-green-500 w-32">
+                      Remove Reservation
+                    </Dialog.Trigger>
+                    <Dialog.Portal>
+                      <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+                      <Dialog.Content className="fixed bg-white text-grey-900 p-8 shadow rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="flex justify-between">
+                          <div>
+                            <p>Are you sure?</p>
+                            <p>Remove Reservation is not a reversible action.</p>
+                          </div>
+                          <div>
+                            <Dialog.Close className="text-grey-400 hover:text-grey-500">
+                              <X />
+                            </Dialog.Close>
+                          </div>
+                        </div>
+                        <div className="flex justify-center items-center">
+                          <Form method="post">
+                            <input
+                              type="hidden"
+                              value={item.userId}
+                              name="booked_userId"
+                            />
+                            <input
+                              type="hidden"
+                              value={JSON.stringify(item)}
+                              name="room"
+                            />
+                            <input
+                              type="hidden"
+                              value={item.blockId}
+                              name="blockId"
+                            />
+                            <Button className="border rounded bg-red-500 text-white">
+                              Confirm
+                            </Button>
+                          </Form>
+                        </div>
+                      </Dialog.Content>
+                    </Dialog.Portal>
+                  </Dialog.Root>
                 </TableCell>
               </TableRow>
             ))}

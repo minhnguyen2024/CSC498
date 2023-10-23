@@ -43,6 +43,7 @@ export async function loader({ request }: LoaderArgs) {
   const search = new URLSearchParams(url.search);
 
   let period: number = parseInt(search.get("period") as string);
+  
   switch (period) {
     case 30:
       period = MONTH_IN_MILISECONDS;
@@ -57,6 +58,7 @@ export async function loader({ request }: LoaderArgs) {
       period = Date.now();
       break;
   }
+  console.log(`period: ${period}`)
   const orders: any[] = await getCafeOrderHistoryByUserId({
     userId,
     period,
@@ -116,12 +118,18 @@ export default function CafeRoy() {
   return (
     <div>
       <div className="flex py-4">
-        <div className={`h-[400px] w-[400px]`}>
-          <MyDoughnutChart data={data} />
-        </div>
-        <div className="">
+        {orders.length != 0 ? (
+          <div className={`h-[400px] w-[400px]`}>
+            <MyDoughnutChart data={data} />
+          </div>
+        ) : (
+          <div className={`h-[400px] w-[400px]`}>
+            <p>No Order History Found</p>
+          </div>
+        )}
+        <div>
           <Form>
-            <div className="p-2 flex hover:bg-slate-300 mx-2">
+            <div className="p-2 flex mx-2">
               <Select name="period">
                 <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
                   <SelectValue placeholder="All" />
@@ -169,7 +177,10 @@ export default function CafeRoy() {
             {orders.map((item: any) => {
               return (
                 <>
-                  <TableRow className="border-b hover:bg-slate-400" key={item.orderId}>
+                  <TableRow
+                    className="border-b hover:bg-slate-400"
+                    key={item.orderId}
+                  >
                     <TableCell className="p-3">{item.orderId}</TableCell>
                     <TableCell className="p-3">{`${item.name} (${
                       item.iced == 1 ? "Iced" : "Hot"
@@ -181,8 +192,8 @@ export default function CafeRoy() {
             })}
           </TableBody>
           <TableRow className="border rounded" key={total}>
-          <TableCell>Total:</TableCell>
-          <TableCell></TableCell>
+            <TableCell>Total:</TableCell>
+            <TableCell></TableCell>
             <TableCell>${total.toFixed(2)}</TableCell>
           </TableRow>
         </Table>
