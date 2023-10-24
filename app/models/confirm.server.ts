@@ -31,15 +31,22 @@ export async function getBlockByTimeAndRoomId({
 export async function updateBlockWithUserId({
   userId,
   room,
+  timeObjJSONString
 }: {
   userId: string;
   room: any;
+  timeObjJSONString: string
 }) {
+  console.log({
+    userId,
+    room,
+    timeObjJSONString
+  })
   if (typeof room === "string") {
     const roomObj = JSON.parse(room);
-    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${roomObj.blockId}`;
+    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} AND Block.booked_time = ${timeObjJSONString} WHERE Block.id = ${roomObj.blockId} `;
   } else {
-    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} WHERE Block.id = ${room.blockId}`;
+    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} AND Block.booked_time = ${timeObjJSONString} WHERE Block.id = ${room.blockId}`;
   }
 }
 

@@ -195,7 +195,7 @@ export default function DashboardIndex() {
             </div>
           </>
         )}
-        <div className={`${sidebarOpen === false? "w-screen" : "w-[950px]"}`}>
+        <div className={`overflow-y-scroll ${sidebarOpen === false? "w-screen " : "w-[950px]"}`}>
           <Outlet/>
         </div>
       </div>

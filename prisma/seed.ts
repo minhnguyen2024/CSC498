@@ -40,7 +40,7 @@ async function seedRoom() {
 async function seedBlock() {
   for (let numRoom = 1; numRoom < 11; numRoom++) {
     for (let numBlock = 1; numBlock < 50; numBlock++) {
-      await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${numRoom}, ${numBlock}, ${0})`;
+      await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id, booked_time) VALUES (${numRoom}, ${numBlock}, ${0}, "")`;
     }
   }
   console.log(`Block table has been seeded. 🌱`);

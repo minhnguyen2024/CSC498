@@ -24,6 +24,7 @@ model Block {
   room_id Int 
   time Int
   booked_user_id Int 
+  booked_time String
 } 
 
 

@@ -35,7 +35,8 @@ import { requireUserId } from "~/session.server";
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   invariant(params.time, "time not found");
-  const time = JSON.parse(decodeURIComponent(params.time));
+  const timeObj = JSON.parse(decodeURIComponent(params.time));
+  const time = timeObj.time
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
   let accessible = search.get("accessible");
@@ -84,14 +85,17 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   };
   const result = await getAllAvailableRoomsByBlockAndAmenities(queryObject);
   const serializedArray = encodeURIComponent(JSON.stringify(result));
-  return { time, serializedArray };
+  return { timeObj, serializedArray };
 };
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
   const userId = (await requireUserId(request)).toString();
-  const time = body.get("time");
+  const timeObj = JSON.parse(body.get("time")?.toString() || "")
   const room = body.get("room");
+  const timeObjJSONString = JSON.stringify(body.get("time"))
+  // console.log(`time: ${body.get("time")?.toString() || ""}`)
+  // console.log(timeObjJSONString)
   if (!room) {
     return json(
       { errors: { message: "Please select a room" } },
@@ -104,12 +108,12 @@ export const action = async ({ request }: ActionArgs) => {
     return redirect("/error/reservationDenied");
   }
 
-  await updateBlockWithUserId({ userId, room });
-  return redirect(`/confirm/${time}/${room}`);
+  await updateBlockWithUserId({ userId, room, timeObjJSONString});
+  return redirect(`/confirm/${timeObj.time}/${room}`);
 };
 
 export default function DashboardReserveUserId() {
-  const { time, serializedArray } = useLoaderData<typeof loader>();
+  const { timeObj, serializedArray } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const confirmRef = useRef<HTMLInputElement>(null);
 
@@ -228,10 +232,10 @@ export default function DashboardReserveUserId() {
       </form>
       <div>
         <form method="post">
-          <input type="hidden" value={time} name="time" />
+          <input type="hidden" value={JSON.stringify(timeObj)} name="time" />
 
           <Table>
-            <TableCaption>Available Study Rooms</TableCaption>
+            <TableCaption>Available Study Rooms for {timeObj.dayOfWeek}, from {timeObj.timeOfDay} to {timeObj.timeOfDay + 2}</TableCaption>
             <TableHeader className="items-start justify-start bg-slate-300">
               <TableRow>
                 <TableHead className="">Room #</TableHead>

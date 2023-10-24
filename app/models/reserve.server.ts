@@ -6,6 +6,7 @@ export type Block = {
   room_id: number
   time: number
   booked_user_id: number
+  booked_time: string
 }
 
 export async function getAllBlocks(): Promise<Block[]> {

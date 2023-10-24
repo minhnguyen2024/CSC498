@@ -34,13 +34,13 @@ export async function action({ request }: ActionArgs) {
   const time = dataArray[0].time;
   const timeIdx: number = parseInt(body.get("time")?.toString() || "-1")
   const dayIdx: number = parseInt(body.get("day")?.toString() || "-1")
-  // console.log(`at: ${TIME_ARR[timeIdx]} time: ${time}, day: ${dayIdx}`)
-  const timeStr = `${DATE_IN_WEEK[dayIdx + 1]}, ${TIME_ARR[timeIdx]}`
-  const payload = {
-    timeStr
+  // const timeObj = `${DATE_IN_WEEK[dayIdx + 1]}, ${TIME_ARR[timeIdx]}`
+  const timeObj = {
+    dayOfWeek: DATE_IN_WEEK[dayIdx + 1],
+    timeOfDay: TIME_ARR[timeIdx],
+    time
   }
-  console.log(payload)
-  return redirect(`/dashboard/${time}`);
+  return redirect(`/dashboard/${JSON.stringify(timeObj)}`);
 }
 export default function DashboardReserve() {
   const { partitionedBy10By7, featureFlag } = useLoaderData<typeof loader>();
