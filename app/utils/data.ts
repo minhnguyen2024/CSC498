@@ -1,6 +1,8 @@
 export const MONTH_IN_MILISECONDS: number = 2592000000
 export const WEEK_IN_MILISECONDS: number = 604800000
 export const DAY_IN_MILISECONDS: number = 86400000
+export const TIME_ARR: number[] = [8, 10, 12, 14, 16, 18, 20]
+export const DATE_IN_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export const imageURLs = [
   "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20211210_MochaCookieCrumbleFrapp.jpg?impolicy=1by1_tight_288",

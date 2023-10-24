@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import FeatureDisabled from "./error.featureDisabled";
 import { getNumberOfRooms } from "~/models/room.server";
 import { partitionArrayByChunk } from "~/utils/helpers";
+import { TIME_ARR, DATE_IN_WEEK } from "~/utils/data";
 
 export async function loader({ request }: LoaderArgs) {
   await requireUserId(request);
@@ -31,15 +32,25 @@ export async function action({ request }: ActionArgs) {
   const dataArrayString = body.get("items")?.toString() || "";
   const dataArray = JSON.parse(dataArrayString);
   const time = dataArray[0].time;
+  const timeIdx: number = parseInt(body.get("time")?.toString() || "-1")
+  const dayIdx: number = parseInt(body.get("day")?.toString() || "-1")
+  // console.log(`at: ${TIME_ARR[timeIdx]} time: ${time}, day: ${dayIdx}`)
+  const timeStr = `${DATE_IN_WEEK[dayIdx + 1]}, ${TIME_ARR[timeIdx]}`
+  const payload = {
+    timeStr
+  }
+  console.log(payload)
   return redirect(`/dashboard/${time}`);
 }
 export default function DashboardReserve() {
   const { partitionedBy10By7, featureFlag } = useLoaderData<typeof loader>();
-  const currentDate = new Date()
-
+  const today = new Date()
+  const dayOfWeek = today.getDay() - 1
+  const timeOfDay = today.getHours()
+  // const dayOfWeek = 3
+  // const timeOfDay = 13
   const renderCardsInColumn = (roomsByBlock: any[], partitionIndex: number) => {
     const cardItems = [];
-
     for (let i = 0; i < roomsByBlock.length; i++) {
       const availableRoomIdArr: object[] = [];
       roomsByBlock[i].map((item: any) => {
@@ -47,37 +58,96 @@ export default function DashboardReserve() {
           availableRoomIdArr.push({ id: item.id, time: item.time });
         }
       });
-      cardItems.push(
-        <div key={i}>
-          <Card className="my-2 h-20 w-full flex items-center justify-center rounded font-medium text-white hover:bg-yellow-600">
-            <CardContent className="w-full h-full">
-              <form method="post">
-                <input
-                  type="hidden"
-                  name="items"
-                  value={JSON.stringify(roomsByBlock[i])}
-                />
-                <input type="hidden" name="time" value={i} />
-                <Button
-                  className={`${
-                    availableRoomIdArr.length > 5
-                      ? "transition ease-in-out delay-150 bg-blue-500  hover:scale-110 hover:bg-indigo-500 duration-300"
-                      : availableRoomIdArr.length == 1
-                      ? "transition ease-in-out delay-150 bg-red-500  hover:scale-110 hover:bg-red-400 duration-300"
-                      : availableRoomIdArr.length < 5 &&
-                        availableRoomIdArr.length < 1
-                      ? "transition ease-in-out delay-150 bg-yellow-500  hover:scale-110 hover:bg-yellow-400 duration-300"
-                      : "bg-slate-200 disabled:cursor-not-allowed"
-                  } px-1 rounded text-white w-full h-20`}
-                >
-                  <p>{availableRoomIdArr.length} rooms</p>
-                  <p>Available</p>
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>,
-      );
+      if (partitionIndex < dayOfWeek){
+        cardItems.push(
+          <div key={i}>
+            <Card className="my-2 h-20 flex items-center justify-center rounded font-medium">
+              <CardContent className="w-full h-full rounded bg-slate-500">
+              </CardContent>
+            </Card>
+          </div>,
+        );
+      }
+      else if (partitionIndex == dayOfWeek){
+        if (timeOfDay < TIME_ARR[i]){
+          cardItems.push(
+            <div key={i}>
+              <Card className="my-2 h-20 w-full flex items-center justify-center rounded font-medium">
+                <CardContent className="w-full h-full">
+                  <form method="post">
+                    <input
+                      type="hidden"
+                      name="items"
+                      value={JSON.stringify(roomsByBlock[i])}
+                    />
+                    <input type="hidden" name="time" value={i} />
+                    <input type="hidden" name="day" value={partitionIndex} />
+                    <Button
+                      className={`${
+                        availableRoomIdArr.length > 5
+                          ? "transition ease-in-out delay-150 bg-blue-500  hover:scale-110 hover:bg-indigo-500 duration-300"
+                          : availableRoomIdArr.length == 1
+                          ? "transition ease-in-out delay-150 bg-red-500  hover:scale-110 hover:bg-red-400 duration-300"
+                          : availableRoomIdArr.length < 5 &&
+                            availableRoomIdArr.length < 1
+                          ? "transition ease-in-out delay-150 bg-yellow-500  hover:scale-110 hover:bg-yellow-400 duration-300"
+                          : "bg-slate-200 disabled:cursor-not-allowed"
+                      } px-1 rounded text-white w-full h-20`}
+                    >
+                      <p>{availableRoomIdArr.length} rooms</p>
+                      <p>Available</p>
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>,
+          );
+        }
+        else{
+          cardItems.push(
+            <div key={i}>
+              <Card className="my-2 h-20 flex items-center justify-center rounded font-medium">
+                <CardContent className="w-full h-full rounded bg-slate-500">
+                </CardContent>
+              </Card>
+            </div>,
+          );
+        }
+      }
+      else{
+        cardItems.push(
+          <div key={i}>
+            <Card className="my-2 h-20 w-full flex items-center justify-center rounded font-medium">
+              <CardContent className="w-full h-full">
+                <form method="post">
+                  <input
+                    type="hidden"
+                    name="items"
+                    value={JSON.stringify(roomsByBlock[i])}
+                  />
+                  <input type="hidden" name="time" value={i} />
+                  <input type="hidden" name="day" value={partitionIndex} />
+                  <Button
+                    className={`${
+                      availableRoomIdArr.length > 5
+                        ? "transition ease-in-out delay-150 bg-blue-500  hover:scale-110 hover:bg-indigo-500 duration-300"
+                        : availableRoomIdArr.length == 1
+                        ? "transition ease-in-out delay-150 bg-red-500  hover:scale-110 hover:bg-red-400 duration-300"
+                        : availableRoomIdArr.length < 5 &&
+                          availableRoomIdArr.length < 1
+                        ? "transition ease-in-out delay-150 bg-yellow-500  hover:scale-110 hover:bg-yellow-400 duration-300"
+                        : "bg-slate-200 disabled:cursor-not-allowed"
+                    } px-1 rounded text-white w-full h-20`}
+                  >
+                    <p>{availableRoomIdArr.length} rooms</p>
+                    <p>Available</p>
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>,
+        );
+      }
     }
     return cardItems;
   };
@@ -86,7 +156,7 @@ export default function DashboardReserve() {
     <div>
       {featureFlag.enabled === 1 ? (
         <div>
-          <p>{`${currentDate.getHours()}:${currentDate.getMinutes()}`}</p>
+          <p>{`${today.getHours()}:${today.getMinutes()}`}</p>
           <div className="h-screen flex">
             <div className="h-full w-15 mb-8 px-2">
               <p className="pt-7 pb-14">8:AM</p>
