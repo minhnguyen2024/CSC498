@@ -11,7 +11,7 @@ cmd = "start.sh"
 entrypoint = "sh"
 
 [mounts]
-  source="minhnguyen-2024-csc498"
+  source="data"
   destination="/data"
 
 [[services]]
