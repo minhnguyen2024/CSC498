@@ -75,8 +75,7 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  // return redirect("/")
-
+  console.log("in action")
   return createUserSession({
     redirectTo,
     remember: remember === "on" ? true : false,

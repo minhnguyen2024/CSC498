@@ -23,6 +23,10 @@ export async function loader({ request }: LoaderArgs) {
   return { user: user[0] };
 }
 
+export async function action() {
+  return null
+}
+
 export default function DashboardIndex() {
   const { user } = useLoaderData<typeof loader>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
