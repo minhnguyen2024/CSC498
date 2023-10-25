@@ -11,8 +11,8 @@ cmd = "start.sh"
 entrypoint = "sh"
 
 [mounts]
-source = "data"
-destination = "/data"
+  source="minhnguyen-2024-csc498"
+  destination="/data"
 
 [[services]]
 internal_port = 8_080
