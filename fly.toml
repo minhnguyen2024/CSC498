@@ -1,4 +1,4 @@
-app = "my-remix-app-443a"
+app = "minhnguyen-2024-csc498"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]

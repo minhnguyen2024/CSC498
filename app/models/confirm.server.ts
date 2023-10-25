@@ -2,6 +2,7 @@ import { prisma } from "~/db.server";
 
 export type BookingInfo = {
   blockId: number;
+  bookedTime: string
   roomId: number;
   accessible: number;
   power: number;
@@ -11,6 +12,7 @@ export type BookingInfo = {
   monitor: number;
   whiteboard: number;
   window: number;
+
 };
 
 export async function getBlockByTimeAndRoomId({
@@ -37,23 +39,24 @@ export async function updateBlockWithUserId({
   room: any;
   timeObjJSONString: string
 }) {
-  console.log({
-    userId,
-    room,
-    timeObjJSONString
-  })
+  // console.log({
+  //   userId,
+  //   room,
+  //   timeObjJSONString
+  // })
   if (typeof room === "string") {
+    console.log(JSON.parse(timeObjJSONString))
     const roomObj = JSON.parse(room);
-    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} AND Block.booked_time = ${timeObjJSONString} WHERE Block.id = ${roomObj.blockId} `;
+    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId}, booked_time = ${timeObjJSONString} WHERE id = ${roomObj.blockId} `;
   } else {
-    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId} AND Block.booked_time = ${timeObjJSONString} WHERE Block.id = ${room.blockId}`;
+    return await prisma.$executeRaw`UPDATE Block SET booked_user_id = ${userId}, booked_time = ${timeObjJSONString} WHERE id = ${room.blockId}`;
   }
 }
 
 export async function confirmRoomBookingWithUserId(
   userId: string,
 ): Promise<BookingInfo[]> {
-  return await prisma.$queryRaw`SELECT Block.id AS blockId, Room.id AS roomId, Block.time AS time, Room.accessible, Room.power, Room.reservable, Room.softSeating, Room.tableChairs, Room.monitor, Room.whiteboard, Room.window FROM Room, Block 
+  return await prisma.$queryRaw`SELECT Block.id AS blockId, Block.booked_time AS bookedTime, Room.id AS roomId, Block.time AS time, Room.accessible, Room.power, Room.reservable, Room.softSeating, Room.tableChairs, Room.monitor, Room.whiteboard, Room.window FROM Room, Block 
             WHERE Block.room_id = Room.id 
             AND Block.booked_user_id = ${userId}`;
 }

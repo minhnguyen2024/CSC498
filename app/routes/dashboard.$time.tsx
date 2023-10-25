@@ -94,8 +94,6 @@ export const action = async ({ request }: ActionArgs) => {
   const timeObj = JSON.parse(body.get("time")?.toString() || "")
   const room = body.get("room");
   const timeObjJSONString = JSON.stringify(body.get("time"))
-  // console.log(`time: ${body.get("time")?.toString() || ""}`)
-  // console.log(timeObjJSONString)
   if (!room) {
     return json(
       { errors: { message: "Please select a room" } },

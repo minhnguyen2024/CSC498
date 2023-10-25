@@ -17,6 +17,34 @@ export function partitionArrayByChunk(arr: any[], chunk: number) {
   return result;
 }
 
-export function sum(a: number, b: number) {
-  return a + b;
+export function militaryTo12Hour(militaryHour: number){
+  let hourStr: string = ""
+  let hour = militaryHour
+  console.log(hour)
+  //13 => 13 - 12 = 1 :PM
+  if(militaryHour > 12){
+    hour = militaryHour - 12
+    if(hour < 10){
+      //13 => 13 - 12 = 01:PM
+      hourStr = `0${militaryHour - 12}:PM`
+    }
+    else{
+      //23 => 23 - 12 11:PM
+      hourStr = `${militaryHour - 12}:PM`
+    }
+  }
+  //12 => 12:PM
+  else if (militaryHour == 12){
+    hourStr = `12:PM`
+  }
+  //9 => 9:AM
+  else {
+    if(hour < 10){
+      hourStr = `0${hour}:AM`
+    }
+    else{
+      hourStr = `${hour}:AM`
+    }
+  }
+  return hourStr
 }

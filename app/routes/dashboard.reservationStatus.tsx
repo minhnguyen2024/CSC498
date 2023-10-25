@@ -22,6 +22,7 @@ import { requireUserId } from "~/session.server";
 import { getFeatureByName, type Feature } from "~/models/manage.server";
 import { type BookingInfo } from "~/models/confirm.server";
 import FeatureDisabled from "./error.featureDisabled";
+import { militaryTo12Hour } from "~/utils/helpers";
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -30,6 +31,7 @@ export async function loader({ request }: LoaderArgs) {
     userId.toString(),
   );
   const data: BookingInfo = userReservation[0];
+
   if (userReservation.length > 0) {
     return { data, featureFlag: featureFlag[0] };
   }
@@ -45,6 +47,7 @@ export async function action({ request }: ActionArgs) {
   await updateBlockWithUserId({
     userId: "0",
     room: roomObj,
+    timeObjJSONString: ""
   });
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
@@ -56,6 +59,8 @@ export async function action({ request }: ActionArgs) {
 
 export default function ReservationStatus() {
   const { data, featureFlag } = useLoaderData<typeof loader>();
+  const bookedTime = JSON.parse(JSON.parse(data.bookedTime))
+  const bookedTimeString = `${bookedTime["dayOfWeek"]} from ${militaryTo12Hour(bookedTime["timeOfDay"])} to ${militaryTo12Hour(bookedTime["timeOfDay"] + 2)}`
   return (
     <div>
       {featureFlag.enabled === 1 ? (
@@ -70,6 +75,7 @@ export default function ReservationStatus() {
                 <CardContent>
                   <div className="flex-box items-center justify-center">
                     <p>Room Number: {data.roomId}</p>
+                    <p>Time: {bookedTimeString}</p>
                     {data.accessible === 1 ? <p>✅ Accessible</p> : <></>}
                     {data.power === 1 ? <p>✅ Power </p> : <></>}
                     {data.reservable === 1 ? <p>✅ Reservable</p> : <></>}
