@@ -1,4 +1,4 @@
-app = "minhnguyen-2024-csc498"
+app = "csc498"
 primary_region = "ord"
 kill_signal = "SIGINT"
 kill_timeout = 5
