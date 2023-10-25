@@ -37,6 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
   await updateBlockWithUserId({
     userId: "0",
     room: roomObj,
+    timeObjJSONString: ""
   });
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
