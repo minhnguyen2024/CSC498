@@ -20,8 +20,8 @@ export async function verifyLogin(username: string, password: string): Promise<U
   if (!existingUser[0]) {
     return {
       id: 0,
-      username: "",
-      password: "",
+      username: "no-user-found",
+      password: "no-user-found",
       accountBalance: 0.0,
       admin: -1
     };
