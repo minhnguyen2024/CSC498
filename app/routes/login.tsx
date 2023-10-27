@@ -50,8 +50,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (
     user.id == 0 ||
     user.username == "" ||
-    user.password == "" ||
-    user.admin == -1
+    user.password == ""
   ) {
     return json(
       {
@@ -67,15 +66,14 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          email: "Invalid username or password",
-          password: "Invalid username or password",
+          email: "User does not exist",
+          password: "User does not exist",
         },
       },
       { status: 400 },
     );
   }
 
-  console.log("in action")
   return createUserSession({
     redirectTo,
     remember: remember === "on" ? true : false,

@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderArgs) {
   const userReservation: BookingInfo[] = await confirmRoomBookingWithUserId(
     userId.toString(),
   );
-  const data: BookingInfo = userReservation[0];
+  let data: BookingInfo = userReservation[0];
 
   if (userReservation.length > 0) {
     return { data, featureFlag: featureFlag[0] };
@@ -59,8 +59,11 @@ export async function action({ request }: ActionArgs) {
 
 export default function ReservationStatus() {
   const { data, featureFlag } = useLoaderData<typeof loader>();
-  const bookedTime = JSON.parse(JSON.parse(data.bookedTime))
-  const bookedTimeString = `${bookedTime["dayOfWeek"]} from ${militaryTo12Hour(bookedTime["timeOfDay"])} to ${militaryTo12Hour(bookedTime["timeOfDay"] + 2)}`
+  let bookedTimeString = ""
+  if(data != null){
+    const bookedTime = JSON.parse(JSON.parse(data.bookedTime))
+    bookedTimeString = `${bookedTime["dayOfWeek"]} from ${militaryTo12Hour(bookedTime["timeOfDay"])} to ${militaryTo12Hour(bookedTime["timeOfDay"] + 2)}`
+  }
   return (
     <div>
       {featureFlag.enabled === 1 ? (
