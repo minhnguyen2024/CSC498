@@ -17,10 +17,14 @@ export async function getUserByUsername(username: string) {
 export async function verifyLogin(username: string, password: string): Promise<User> {
   const existingUser: User[] =
     await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
+  const userWithPassword = await prisma.user.findUnique({
+    where: { username },
+  });
+
   if (!existingUser[0]) {
     return {
       id: 0,
-      username: "no-user-found",
+      username: `${userWithPassword}`,
       password: "no-user-found",
       accountBalance: 0.0,
       admin: -1

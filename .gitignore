@@ -6,8 +6,5 @@ node_modules
 
 /cypress/screenshots
 /cypress/videos
-/test-results/
-/playwright-report/
-/playwright/.cache/
 /prisma/data.db
 /prisma/data.db-journal
