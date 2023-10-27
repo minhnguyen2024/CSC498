@@ -47,32 +47,32 @@ export const action = async ({ request }: ActionArgs) => {
 
   const user = await verifyLogin(username, password);
 
-  if (
-    user.id == 0 ||
-    user.username == "" ||
-    user.password == ""
-  ) {
-    return json(
-      {
-        errors: {
-          email: "Invalid username or password",
-          password: "Invalid username or password",
-        },
-      },
-      { status: 400 },
-    );
-  }
-  if (!user) {
-    return json(
-      {
-        errors: {
-          email: "User does not exist",
-          password: "User does not exist",
-        },
-      },
-      { status: 400 },
-    );
-  }
+  // if (
+  //   user.id == 0 ||
+  //   user.username == "" ||
+  //   user.password == ""
+  // ) {
+  //   return json(
+  //     {
+  //       errors: {
+  //         email: "Invalid username or password",
+  //         password: "Invalid username or password",
+  //       },
+  //     },
+  //     { status: 400 },
+  //   );
+  // }
+  // if (!user) {
+  //   return json(
+  //     {
+  //       errors: {
+  //         email: "User does not exist",
+  //         password: "User does not exist",
+  //       },
+  //     },
+  //     { status: 400 },
+  //   );
+  // }
 
   return createUserSession({
     redirectTo,
