@@ -16,7 +16,7 @@ export async function getUserByUsername(username: string) {
 
 export async function verifyLogin(username: string, password: string): Promise<User> {
   const existingUser: User[] =
-    await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
+    await prisma.$queryRaw`SELECT * FROM User`;
   const userWithPassword = await prisma.user.findUnique({
     where: { username },
   });
