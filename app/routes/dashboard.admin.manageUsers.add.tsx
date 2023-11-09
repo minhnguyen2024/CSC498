@@ -9,37 +9,85 @@ import {
 } from "@/components/ui/select";
 
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet} from "@remix-run/react";
+import { Form, Outlet } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import { createUser } from "~/models/user.server";
-
+import { sendSetPasswordEmail } from "~/utils/nodemailer_helper";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  await requireUserId(request)
+  await requireUserId(request);
   return null;
 };
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
-  await requireUserId(request)
+  await requireUserId(request);
   const username: string = body.get("username") as string;
+  const email: string = body.get("email") as string;
   const password: string = body.get("password") as string;
   const permission: number = parseInt(body.get("permission") as string);
-  await createUser({ username, password, permission });
-  return redirect("/dashboard/cafeRoyAdmin/manageInventory/view");
+
+  //enter nodemailer here
+  await sendSetPasswordEmail({ username, email, password})
+  await createUser({ username, password, accountBalance: 0, permission });
+  return redirect("/dashboard/admin/manageUsers");
 };
 
 export default function AdminManageUsersAdd() {
   return (
     <div>
       <Form method="post">
-        <div className="flex">
-          <label>Username</label>
-          <input type="text" name="username" className="border" />
+        <div className="m-3">
+          <label
+            htmlFor="username"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Username
+          </label>
+          <div className="mt-1">
+            <input
+              id="username"
+              required
+              autoFocus={true}
+              name="username"
+              type="username"
+              className="w-64 rounded border border-gray-500 px-2 py-1 text-lg"
+            />
+          </div>
         </div>
-        <div className="flex">
-          <label>Password</label>
-          <input type="text" name="password" className="border" />
+        <div className="m-3">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email Address
+          </label>
+          <div className="mt-1">
+            <input
+              id="email"
+              required
+              autoFocus={true}
+              name="email"
+              type="email"
+              className="w-64 rounded border border-gray-500 px-2 py-1 text-lg"
+            />
+          </div>
+        </div>
+        <div className="m-3">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Password
+          </label>
+          <div className="mt-1">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              className="w-64 rounded border border-gray-500 px-2 py-1 text-lg"
+            />
+          </div>
         </div>
         <Select name="permission">
           <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">

@@ -17,23 +17,22 @@ export async function getUserByUsername(username: string) {
 export async function verifyLogin(username: string, password: string): Promise<User> {
   const existingUser: User[] =
     await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`;
-  const userWithPassword = await prisma.user.findUnique({
-    where: { username },
-  });
 
   if (!existingUser[0]) {
     return {
       id: 0,
-      username: `${userWithPassword}`,
-      password: "no-user-found",
+      username: ``,
+      password: "",
       accountBalance: 0.0,
       admin: -1
     };
   }
+  console.log(password)
   const isCorrectPassword: boolean = await bcrypt.compare(
     password,
     existingUser[0].password,
   );
+  console.log(isCorrectPassword)
   if (isCorrectPassword) {
     return existingUser[0];
   }
@@ -82,19 +81,32 @@ export async function selectUsersBySearchQuery({
 export async function createUser({
   username,
   password,
+  accountBalance,
   permission,
 }: {
   username: string;
   password: string;
+  accountBalance: number,
   permission: number;
 }): Promise<number> {
   const hashedPassword: string = await bcrypt.hash(password, 10);
   await prisma.$executeRaw`
-  INSERT INTO User(username, password, admin) 
-  VALUES (${username}, ${hashedPassword}, ${permission})`;
+  INSERT INTO User(username, password, accountBalance ,admin) 
+  VALUES (${username}, ${hashedPassword}, ${accountBalance}, ${permission})`;
   const users: User[] = await prisma.$queryRaw`SELECT * FROM User WHERE username = ${username}`
   const user: User = users[0]
   return user.id
+}
+
+export async function updateUserPassword({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}): Promise<any> {
+  const hashedPassword: string = await bcrypt.hash(password, 10);
+  await prisma.$executeRaw`UPDATE User SET password = ${hashedPassword} WHERE username = ${username}`
 }
 
 export async function deleteUser({ id }: { id: number }) {

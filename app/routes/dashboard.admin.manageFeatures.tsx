@@ -41,20 +41,19 @@ export default function ManageFeatures() {
   const features: Feature[] = useLoaderData<typeof loader>();
 
   return (
-    <div className="">
-      <p>Feature Flags</p>
+    <div>
+      <h1 className="px-2 font-bold text-lg my-4">Feature Flags</h1>
       <Table>
         <TableBody>
           <TableRow>
-            <TableHead>Feature Name</TableHead>
+            <TableHead>Name</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
-          {features.map((feature: Feature) => (
-         
+          {features.map((feature: Feature) => (      
               <TableRow key={feature.id} className="border-b hover:bg-slate-400">
-                <TableCell>{feature.featureName}</TableCell>
-                <TableCell>
+                <TableCell className="w-20">{feature.featureName}</TableCell>
+                <TableCell className="w-16">
                   <Form method="post">
                     <input
                       type="hidden"

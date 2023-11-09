@@ -20,6 +20,7 @@ import { selectAllReserved } from "~/models/manage.server";
 import { getUserById } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 import { X } from "lucide-react";
+import { militaryTo12Hour } from "~/utils/helpers";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
@@ -48,11 +49,18 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function ManageRoomsConsole() {
   const { reservedRooms } = useLoaderData<typeof loader>();
+
+  const bookedTimeJsonStringtoString = (booked_time: string) =>{
+    const bookedTime = JSON.parse(JSON.parse(booked_time))
+    const hour = militaryTo12Hour(bookedTime["timeOfDay"])
+    const string = `${bookedTime["dayOfWeek"]} - ${hour}`
+    return string
+  }
   return (
     <div>
       <div>
+      <h1 className="px-2 font-bold text-lg my-4">List of Reserved Study Rooms</h1>
         <Table>
-          <TableCaption>List of Reserved Study Rooms</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Block #</TableHead>
@@ -63,11 +71,11 @@ export default function ManageRoomsConsole() {
           </TableHeader>
           <TableBody>
             {reservedRooms.map((item: any) => (
-              <TableRow className="border rounded" key={item.blockId}>
+              <TableRow className="border-b hover:bg-slate-400" key={item.blockId}>
                 <TableCell>{item.blockId}</TableCell>
                 <TableCell>{item.roomId}</TableCell>
                 <TableCell>{item.username}</TableCell>
-                <TableCell>{item.time}</TableCell>
+                <TableCell>{bookedTimeJsonStringtoString(item.booked_time)}</TableCell>
                 <TableCell>
                   {/* <Form method="post">
                     <input
@@ -86,7 +94,7 @@ export default function ManageRoomsConsole() {
                     </Button>
                   </Form> */}
                   <Dialog.Root>
-                    <Dialog.Trigger className="rounded p-2 hover:bg-green-400 bg-green-500 w-32">
+                    <Dialog.Trigger className="rounded p-2 hover:bg-red-400 bg-red-500 w-32">
                       Remove Reservation
                     </Dialog.Trigger>
                     <Dialog.Portal>
@@ -94,7 +102,7 @@ export default function ManageRoomsConsole() {
                       <Dialog.Content className="fixed bg-white text-grey-900 p-8 shadow rounded top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         <div className="flex justify-between">
                           <div>
-                            <p>Are you sure?</p>
+                            <p className="my-2">Are you sure?</p>
                             <p>Remove Reservation is not a reversible action.</p>
                           </div>
                           <div>
@@ -103,7 +111,7 @@ export default function ManageRoomsConsole() {
                             </Dialog.Close>
                           </div>
                         </div>
-                        <div className="flex justify-center items-center">
+                        <div className="justify-center items-start">
                           <Form method="post">
                             <input
                               type="hidden"
@@ -120,7 +128,7 @@ export default function ManageRoomsConsole() {
                               value={item.blockId}
                               name="blockId"
                             />
-                            <Button className="border rounded bg-red-500 text-white">
+                            <Button className="my-3 border rounded bg-red-500 text-white justify-center items-start">
                               Confirm
                             </Button>
                           </Form>
