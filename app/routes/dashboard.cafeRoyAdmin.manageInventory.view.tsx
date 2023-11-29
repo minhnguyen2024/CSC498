@@ -25,11 +25,10 @@ import {
 } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
-import Pagination from "~/components/Pagination";
-import { useMemo, useState } from "react";
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await requireUserId(request)
+  console.log("before SQL model")
   let inventory: any = await selectAllInventory();
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
@@ -42,8 +41,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
     let price: number = parseFloat(search.get("price") as string);
     let iced: number = parseInt(search.get("iced") as string);
     let sold: number = parseInt(search.get("sold") as string);
+
     if (Number.isNaN(price)) {
-      price = 0;
+      price = -1;
     }
     if (Number.isNaN(iced)) {
       iced = -1;
@@ -68,15 +68,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
 export default function CafeRoyManageInventoryView() {
   const { inventory } = useLoaderData<typeof loader>();
-  let pageSize = 10;
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const currentTableData = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * pageSize;
-    const lastPageIndex = firstPageIndex + pageSize;
-    return inventory.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
   return (
     <div>
       <div>
@@ -104,7 +95,7 @@ export default function CafeRoyManageInventoryView() {
                 <label>Price</label>
                 <input
                   type="text"
-                  name="name"
+                  name="price"
                   className="my-2 border-2 h-10 border-black rounded w-36 px-2 py-1"
                 />
               </div>
@@ -182,7 +173,7 @@ export default function CafeRoyManageInventoryView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentTableData.map((item: any) => (
+              {inventory.map((item: any) => (
                 <TableRow className="border-b hover:bg-slate-400" key={item.id}>
                   <TableCell className="p-3">{item.id}</TableCell>
                   <TableCell className="p-3">{item.name}</TableCell>
@@ -195,12 +186,6 @@ export default function CafeRoyManageInventoryView() {
               ))}
             </TableBody>
           </Table>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={inventory.length}
-            pageSize={pageSize}
-            onPageChange={(page: any) => setCurrentPage(page)}
-          />
         </div>
       </div>
       <Outlet />

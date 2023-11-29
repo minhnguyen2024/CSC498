@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
   await updateBlockWithUserId({
     userId: "0",
     room: roomObj,
-    timeObjJSONString: ""
+    timeObjJSONString: "",
   });
   const userReservation: object[] = await confirmRoomBookingWithUserId(userId);
   let isUserCancelled = userReservation.length === 0 ? true : false;
@@ -50,16 +50,20 @@ export const action = async ({ request }: ActionArgs) => {
 export default function ManageRoomsConsole() {
   const { reservedRooms } = useLoaderData<typeof loader>();
 
-  const bookedTimeJsonStringtoString = (booked_time: string) =>{
-    const bookedTime = JSON.parse(JSON.parse(booked_time))
-    const hour = militaryTo12Hour(bookedTime["timeOfDay"])
-    const string = `${bookedTime["dayOfWeek"]} - ${hour}`
-    return string
-  }
+  const bookedTimeJsonStringtoString = (booked_time: string) => {
+    const bookedTime = JSON.parse(JSON.parse(booked_time));
+    const hour = militaryTo12Hour(bookedTime["timeOfDay"]);
+    const string = `${bookedTime["dayOfWeek"]} - ${hour}`;
+    return string;
+  };
   return (
     <div>
       <div>
-      <h1 className="px-2 font-bold text-lg my-4">List of Reserved Study Rooms</h1>
+        <h1 className="px-2 font-bold text-lg my-4">
+          List of Reserved Study Rooms
+        </h1>
+      </div>
+      <div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -71,11 +75,16 @@ export default function ManageRoomsConsole() {
           </TableHeader>
           <TableBody>
             {reservedRooms.map((item: any) => (
-              <TableRow className="border-b hover:bg-slate-400" key={item.blockId}>
+              <TableRow
+                className="border-b hover:bg-slate-400"
+                key={item.blockId}
+              >
                 <TableCell>{item.blockId}</TableCell>
                 <TableCell>{item.roomId}</TableCell>
                 <TableCell>{item.username}</TableCell>
-                <TableCell>{bookedTimeJsonStringtoString(item.booked_time)}</TableCell>
+                <TableCell>
+                  {bookedTimeJsonStringtoString(item.booked_time)}
+                </TableCell>
                 <TableCell>
                   {/* <Form method="post">
                     <input
@@ -103,7 +112,9 @@ export default function ManageRoomsConsole() {
                         <div className="flex justify-between">
                           <div>
                             <p className="my-2">Are you sure?</p>
-                            <p>Remove Reservation is not a reversible action.</p>
+                            <p>
+                              Remove Reservation is not a reversible action.
+                            </p>
                           </div>
                           <div>
                             <Dialog.Close className="text-grey-400 hover:text-grey-500">

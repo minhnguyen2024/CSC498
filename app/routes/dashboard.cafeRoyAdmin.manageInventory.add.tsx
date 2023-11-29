@@ -22,9 +22,10 @@ export const action = async ({ request }: ActionArgs) => {
   const quantity: number = parseInt(body.get("quantity") as string)
   const price: number = parseFloat(body.get("quantity") as string)
   const size: string = body.get("size") as string
-  // console.log({ iced, name, quantity })
+  const image: string = body.get("image") as string
+  // console.log({ iced, name, quantity, price, size, image })
   //create SQL insert model
-  await createInventory({ iced, name, quantity, size, price })
+  await createInventory({ iced, name, quantity, size, price, image })
   return redirect("/dashboard/cafeRoyAdmin/manageInventory/view")
 };
 
@@ -60,6 +61,10 @@ export default function CafeRoyManageInventoryAdd() {
           <div className="flex">
             <label>Quantity</label>
             <input type="text" name="quantity" className="border"/>
+          </div>
+          <div className="flex">
+            <label>Image URL</label>
+            <input type="text" name="image" className="border"/>
           </div>
           <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">Submit</Button>
         </Form>

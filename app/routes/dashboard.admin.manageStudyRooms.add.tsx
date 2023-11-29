@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { type ActionArgs, type LoaderArgs } from "@remix-run/node";
+import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
 import { createRoom } from "~/models/room.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -29,12 +29,13 @@ export const action = async ({ request }: ActionArgs) => {
     window,
   });
 
-  return null;
+  return redirect("/dashboard/admin/manageStudyRooms/view");
 };
 
 export default function AddRoom() {
   return (
     <div>
+      <h1 className="px-2 font-bold text-lg my-4">Create new Study Room</h1>
       <form method="post">
         <div className="items-top flex-box">
           <div className="items-top flex space-x-2">
@@ -126,7 +127,7 @@ export default function AddRoom() {
             </div>
           </div>
         </div>
-        <Button type="submit">Add Room</Button>
+        <Button type="submit" className="border rounded bg-green-500 hover:bg-green-400 text-white">Add Room</Button>
       </form>
     </div>
   );

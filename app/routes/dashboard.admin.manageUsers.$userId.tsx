@@ -128,13 +128,13 @@ export default function AdminManageUsers() {
                       <p>Current Balance: ${user.accountBalance}</p>
                       <input type="hidden" name="_action" value="addFund" />
                       <label>Amount</label>
-                      <input type="text" name="amount" className="border" />
+                      <input type="text" name="amount" className="border mx-2" />
                       <input type="hidden" name="id" value={user.id} />
                       <Button
                         className={`my-2 mx-2 rounded bg-green-500 hover:bg-green-400 px-4 py-2 font-medium text-white`}
                         type="submit"
                       >
-                        Save
+                        Add
                       </Button>
                     </Form>
                   </div>

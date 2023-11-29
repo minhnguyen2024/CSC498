@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { PlusSquare } from "lucide-react";
 import { deleteRoombyId, selectAllRooms } from "~/models/room.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -30,8 +31,16 @@ export default function ViewRooms() {
 
   return (
     <div>
-      <TableCaption>Study Rooms</TableCaption>
-      <TableHeader>
+      <div className="flex flex-row items-stretch justify-between px-4 bg-slate-200">
+
+        <h1 className="px-2 font-bold text-lg my-4 ">Study Rooms</h1>
+        <div className="mt-5">
+          <Link to="/dashboard/admin/manageStudyRooms/add" className="bg-green-400 p-3 rounded">
+            Create Room
+          </Link>
+        </div>
+      </div>
+      <TableHeader className="bg-slate-300">
         <TableRow>
           <TableHead className="">Room #</TableHead>
           <TableHead>Amenities</TableHead>
@@ -41,7 +50,7 @@ export default function ViewRooms() {
         <Table>
           <TableBody>
             {rooms.map((item: any) => (
-              <TableRow className="border rounded" key={item.id}>
+              <TableRow className="border-b" key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>
                   {item.accessible == 1 ? "Accessible, " : " "}
@@ -69,6 +78,7 @@ export default function ViewRooms() {
                 <TableCell>
                   <Link
                     to={`/dashboard/admin/manageStudyRooms/update/${item.id}`}
+                    className="bg-green-400 p-3 rounded"
                   >
                     Update
                   </Link>

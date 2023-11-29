@@ -3,10 +3,13 @@ import { ActionArgs, json, redirect } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { updateUserPassword, verifyLogin } from "~/models/user.server";
+import { createUserSession } from "~/session.server";
+import { safeRedirect } from "~/utils";
 
 export const action = async ({ request }: ActionArgs) => {
   const body = await request.formData();
 
+  const redirectTo = safeRedirect("/dashboard", "/");
   const username: string = body.get("username") as string;
   const tempPassword: string = body.get("tempPassword") as string;
   const password: string = body.get("password") as string;
@@ -38,7 +41,12 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   await updateUserPassword({ username, password });
-  return redirect("/login");
+  return createUserSession({
+    redirectTo,
+    remember: false,
+    request,
+    userId: user.id.toString(),
+  });
 };
 
 export default function ResetPasswordRoute() {

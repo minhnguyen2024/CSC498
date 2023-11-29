@@ -127,13 +127,11 @@ export default function AdminManageUsers() {
             </div>
           </Form>
         </div>
-        <TableHeader className="items-start justify-start bg-slate-300">
-          <TableRow className="px-3">
-            <TableHead className="text-left">User ID</TableHead>
-            <TableHead className="text-left">Username</TableHead>
-            <TableHead className="text-left">Permission</TableHead>
-            <TableHead className="text-left">Select</TableHead>
-          </TableRow>
+        <TableHeader className="items-start justify-start bg-slate-300 w-full">
+          <TableHead className="text-left">User ID</TableHead>
+          <TableHead className="text-left">Username</TableHead>
+          <TableHead className="text-left">Permission</TableHead>
+          <TableHead className="text-left">Select</TableHead>
         </TableHeader>
         <div className="max-h-[600px] overflow-y-auto">
           <Table>

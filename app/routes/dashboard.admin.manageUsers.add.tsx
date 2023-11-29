@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/select";
 
 import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet } from "@remix-run/react";
+import { Form, Outlet, useNavigation } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import { createUser } from "~/models/user.server";
 import { sendSetPasswordEmail } from "~/utils/nodemailer_helper";
+
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   await requireUserId(request);
@@ -27,13 +28,14 @@ export const action = async ({ request }: ActionArgs) => {
   const password: string = body.get("password") as string;
   const permission: number = parseInt(body.get("permission") as string);
 
-  //enter nodemailer here
+
   await sendSetPasswordEmail({ username, email, password})
   await createUser({ username, password, accountBalance: 0, permission });
-  return redirect("/dashboard/admin/manageUsers");
+  return redirect("/dashboard/admin/manageUsers/view");
 };
 
 export default function AdminManageUsersAdd() {
+  const { state } = useNavigation();
   return (
     <div>
       <Form method="post">
@@ -89,24 +91,28 @@ export default function AdminManageUsersAdd() {
             />
           </div>
         </div>
-        <Select name="permission">
-          <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
-            <SelectValue placeholder="Permission" />
-          </SelectTrigger>
-          <SelectContent className="w-[100px] bg-slate-100">
-            <SelectGroup>
-              <div className="hover:bg-slate-300 p-2">
-                <SelectItem value="0">Student</SelectItem>
-              </div>
-              <div className="hover:bg-slate-300 p-2">
-                <SelectItem value="2">Cafe Roy Employee</SelectItem>
-              </div>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">
-          Submit
-        </Button>
+        <div className="m-3">
+          <Select name="permission">
+            <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
+              <SelectValue placeholder="Permission" />
+            </SelectTrigger>
+            <SelectContent className="w-[100px] bg-slate-100">
+              <SelectGroup>
+                <div className="hover:bg-slate-300 p-2">
+                  <SelectItem value="0">Student</SelectItem>
+                </div>
+                <div className="hover:bg-slate-300 p-2">
+                  <SelectItem value="2">Cafe Roy Employee</SelectItem>
+                </div>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <div className="my-2">
+            <Button className="border rounded bg-blue-500 hover:bg-blue-300 text-white">
+              {state == "submitting" ? "Submitting..." : "Submit"}
+            </Button>
+          </div>
+        </div>
       </Form>
       <Outlet />
     </div>

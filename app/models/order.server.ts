@@ -150,23 +150,30 @@ export async function createInventory({
   quantity,
   size,
   price,
+  image
 }: {
   iced: number;
   name: string;
   quantity: number;
   size: string;
   price: number;
+  image: string;
 }) {
+  console.log({ iced, name, quantity, price, size, image })
   for (let i = 0; i < quantity; i++) {
     await prisma.$executeRaw`
-    INSERT INTO Inventory (id, name, iced, size, price) 
-    VALUES (${uuidv4()}, ${name}, ${iced},${size}, ${price})`;
+    INSERT INTO Inventory (id, name, iced, size, image, price, sold) 
+    VALUES (${uuidv4()}, ${name}, ${iced},${size}, ${image}, ${price}, 0)`;
   }
   return null;
 }
 
 export async function selectAllInventory() {
-  return await prisma.$queryRaw`SELECT * FROM Inventory`;
+  const inventory = await prisma.$queryRaw`SELECT * FROM Inventory`;
+  // return await prisma.$queryRaw`SELECT * FROM Inventory`;
+  console.log(JSON.stringify(inventory))
+  return inventory
+
 }
 
 export async function selectInventoryBySearchQuery({
@@ -193,7 +200,7 @@ export async function selectInventoryBySearchQuery({
   ${invId == "" ? Prisma.empty : Prisma.sql`AND id LIKE ${invQuery}`}
   ${name == "" ? Prisma.empty : Prisma.sql`AND name LIKE ${nameQuery}`}
   ${size == "" ? Prisma.empty : Prisma.sql`AND size = ${size}`}
-  ${price == 0 ? Prisma.empty : Prisma.sql`AND price = ${price}`}
+  ${price == -1 ? Prisma.empty : Prisma.sql`AND price = ${price}`}
   ${iced == -1 ? Prisma.empty : Prisma.sql`AND iced = ${iced}`}
   ${sold == -1 ? Prisma.empty : Prisma.sql`AND sold = ${sold}`}
   `;

@@ -25,7 +25,7 @@ export async function createRoom({
   const result: any[] = await prisma.$queryRaw`SELECT last_insert_rowid()`;
   const newRoomId: number = Number(result[0]["last_insert_rowid()"]);
   for (let i = 1; i < 50; i++) {
-    await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id) VALUES (${newRoomId}, ${i}, ${0})`;
+    await prisma.$executeRaw`INSERT INTO Block (room_id, time, booked_user_id, booked_time) VALUES (${newRoomId}, ${i}, ${0}, "")`;
   }
 }
 

@@ -58,6 +58,6 @@ model Inventory{
   iced Int
   size String
   image String
-  price Decimal
+  price Float
   sold Int
 }
