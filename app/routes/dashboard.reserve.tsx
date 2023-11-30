@@ -156,7 +156,6 @@ export default function DashboardReserve() {
     <div>
       {featureFlag.enabled === 1 ? (
         <div>
-          <p>{`${today.getHours()}:${today.getMinutes()}`}</p>
           <div className="h-screen flex">
             <div className="h-full w-15 mb-8 px-2">
               <p className="pt-7 pb-14">8:AM</p>

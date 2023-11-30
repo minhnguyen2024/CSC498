@@ -1,12 +1,19 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { type LoaderArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getCafeOrderHistoryByUserId, selectOrderByUserId } from "~/models/order.server";
+import {
+  getCafeOrderHistoryByUserId,
+  selectOrderByUserId,
+} from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = (await requireUserId(request)).toString();
   const orders: any = await selectOrderByUserId({ userId });
-  await getCafeOrderHistoryByUserId({userId: parseInt(userId), period: Date.now()})
+  await getCafeOrderHistoryByUserId({
+    userId: parseInt(userId),
+    period: Date.now(),
+  });
   const activeOrder = orders.find(
     (order: any) => order.orderStatus !== "finished",
   );
@@ -17,7 +24,6 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   }
   return { activeOrder };
 };
-
 
 export default function CafeRoyViewOrder() {
   const { activeOrder } = useLoaderData<typeof loader>();
@@ -65,7 +71,14 @@ export default function CafeRoyViewOrder() {
           </>
         ) : (
           <>
-            <p>No pending order</p>
+            <div className="flex h-screen items-center justify-center p-5">
+            <Card className="w-fit h-fit bg-slate-200 p-4 rounded">
+              <CardContent>
+                <p>No pending Cafe Roy orders.</p>
+                <p>Please navigate to Cafe Roy/Make an Order to start your order</p>
+              </CardContent>
+            </Card>
+          </div>
           </>
         )}
       </div>

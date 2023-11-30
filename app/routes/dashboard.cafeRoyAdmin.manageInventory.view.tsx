@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -27,8 +26,8 @@ import { requireUserId } from "~/session.server";
 import { Filter, PlusSquare } from "lucide-react";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await requireUserId(request)
-  console.log("before SQL model")
+  await requireUserId(request);
+  console.log("before SQL model");
   let inventory: any = await selectAllInventory();
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
@@ -74,34 +73,34 @@ export default function CafeRoyManageInventoryView() {
         <div className="bg-slate-200 px-3 flex">
           <Form>
             <input type="hidden" name="query" value={1} />
-            <div className="flex flex-row">
-              <div className="basis-1/6 hover:bg-slate-300 mx-2">
+            <div className="flex flex-row pt-3">
+              <div className="basis-1/6 hover:bg-slate-300 mx-2 flex flex-col">
                 <label>Inventory #</label>
                 <input
                   type="text"
                   name="invId"
-                  className="my-2 border-2 h-10 border-black rounded w-64 px-2 py-1"
+                  className="rounded border border-gray-500 px-2 w-48" 
                 />
               </div>
-              <div className="basis-1/6 hover:bg-slate-300 mx-2">
+              <div className="basis-1/6 hover:bg-slate-300 mx-2 flex flex-col">
                 <label>Name</label>
                 <input
                   type="text"
                   name="name"
-                  className="my-2 border-2 h-10 border-black rounded w-48 px-2 py-1"
+                  className="rounded border border-gray-500 px-2 w-36" 
                 />
               </div>
-              <div className="basis-1/6 hover:bg-slate-300 mx-2">
+              <div className="basis-1/6 mx-2 flex flex-col">
                 <label>Price</label>
                 <input
                   type="text"
                   name="price"
-                  className="my-2 border-2 h-10 border-black rounded w-36 px-2 py-1"
+                  className="rounded border border-gray-500 px-2 w-10" 
                 />
               </div>
               <div className="basis-1/6 p-2 flex hover:bg-slate-300 mx-2 items-center justify-center">
                 <Select name="size">
-                  <SelectTrigger className="w-36 border-2 border-black rounded px-2">
+                  <SelectTrigger className=" w-16 border-black rounded px-2">
                     <SelectValue placeholder="Size" />
                   </SelectTrigger>
                   <SelectContent className="w-36 bg-slate-100">
@@ -143,14 +142,14 @@ export default function CafeRoyManageInventoryView() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="basis-1/6">
+              <div className="basis-1/6 flex flex-row">
                 <div>
-                  <Button className="bg-green-500 hover:bg-green-400 text-white my-2 rounded">
+                  <Button className="bg-green-500 hover:bg-green-400 text-white p-2 rounded">
                     <Filter />
                   </Button>
                 </div>
                 <div className="px-2">
-                  <div className="rounded w-16 items-center justify-center bg-green-500 hover:bg-green-400 px-4 py-2 font-medium text-white">
+                  <div className="rounded w-10 items-center justify-center bg-green-500 hover:bg-green-400 p-2 font-medium text-white">
                     <Link to="/dashboard/cafeRoyAdmin/manageInventory/add">
                       <PlusSquare />
                     </Link>
@@ -160,9 +159,8 @@ export default function CafeRoyManageInventoryView() {
             </div>
           </Form>
         </div>
-        <div className="">
+        <div className="overflow-y-auto">
           <Table>
-            <TableCaption>Available Inventory</TableCaption>
             <TableHeader className="items-start justify-start bg-slate-300">
               <TableRow>
                 <TableHead className="text-left">Inventory #</TableHead>

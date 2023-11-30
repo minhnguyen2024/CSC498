@@ -125,7 +125,7 @@ export const action = async ({ request }: ActionArgs) => {
   let currentUserAccountBalance: any = await getUserAccountBalanceByUserId({
     userId,
   });
-  currentUserAccountBalance = currentUserAccountBalance[0].accountBalance
+  currentUserAccountBalance = currentUserAccountBalance[0].accountBalance;
   //return error
   if (currentUserAccountBalance < price) {
     return json(
@@ -154,6 +154,7 @@ export default function CafeRoyOrder() {
       messageRef.current?.focus();
     }
   }, [actionData]);
+
   return (
     <div>
       <div>
@@ -172,7 +173,7 @@ export default function CafeRoyOrder() {
                         />
                         <Form method="get">
                           <input type="hidden" name="name" value={item.name} />
-                          <Button className="border w-full rounded bg-slate-500 hover:bg-slate-300 text-white">
+                          <Button className="border w-full h-fit rounded bg-slate-500 hover:bg-slate-300 text-white">
                             {item.name}
                           </Button>
                         </Form>
@@ -196,7 +197,10 @@ export default function CafeRoyOrder() {
               <p>Select Size for {name}</p>
               <div className="flex">
                 {availableSizePriceArr.map((item: any) => (
-                  <div key={item} className="flex w-full items-center justify-center hover:bg-slate-200">
+                  <div
+                    key={item}
+                    className="flex w-full items-center justify-center hover:bg-slate-200"
+                  >
                     <input type="radio" name="size" value={item.size} />
                     <label className="mx-4">
                       <p className="font-bold">

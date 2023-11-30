@@ -7,11 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderArgs) {
   const search = new URLSearchParams(url.search);
 
   let period: number = parseInt(search.get("period") as string);
-  
+
   switch (period) {
     case 30:
       period = MONTH_IN_MILISECONDS;
@@ -58,7 +58,6 @@ export async function loader({ request }: LoaderArgs) {
       period = Date.now();
       break;
   }
-  console.log(`period: ${period}`)
   const orders: any[] = await getCafeOrderHistoryByUserId({
     userId,
     period,
@@ -124,40 +123,37 @@ export default function CafeRoy() {
           </div>
         ) : (
           <div className={`h-[400px] w-[400px]`}>
-            <p>No Order History Found</p>
+            <div className=" p-5">
+              <Card className="w-fit h-fit bg-slate-200 p-4 rounded">
+                <CardContent>
+                  <p>No Order History Found 😓</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
         <div>
           <Form>
             <div className="p-2 flex mx-2">
-              <Select name="period">
-                <SelectTrigger className="w-[100px] border-2 border-black rounded px-2">
-                  <SelectValue placeholder="All" />
-                </SelectTrigger>
-                <SelectContent className="w-[100px] bg-slate-100">
-                  <SelectGroup>
-                    <div className="hover:bg-slate-300 p-2">
-                      <SelectItem value="0">All</SelectItem>
-                    </div>
-                    <div className="hover:bg-slate-300 p-2">
-                      <SelectItem value="30">Last 30 days</SelectItem>
-                    </div>
-                    <div className="hover:bg-slate-300 p-2">
-                      <SelectItem value="7">Last 7 Days</SelectItem>
-                    </div>
-                    <div className="hover:bg-slate-300 p-2">
-                      <SelectItem value="1">Today</SelectItem>
-                    </div>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div>
+                <select name="period" className="bg-slate-300 p-2 mr-2 rounded">
+                  <option value="0">All Orders</option>
+                  <option value="30">Last 30 days</option>
+                  <option value="7">Last 7 days</option>
+                  <option value="1">Today</option>
+                </select>
+              </div>
               <Button className={`${positiveButtonCSS()}`}>Search</Button>
             </div>
           </Form>
           <div>
-            <p>Username: {user.username}</p>
-            <p>Current Balance: ${user.accountBalance}</p>
-            <p>Total spent: ${total.toFixed(2)}</p>
+            <Card className="w-fit h-fit bg-slate-200 p-4 rounded">
+              <CardContent>
+                <p>Username: {user.username}</p>
+                <p>Current Balance: ${user.accountBalance}</p>
+                <p>Total spent: ${total.toFixed(2)}</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
@@ -165,7 +161,6 @@ export default function CafeRoy() {
       </div>
       <div>
         <Table>
-          <TableCaption>Orders</TableCaption>
           <TableHeader className="items-start justify-start bg-slate-300">
             <TableRow>
               <TableHead className="text-left">Order #</TableHead>
