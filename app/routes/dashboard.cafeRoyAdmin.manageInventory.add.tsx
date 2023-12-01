@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { redirect, type ActionArgs, type LoaderArgs } from "@remix-run/node";
-import { Form, Outlet } from "@remix-run/react";
+import { redirect, type ActionArgs, type LoaderArgs, json } from "@remix-run/node";
+import { Form, Outlet, useActionData } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 import { createInventory } from "~/models/order.server";
 import { requireUserId } from "~/session.server";
 
@@ -24,6 +25,16 @@ export const action = async ({ request }: ActionArgs) => {
   const price: number = parseFloat(body.get("quantity") as string);
   const size: string = body.get("size") as string;
   const image: string = body.get("image") as string;
+  if(!iced || !name || !quantity || !price || !size || !image){
+    return json(
+      {
+        errors: {
+          message: "Please fill out all fields",
+        },
+      },
+      { status: 400 },
+    );
+  }
   // console.log({ iced, name, quantity, price, size, image })
   //create SQL insert model
   await createInventory({ iced, name, quantity, size, price, image });
@@ -31,6 +42,13 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function CafeRoyManageInventoryAdd() {
+  const actionData = useActionData<typeof action>();
+  const messageRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (actionData?.errors?.message) {
+      messageRef.current?.focus();
+    }
+  }, [actionData]);
   return (
     <div>
       <title>Add Inventory</title>
@@ -77,7 +95,12 @@ export default function CafeRoyManageInventoryAdd() {
                 <label>Image URL</label>
                 <input type="text" name="image" className="w-96 rounded border border-gray-500 px-2" />
               </div>
-              <div className="flex items-center justify-end">
+              <div className="flex items-center justify-end" ref={messageRef}>
+              {actionData?.errors?.message ? (
+                  <div className="pt-1 text-red-700" id="password-error">
+                    {actionData.errors.message}
+                  </div>
+                ) : null}
                 <Button 
                 className="border rounded bg-blue-500 hover:bg-blue-300 text-white">
                   Confirm

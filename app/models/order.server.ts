@@ -150,7 +150,7 @@ export async function createInventory({
   quantity,
   size,
   price,
-  image
+  image,
 }: {
   iced: number;
   name: string;
@@ -159,7 +159,7 @@ export async function createInventory({
   price: number;
   image: string;
 }) {
-  console.log({ iced, name, quantity, price, size, image })
+  console.log({ iced, name, quantity, price, size, image });
   for (let i = 0; i < quantity; i++) {
     await prisma.$executeRaw`
     INSERT INTO Inventory (id, name, iced, size, image, price, sold) 
@@ -171,9 +171,7 @@ export async function createInventory({
 export async function selectAllInventory() {
   const inventory = await prisma.$queryRaw`SELECT * FROM Inventory`;
   // return await prisma.$queryRaw`SELECT * FROM Inventory`;
-  console.log(JSON.stringify(inventory))
-  return inventory
-
+  return inventory;
 }
 
 export async function selectInventoryBySearchQuery({

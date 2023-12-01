@@ -102,6 +102,16 @@ export const action = async ({ request }: ActionArgs) => {
     iced,
     size,
   });
+  if (!size) {
+    return json(
+      {
+        errors: {
+          message: "Please select a size",
+        },
+      },
+      { status: 400 },
+    );
+  }
   //error check if result = []
 
   const invId: string = result[0].invId;
@@ -162,25 +172,23 @@ export default function CafeRoyOrder() {
           {availableInventoryCondensed.length !== 0 ? (
             <>
               <div className="grid grid-cols-4 gap-4">
-                {availableInventoryCondensed.map(
-                  (item: Inventory, index: number) => (
-                    <div key={item.image}>
-                      <Card className="rounded">
-                        <img
-                          className="h-full w-full object-cover"
-                          alt="image"
-                          src={item.image}
-                        />
-                        <Form method="get">
-                          <input type="hidden" name="name" value={item.name} />
-                          <Button className="border w-full h-fit rounded bg-slate-500 hover:bg-slate-300 text-white">
-                            {item.name}
-                          </Button>
-                        </Form>
-                      </Card>
-                    </div>
-                  ),
-                )}
+                {availableInventoryCondensed.map((item: Inventory) => (
+                  <div key={item.image}>
+                    <Card className="rounded">
+                      <img
+                        className="h-full w-full object-cover"
+                        alt="image"
+                        src={item.image}
+                      />
+                      <Form method="get">
+                        <input type="hidden" name="name" value={item.name} />
+                        <Button className="border w-full h-fit rounded bg-slate-500 hover:bg-slate-300 text-white">
+                          {item.name}
+                        </Button>
+                      </Form>
+                    </Card>
+                  </div>
+                ))}
               </div>
             </>
           ) : (
@@ -224,6 +232,7 @@ export default function CafeRoyOrder() {
                 </Button>
               </div>
             </Form>
+      
           </>
         ) : (
           <></>

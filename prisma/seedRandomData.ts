@@ -5,8 +5,14 @@ import {
   updateOrderStatus,
 } from "~/models/order.server";
 import { getRandomInteger } from "~/utils/helpers";
-
+import { MONTH_IN_MILISECONDS, WEEK_IN_MILISECONDS, DAY_IN_MILISECONDS } from "~/utils/data";
 const prisma = new PrismaClient();
+
+function getRandomTimeInMiliseconds(){
+  const periods = [MONTH_IN_MILISECONDS - 10, WEEK_IN_MILISECONDS - 10, DAY_IN_MILISECONDS - 10]
+  //at least 1 day old orders
+  return Date.now() - periods[getRandomInteger(0, periods.length - 1)]
+}
 async function seedExampleOrder() {
   //these are 40 inventory items randomly selected
   const selectedInventory: Inventory[] = await prisma.$queryRaw`
@@ -24,11 +30,13 @@ async function seedExampleOrder() {
     const userId: number = studentUsers[randUserIndex].id;
     const invId: string = selectedInventory[i].id;
     const price: number = Number(selectedInventory[i].price);
+    const randomTime = getRandomTimeInMiliseconds()
+    
 
     const orderId: string = await createOrder({
       invId,
       userId,
-      createdAt: Date.now(),
+      createdAt: randomTime,
       price,
     });
 
